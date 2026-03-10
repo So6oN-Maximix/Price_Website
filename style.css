@@ -15,7 +15,7 @@ body {
     background: #0a0a0b;
     background-size: cover;
     background-position: center;
-    height: 300vh;
+    height: 600vh;
     color: white;
     margin: 0;
     padding: 0;
@@ -59,16 +59,16 @@ header {
     opacity: 0.7;
 }
 
-.logo-link {
+.logo-link, .account-logo {
     display: flex;
     align-items: center;
 }
 
-.logo-link svg {
+.logo-link, .account-logo svg {
     transition: transform 0.3s ease;
 }
 
-.logo-link:hover svg {
+.logo-link:hover, .account-logo:hover svg {
     transform: scale(1.1);
 }
 
@@ -159,4 +159,147 @@ footer {
     align-items: center;
     pointer-events: none;
     z-index: 10;
+}
+
+/* PROFILE MENU */
+
+.back-btn {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 100;
+}
+
+.back-btn:hover {
+    opacity: 1;
+    transform: translateX(-5px);
+}
+
+.login-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.glass-login {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 50px 40px;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.login-logo {
+    margin: 0 auto -5px auto;
+    opacity: 0.9;
+}
+
+.glass-login h2 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: -15px;
+    letter-spacing: 1px;
+}
+
+.glass-login p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 10px;
+}
+
+.input-group {
+    position: relative;
+    text-align: left;
+    margin-top: 10px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    border-bottom: 1px solid white;
+}
+
+.input-group label {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1rem;
+    pointer-events: none;
+    transition: 0.3s ease all;
+}
+
+.input-group input:focus ~ label,
+.input-group input:valid ~ label {
+    top: -18px;
+    font-size: 0.75rem;
+    color: white;
+    letter-spacing: 1px;
+}
+
+.glass-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 12px;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+}
+
+.glass-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.login-links {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-top: 10px;
+}
+
+.login-links a {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.login-links a:hover {
+    color: white;
 }
