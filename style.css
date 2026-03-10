@@ -164,7 +164,7 @@ footer {
 /* PROFILE MENU */
 
 .back-btn {
-    position: absolute;
+    position: fixed;
     top: 30px;
     left: 40px;
     display: flex;
