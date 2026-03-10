@@ -449,6 +449,17 @@ footer {
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+.badge-category {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .badge-promo {
     position: absolute;
     top: 15px;
@@ -456,7 +467,7 @@ footer {
     background: rgba(255, 255, 255, 0.1);
     padding: 4px 10px;
     border-radius: 10px;
-    font-size: 0.7rem;
+    font-size: 1rem;
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -495,17 +506,44 @@ footer {
     font-weight: 600;
 }
 
-.add-to-cart {
-    float: right;
+.product-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.product-actions button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-add {
     background: white;
     color: black;
     border: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
 }
 
-.add-to-cart:hover { transform: scale(1.2); }
+.btn-add:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.02);
+}
+
+.btn-custom {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.btn-custom:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: white;
+}
