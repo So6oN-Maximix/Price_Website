@@ -23,7 +23,7 @@ const serverLunching = http.createServer(async (req, res) => {
                         const isPasswordCorrect = await bcrypt.compare(password, userData.password);
                         if (isPasswordCorrect) {
                             console.log(`Connexion réussie pour ${email}`);
-                            res.writeHead(302, {"Location": "/"});
+                            res.writeHead(302, {"Location": "/profile"});
                         } else {
                             console.log("Échec : Mauvais mot de passe");
                             res.writeHead(302, {"Location": "/login?error=1"});
@@ -37,6 +37,31 @@ const serverLunching = http.createServer(async (req, res) => {
                     res.writeHead(500);
                 }
                 res.end()
+            });
+            return;
+        } else if (req.url === "/api/register") {
+            let body = "";
+            req.on("data", chunk => body += chunk);
+            req.on("end", async () => {
+                console.log(body);
+                const formDatas = new URLSearchParams(body);
+                const username = formDatas.get("username");
+                const email = formDatas.get("email");
+                const password = formDatas.get("password");
+                const confirmPassword = formDatas.get("confirm-password");
+                if (password === confirmPassword) {
+                    try {
+                        const salt = await bcrypt.genSalt(15);
+                        const hashedPassword = await bcrypt.hash(password, salt);
+                        await database.query("INSERT INTO users (username, email, password) VALUES ($1, $2, $3);", [username, email, hashedPassword]);
+                        console.log(`Bienvenue ${username}`);
+                        res.writeHead(302, {"Location": "/profile"});
+                    } catch (error) {
+                        console.error("Erreur SQL - Register : ", error);
+                        req.writeHead(500);
+                    }
+                }
+                res.end();
             });
             return;
         }
