@@ -11,6 +11,7 @@ function getCookie(name) {
 async function checkAuthentification() {
     const username = getCookie("username");
     if (username) {
+        console.log(username);
         usernameElement.textContent = username;
         avatarLettersElement = username[0].toString().toUpperCase();
     } else {
