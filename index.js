@@ -29,7 +29,7 @@ const serverLunching = http.createServer(async (req, res) => {
                             res.writeHead(302, {"Location": "/login?error=1"});
                         }
                     } else {
-                        console.log(`Echec de connexion ! Mauvais identifiants pour ${username}`);
+                        console.log(`Echec de connexion ! Mauvais identifiants pour ${email}`);
                         res.writeHead(302, {"Location": "/login"});
                     }
                 } catch (error) {
@@ -58,7 +58,7 @@ const serverLunching = http.createServer(async (req, res) => {
                         res.writeHead(302, {"Location": "/profile"});
                     } catch (error) {
                         console.error("Erreur SQL - Register : ", error);
-                        req.writeHead(500);
+                        res.writeHead(500);
                     }
                 }
                 res.end();
