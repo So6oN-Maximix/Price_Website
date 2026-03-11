@@ -1,4 +1,4 @@
-const avatarLettersElement = document.getElementById("user-avatar");
+const avatarLettersElement = document.getElementById("avatar-letters");
 const usernameElement = document.getElementById("username");
 
 function getUsername(cookie) {
@@ -23,3 +23,5 @@ async function checkAuthentification() {
         if (window.location.pathname === "/profile") window.location.href = "/login";
     }
 }
+
+window.addEventListener("DOMContentLoaded", checkAuthentification);
