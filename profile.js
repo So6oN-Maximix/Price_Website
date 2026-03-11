@@ -13,7 +13,7 @@ async function checkAuthentification() {
     if (username) {
         console.log(username);
         usernameElement.textContent = username;
-        avatarLettersElement = username.split("")[0].toUpperCase();
+        avatarLettersElement.textContent = username.split("")[0].toUpperCase();
     } else {
         if (window.location.pathname === "/profile") window.location.href = "/login";
     }
