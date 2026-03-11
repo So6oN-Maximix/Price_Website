@@ -9,8 +9,10 @@ async function checkAuthentification() {
     const avatarLettersElement = document.getElementById("avatar-letters");
     const usernameElement = document.getElementById("username");
     const username = getCookie("username");
+    const cartElement = document.getElementById("nav-cart-link");
     if (username) {
         if (profileLink) profileLink.href = "/profile";
+        if (cartElement) cartElement.href = "/cart";
         if (usernameElement) usernameElement.textContent = username;
         if (avatarLettersElement) avatarLettersElement.textContent = username.split("")[0].toUpperCase();
     } else {
