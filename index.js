@@ -41,7 +41,7 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/register") {
             let body = "";
-            req.on("data", chunk => body += chunk);
+            req.on("data", chunk => body += chunk.toString());
             req.on("end", async () => {
                 console.log(body);
                 const formDatas = new URLSearchParams(body);
