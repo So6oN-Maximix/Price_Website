@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import database from "./database.js";
 import bcrypt from "bcrypt";
-import { resourceLimits } from "worker_threads";
 
 const PORT = process.env.PORT || 8080;
 
