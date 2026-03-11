@@ -5,6 +5,7 @@ import database from "./database.js";
 import bcrypt from "bcrypt";
 
 const PORT = process.env.PORT || 8080;
+const sessions = {};
 
 const serverLunching = http.createServer(async (req, res) => {
     if (req.method === "POST") {
@@ -23,7 +24,13 @@ const serverLunching = http.createServer(async (req, res) => {
                         const isPasswordCorrect = await bcrypt.compare(password, userData.password);
                         if (isPasswordCorrect) {
                             console.log(`Connexion réussie pour ${email}`);
-                            res.writeHead(302, {"Location": "/profile"});
+                            const ticket = Math.random().toString(36).substring(7);
+                            sessions[ticket] = userData.username;
+                            res.writeHead(302, {
+                                "Location": "/profile",
+                                "Set-Cookie": [`session_id=${ticket}; Path=/; HttpOnly; Secure; SameSite=Strict`,
+                                                `username=${username}; Path=/; Secure; SameSite=Strict`]
+                            });
                         } else {
                             console.log("Échec : Mauvais mot de passe");
                             res.writeHead(302, {"Location": "/login?error=1"});
