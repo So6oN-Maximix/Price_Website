@@ -29,8 +29,7 @@ const serverLunching = http.createServer(async (req, res) => {
                             res.writeHead(302, {
                                 "Location": "/profile",
                                 "Set-Cookie": [`session_id=${ticket}; Path=/; HttpOnly; Secure; SameSite=Strict`,
-                                                `username=${userData.username}; Path=/; Secure; SameSite=Strict`,
-                                                `date=${userData.date}; Path=/; Secure; SameSite=Strict`]
+                                                `username=${userData.username}; Path=/; Secure; SameSite=Strict`]
                             });
                         } else {
                             console.log("Échec : Mauvais mot de passe");
@@ -117,4 +116,4 @@ const serverLunching = http.createServer(async (req, res) => {
     })
 });
 
-serverLunching.listen(PORT, () => console.log(`Serveur lancé à l'adresse : http://localhost:${PORT}`));
+serverLunching.listen(PORT, () => console.log(`Site lancé !!`));
