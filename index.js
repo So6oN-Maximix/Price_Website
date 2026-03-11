@@ -86,6 +86,8 @@ const serverLunching = http.createServer(async (req, res) => {
         filePath = "./register.html";
     } else if (req.url === "/profile") {
         filePath = "./profile.html";
+    } else if (req.url === "/cart") {
+        filePath = "./cart.html";
     }
 
     const extName = String(path.extname(filePath)).toLowerCase();
