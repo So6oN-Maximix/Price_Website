@@ -13,7 +13,7 @@ function getCookie(name) {
 async function checkAuthentification() {
     const username = getCookie("username");
     if (username) {
-        profileLink.href = "/profile";
+        if (profileLink) profileLink.href = "/profile";
         console.log(username);
         usernameElement.textContent = username;
         avatarLettersElement.textContent = username.split("")[0].toUpperCase();
