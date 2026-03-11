@@ -8,7 +8,6 @@ function getCookie(name) {
 async function checkAuthentification() {
     const avatarLettersElement = document.getElementById("avatar-letters");
     const usernameElement = document.getElementById("username");
-    const profileLink = document.getElementById("nav-profile-link");
     const username = getCookie("username");
     if (username) {
         if (profileLink) profileLink.href = "/profile";
@@ -19,6 +18,8 @@ async function checkAuthentification() {
         if (window.location.pathname === "/profile") window.location.href = "/login";
     }
 }
+
+const profileLink = document.getElementById("nav-profile-link");
 
 window.addEventListener("DOMContentLoaded", checkAuthentification);
 document.getElementById("logout-btn").addEventListener("click", () => {
