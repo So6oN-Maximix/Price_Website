@@ -29,7 +29,8 @@ const serverLunching = http.createServer(async (req, res) => {
                             res.writeHead(302, {
                                 "Location": "/profile",
                                 "Set-Cookie": [`session_id=${ticket}; Path=/; HttpOnly; Secure; SameSite=Strict`,
-                                                `username=${userData.username}; Path=/; Secure; SameSite=Strict`]
+                                                `username=${userData.username}; Path=/; Secure; SameSite=Strict`,
+                                                `date=${userData.date}; Path=/; Secure; SameSite=Strict`]
                             });
                         } else {
                             console.log("Échec : Mauvais mot de passe");
