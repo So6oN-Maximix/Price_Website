@@ -2,8 +2,7 @@ const avatarLettersElement = document.getElementById("avatar-letters");
 const usernameElement = document.getElementById("username");
 
 function getUsername(cookie) {
-    const splitCookie = cookie.split("; ");
-    const userRow = splitCookie.find(row => row.startsWith("username="));
+    const userRow = cookie.find(row => row.startsWith("username="));
     if (userRow) {
         const username = userRow.split("=")[1];
         console.log("Pseudo trouvé :", username);
@@ -16,7 +15,7 @@ async function checkAuthentification() {
     const cookie = document.cookie.split(";");
     const userCookie = cookie.find(c => c.trim().startsWith('username='));
     if (userCookie) {
-        const username = getUsername();
+        const username = getUsername(cookie);
         usernameElement.textContent = username;
         avatarLettersElement = username[0].toString().toUpperCase();
     } else {
