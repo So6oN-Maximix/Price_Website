@@ -15,8 +15,8 @@ async function checkAuthentification() {
     if (username) {
         if (profileLink) profileLink.href = "/profile";
         console.log(username);
-        usernameElement.textContent = username;
-        avatarLettersElement.textContent = username.split("")[0].toUpperCase();
+        if (usernameElement) usernameElement.textContent = username;
+        if (avatarLettersElement) avatarLettersElement.textContent = username.split("")[0].toUpperCase();
     } else {
         if (window.location.pathname === "/profile") window.location.href = "/login";
     }
