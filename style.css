@@ -83,16 +83,16 @@ header {
     box-shadow: 0 0 10px white;
 }
 
-.logo-link, .account-logo {
+.logo-link {
     display: flex;
     align-items: center;
 }
 
-.logo-link, .account-logo svg {
+.logo-link svg {
     transition: transform 0.3s ease;
 }
 
-.logo-link:hover, .account-logo:hover svg {
+.logo-link:hover svg {
     transform: scale(1.1);
 }
 
@@ -344,6 +344,78 @@ footer {
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
+}
+
+/* BARRE DE RECHERCHE */
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px 50px;
+    margin-top: 100px;
+    margin-bottom: -100px;
+}
+
+.search-group {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 10px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.search-group:focus-within {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.search-group input {
+    width: 100%;
+    padding: 15px 40px 10px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1.1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.search-group label {
+    position: absolute;
+    top: 25px;
+    left: 20px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1rem;
+    pointer-events: none;
+    transition: 0.3s ease all;
+}
+
+.search-icon {
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    transition: color 0.3s ease;
+}
+
+.search-group input:focus ~ label,
+.search-group input:valid ~ label {
+    top: 5px;
+    left: 20px;
+    font-size: 0.75rem;
+    color: white;
+    letter-spacing: 1px;
+}
+
+.search-group input:focus ~ .search-icon {
+    color: white;
 }
 
 /* SIDEBAR */
