@@ -2,7 +2,7 @@ import http from "http";
 import fs from "fs";
 import path from "path";
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 const serverLunching = http.createServer(async (req, res) => {
     let filePath = "." + req.url;
