@@ -1,8 +1,3 @@
-const avatarLettersElement = document.getElementById("avatar-letters");
-const usernameElement = document.getElementById("username");
-const creationDateElement = document.getElementById("creation-date");
-const profileLink = document.getElementById("nav-profile-link");
-
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -11,6 +6,9 @@ function getCookie(name) {
 }
 
 async function checkAuthentification() {
+    const avatarLettersElement = document.getElementById("avatar-letters");
+    const usernameElement = document.getElementById("username");
+    const profileLink = document.getElementById("nav-profile-link");
     const username = getCookie("username");
     if (username) {
         if (profileLink) profileLink.href = "/profile";
