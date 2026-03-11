@@ -1,6 +1,7 @@
 const avatarLettersElement = document.getElementById("avatar-letters");
 const usernameElement = document.getElementById("username");
 const creationDateElement = document.getElementById("creation-date");
+const profileLink = document.getElementById("nav-profile-link");
 
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -12,12 +13,10 @@ function getCookie(name) {
 async function checkAuthentification() {
     const username = getCookie("username");
     if (username) {
+        if (profileLink) profileLink.href = "/profile";
         console.log(username);
         usernameElement.textContent = username;
         avatarLettersElement.textContent = username.split("")[0].toUpperCase();
-        const rawDate = getCookie("date");
-        const creationDate = new Date(rawDate, "fr-FR");
-        creationDateElement.textContent = creationDate;
     } else {
         if (window.location.pathname === "/profile") window.location.href = "/login";
     }
