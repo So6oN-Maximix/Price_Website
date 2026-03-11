@@ -619,3 +619,185 @@ footer {
     background: rgba(255, 255, 255, 0.15);
     border-color: white;
 }
+
+/* --- PROFILE MENU --- */
+
+.profile-container {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 40px;
+    padding: 120px 50px 50px;
+    max-width: 1400px;
+    margin: 0 auto;
+    align-items: start;
+}
+
+/* --- SIDEBAR PROFIL --- */
+.profile-sidebar {
+    padding: 40px 25px;
+    position: sticky;
+    top: 120px;
+    text-align: center;
+}
+
+.user-avatar {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 15px;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.user-info h3 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.user-info p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 30px;
+}
+
+.profile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+}
+
+.profile-menu a {
+    padding: 12px 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.profile-menu a:hover, .profile-menu a.active {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    transform: translateX(5px);
+}
+
+.logout-btn {
+    margin-top: 20px;
+    color: rgba(255, 100, 100, 0.8) !important;
+}
+
+/* --- CONTENU --- */
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.profile-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.view-all {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+}
+
+/* Grille de stats */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.stat-card {
+    padding: 25px;
+    text-align: center;
+}
+
+.stat-card span {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-card p {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+/* Mini Grille de Designs */
+.designs-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.design-card {
+    display: flex;
+    padding: 15px;
+    gap: 20px;
+    align-items: center;
+}
+
+.design-preview {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.design-info h4 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.design-info p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Résumé de commande */
+.order-summary {
+    padding: 30px;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.status-badge {
+    background: rgba(74, 222, 128, 0.1);
+    color: #4ade80;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.order-total {
+    margin-top: 20px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-align: right;
+}

@@ -1,10 +1,22 @@
 import http from "http";
 import fs from "fs";
 import path from "path";
+import database from "./database.js";
+import bcrypt from "bcrypt";
 
 const PORT = process.env.PORT || 8080;
 
 const serverLunching = http.createServer(async (req, res) => {
+    if (req.method === "POST") {
+        if (req.url === "/api/login") {
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                console.log(body);
+            });
+        }
+    }
+
     let filePath = "." + req.url;
     if (req.url === "/" || req.url === "") {
         filePath = "./index.html";
@@ -14,6 +26,8 @@ const serverLunching = http.createServer(async (req, res) => {
         filePath = "./shop.html";
     } else if (req.url === "/register") {
         filePath = "./register.html";
+    } else if (req.url === "/profile") {
+        filePath = "./profile.html";
     }
 
     const extName = String(path.extname(filePath)).toLowerCase();
