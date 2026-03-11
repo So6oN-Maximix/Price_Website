@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import database from "./database.js";
 import bcrypt from "bcrypt";
+import { resourceLimits } from "worker_threads";
 
 const PORT = process.env.PORT || 8080;
 
@@ -13,7 +14,32 @@ const serverLunching = http.createServer(async (req, res) => {
             req.on("data", chunk => body += chunk.toString());
             req.on("end", async () => {
                 console.log(body);
+                const formDatas = new URLSearchParams(body);
+                const email = formDatas.get("email");
+                const password = formDatas.get("password");
+                try {
+                    const result = await database.query("SELECT * FROM users WHERE email = $1;", [email]);
+                    if (result.rows.length > 0) {
+                        const userData = result.rows[0];
+                        const isPasswordCorrect = await bcrypt.compare(password, userData.password);
+                        if (isPasswordCorrect) {
+                            console.log(`Connexion réussie pour ${email}`);
+                            res.writeHead(302, {"Location": "/"});
+                        } else {
+                            console.log("Échec : Mauvais mot de passe");
+                            res.writeHead(302, {"Location": "/login?error=1"});
+                        }
+                    } else {
+                        console.log(`Echec de connexion ! Mauvais identifiants pour ${username}`);
+                        res.writeHead(302, {"Location": "/login"});
+                    }
+                } catch (error) {
+                    console.error("Erreur SQL - Login : ", error);
+                    res.writeHead(500);
+                }
+                res.end()
             });
+            return;
         }
     }
 
