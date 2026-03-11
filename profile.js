@@ -1,21 +1,16 @@
 const avatarLettersElement = document.getElementById("avatar-letters");
 const usernameElement = document.getElementById("username");
 
-function getUsername(cookie) {
-    const userRow = cookie.find(row => row.startsWith("username="));
-    if (userRow) {
-        const username = userRow.split("=")[1];
-        console.log("Pseudo trouvé :", username);
-        return username;
-    }
-    return "Inconnu";
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    return null;
 }
 
 async function checkAuthentification() {
-    const cookie = document.cookie.split(";");
-    const userCookie = cookie.find(c => c.trim().startsWith('username='));
-    if (userCookie) {
-        const username = getUsername(cookie);
+    const username = getCookie("username");
+    if (username) {
         usernameElement.textContent = username;
         avatarLettersElement = username[0].toString().toUpperCase();
     } else {
