@@ -40,7 +40,7 @@ const products = [{
 
 function addProduct(productObj) {
     const globalCard = document.createElement("div");
-    globalCard.classList.add("product-card glass-card");
+    globalCard.classList.add("product-card", "glass-card");
 
     const categoryBadge = document.createElement("div");
     categoryBadge.classList.add("badge-category");
@@ -63,7 +63,7 @@ function addProduct(productObj) {
     const buttonsDiv = document.createElement("div");
     buttonsDiv.classList.add("product-actions");
     const btnAdd = document.createElement("button");
-    btnAdd.classList.add = "btn-add";
+    btnAdd.classList.add("btn-add");
     btnAdd.textContent = "Ajouter au panier";
     const btnCustom = document.createElement("button");
     btnCustom.classList.add("btn-custom");
