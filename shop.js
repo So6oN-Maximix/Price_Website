@@ -132,7 +132,7 @@ applyFilterBtn.addEventListener("click", () => {
     }
 });
 priceRange.addEventListener("input", (event) => {
-    priceDisplay.value = event.target.value + "€";
+    priceDisplay.value = priceRange.value;
 });
 priceDisplay.addEventListener("input", () => {
     const priceValue = Number(priceDisplay.value);
@@ -142,4 +142,5 @@ priceDisplay.addEventListener("input", () => {
         priceValue = 0;
     }
     priceRange.value = priceValue;
+    priceDisplay.value = priceValue;
 })
