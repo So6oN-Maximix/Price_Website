@@ -56,7 +56,10 @@
                 <div class="filter-group">
                     <div class="price-header">
                         <h4>Prix max</h4>
-                        <span id="price-display">100€</span>
+                        <div class="price-input-group">
+                            <input type="number" id="price-display" value="100" min="0" max="100">
+                            <span>€</span>
+                        </div>
                     </div>
                     
                     <input type="range" id="price-range" class="glass-range" min="0" max="100" value="100" step="1">

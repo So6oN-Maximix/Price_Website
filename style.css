@@ -550,13 +550,35 @@ footer {
     margin-bottom: 0;
 }
 
-#price-display {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: white;
+.price-input-group {
+    display: flex;
+    align-items: center;
     background: rgba(255, 255, 255, 0.1);
     padding: 2px 8px;
     border-radius: 5px;
+}
+
+#price-display {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    width: 35px;
+    text-align: right;
+    outline: none;
+}
+
+.price-input-group span {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-left: 2px;
+}
+
+#price-display::-webkit-inner-spin-button,
+#price-display::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .price-labels {

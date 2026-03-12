@@ -134,3 +134,7 @@ applyFilterBtn.addEventListener("click", () => {
 priceRange.addEventListener("input", (event) => {
     priceDisplay.textContent = event.target.value + "€";
 });
+priceDisplay.addEventListener("input", () => {
+    const priceValue = Number(priceDisplay.value);
+    priceRange.value = priceValue;
+})
