@@ -4,42 +4,43 @@ const filtersContainer = document.querySelector(".filter-group");
 const checkboxs = document.querySelectorAll(".filter-group input[type='checkbox']");
 const priceRange = document.getElementById("price-range");
 const priceDisplay = document.getElementById("price-display");
+const applyFilterBtn = document.getElementById("apply-filters-btn");
 
 const products = [{
     name: "Produit 01",
     type: "Corps",
-    price: "29.56"
+    price: 29.56
 },
 {
     name: "Produit 02",
     type: "Bouchon",
-    price: "80.49",
+    price: 80.49,
     promo: 20
 },
 {
     name: "Produit 03",
     type: "Socle",
-    price: "27.96"
+    price: 27.96
 },
 {
     name: "Produit 04",
     type: "Habillage",
-    price: "21.02"
+    price: 21.02
 },
 {
     name: "Produit 05",
     type: "Habillage",
-    price: "54.04"
+    price: 54.04
 },
 {
     name: "Produit 06",
     type: "Corps",
-    price: "72.30"
+    price: 72.30
 },
 {
     name: "Produit 07",
     type: "Bouchon",
-    price: "25.28",
+    price: 25.28,
     promo: 50
 }];
 
@@ -118,17 +119,15 @@ function getFilters() {
 }
 
 window.addEventListener("DOMContentLoaded", () => products.forEach(product => addProduct(product)));
-filtersContainer.addEventListener("change", (event) => {
-    if (event.target.type === "checkbox") {
-        const filters = getFilters();
-        productContainer.innerHTML = "";
-        if (filters.length > 0) {
-            products.forEach(product => {
-                if (filters.includes(product.type.toLowerCase())) addProduct(product);
-            });
-        } else {
-            products.forEach(product => addProduct(product));
-        }
+applyFilterBtn.addEventListener("click", () => {
+    const filters = getFilters();
+    productContainer.innerHTML = "";
+    if (filters.length > 0) {
+        products.forEach(product => {
+            if (filters.includes(product.type.toLowerCase()) && product.price <= Number(priceDisplay.textContent)) addProduct(product);
+        });
+    } else {
+        products.forEach(product => {if (product.price <= Number(priceDisplay.textContent)) addProduct(product);});
     }
 });
 priceRange.addEventListener("input", (event) => {

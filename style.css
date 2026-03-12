@@ -509,6 +509,34 @@ footer {
     accent-color: white;
 }
 
+.apply-filters-btn {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.apply-filters-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.05);
+}
+
+.apply-filters-btn:active {
+    transform: translateY(0);
+    background: rgba(255, 255, 255, 0.25);
+}
+
 /* FILTER MENU */
 
 .price-header {
