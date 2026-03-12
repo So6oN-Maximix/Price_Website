@@ -142,5 +142,4 @@ priceDisplay.addEventListener("input", () => {
         priceValue = 0;
     }
     priceRange.value = priceValue;
-    priceDisplay.value = priceValue;
 })
