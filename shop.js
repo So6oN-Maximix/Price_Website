@@ -2,6 +2,9 @@ const productContainer = document.getElementById("products-grid");
 const testBtn = document.getElementById("test");
 const filtersContainer = document.querySelector(".filter-group");
 const checkboxs = document.querySelectorAll(".filter-group input[type='checkbox']");
+const priceRange = document.getElementById("price-range");
+const priceDisplay = document.getElementById("price-display");
+
 const products = [{
     name: "Produit 01",
     type: "Corps",
@@ -127,4 +130,7 @@ filtersContainer.addEventListener("change", (event) => {
             products.forEach(product => addProduct(product));
         }
     }
-})
+});
+priceRange.addEventListener("input", (event) => {
+    priceDisplay.textContent = event.target.value + "€";
+});

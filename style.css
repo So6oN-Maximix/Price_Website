@@ -502,6 +502,13 @@ footer {
     align-items: center;
 }
 
+.glass-range {
+    width: 100%;
+    margin: 10px 0;
+    cursor: pointer;
+    accent-color: white;
+}
+
 /* FILTER MENU */
 
 .price-header {
