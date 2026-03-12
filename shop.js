@@ -1,4 +1,4 @@
-const productContainer = document.getElementById("shop-container");
+const productContainer = document.getElementById("products-grid");
 const testBtn = document.getElementById("test");
 const products = [{
     name: "Produit 01",
@@ -59,7 +59,7 @@ function addProduct(productObj) {
     productName.textContent = productObj.name;
     const priceSpan = document.createElement("span");
     priceSpan.classList.add("price");
-    priceSpan.textContent = productObj.price;
+    priceSpan.textContent = productObj.price + "€";
     const buttonsDiv = document.createElement("div");
     buttonsDiv.classList.add("product-actions");
     const btnAdd = document.createElement("button");
