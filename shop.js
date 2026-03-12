@@ -61,18 +61,23 @@ function addProduct(productObj) {
     productName.textContent = productObj.name;
 
     let priceElement;
+    let promoBadge;
     if (productObj.hasOwnProperty("promo")) {
         priceElement = document.createElement("div");
         priceElement.classList.add("price-container");
         const priceSpan = document.createElement("span");
-        priceSpan.classList.add("price");
+        priceSpan.classList.add("old-price");
         priceSpan.textContent = productObj.price + "€";
         const pricePromoSpan = document.createElement("span");
-        pricePromoSpan.classList.add("old-price");
-        pricePromoSpan.textContent = `${productObj.price * (1 - productObj.promo / 100)}€`;
+        pricePromoSpan.classList.add("price");
+        pricePromoSpan.textContent = `${(productObj.price * (1 - productObj.promo / 100)).toFixed(2)}€`;
         priceElement.appendChild(priceSpan);
         priceElement.appendChild(document.createTextNode(" "));
         priceElement.appendChild(pricePromoSpan);
+
+        promoBadge = document.createElement("div");
+        promoBadge.classList.add("badge-promo");
+        promoBadge.textContent = `-${productObj.promo}%`;
     } else {
         priceElement = document.createElement("span");
         priceElement.classList.add("price");
@@ -96,6 +101,7 @@ function addProduct(productObj) {
     productCard.appendChild(buttonsDiv);
 
     globalCard.appendChild(categoryBadge);
+    if (promoBadge) globalCard.appendChild(promoBadge);
     globalCard.appendChild(imgDiv);
     globalCard.appendChild(productCard);
 
