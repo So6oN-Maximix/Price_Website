@@ -82,8 +82,8 @@ function addProduct(productObj) {
     productContainer.appendChild(globalCard);
 }
 
-testBtn.addEventListener("click", () => addProduct({
-    name: "Product 03",
-    type: "Socle",
-    price: "13.67"
-}));
+window.addEventListener("DOMContentLoaded", () => {
+    for (const product of products) {
+        addProduct(product);
+    }
+})
