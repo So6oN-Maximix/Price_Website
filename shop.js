@@ -1,5 +1,7 @@
 const productContainer = document.getElementById("products-grid");
 const testBtn = document.getElementById("test");
+const filtersContainer = document.querySelectorAll(".filter-group");
+const checkboxs = document.querySelectorAll(".filter-group input[type='checkbox']");
 const products = [{
     name: "Produit 01",
     type: "Corps",
@@ -57,9 +59,12 @@ function addProduct(productObj) {
     productCard.classList.add("product-info");
     const productName = document.createElement("h4");
     productName.textContent = productObj.name;
+
     const priceSpan = document.createElement("span");
     priceSpan.classList.add("price");
     priceSpan.textContent = productObj.price + "€";
+
+
     const buttonsDiv = document.createElement("div");
     buttonsDiv.classList.add("product-actions");
     const btnAdd = document.createElement("button");
@@ -82,8 +87,21 @@ function addProduct(productObj) {
     productContainer.appendChild(globalCard);
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-    for (const product of products) {
-        addProduct(product);
+function getFilters() {
+    let filters = [];
+    checkboxs.forEach(checkbox => {if(checkbox.checked) filters.push(checkbox.value);});
+    return filters;
+}
+
+window.addEventListener("DOMContentLoaded", () => products.forEach(product => addProduct(product)));
+filtersContainer.addEventListener("change", (event) => {
+    if (event.taget.type === "checkbox") {
+        const filters = getFilters();
+        if (filters.length > 0) {
+            productContainer.innerHTML = "";
+            products.forEach(product => {
+                if (filters.includes(product.type)) addProduct(product);
+            });
+        }
     }
 })
