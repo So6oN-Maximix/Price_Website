@@ -1,6 +1,6 @@
 const productContainer = document.getElementById("products-grid");
 const testBtn = document.getElementById("test");
-const filtersContainer = document.querySelectorAll(".filter-group");
+const filtersContainer = document.querySelector(".filter-group");
 const checkboxs = document.querySelectorAll(".filter-group input[type='checkbox']");
 const products = [{
     name: "Produit 01",
@@ -95,13 +95,15 @@ function getFilters() {
 
 window.addEventListener("DOMContentLoaded", () => products.forEach(product => addProduct(product)));
 filtersContainer.addEventListener("change", (event) => {
-    if (event.taget.type === "checkbox") {
+    if (event.target.type === "checkbox") {
         const filters = getFilters();
+        productContainer.innerHTML = "";
         if (filters.length > 0) {
-            productContainer.innerHTML = "";
             products.forEach(product => {
-                if (filters.includes(product.type)) addProduct(product);
+                if (filters.includes(product.type.toLowerCase())) addProduct(product);
             });
+        } else {
+            products.forEach(product => addProduct(product));
         }
     }
 })
