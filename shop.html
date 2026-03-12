@@ -54,8 +54,17 @@
                     <label class="glass-check"><input type="checkbox" value="socle"> <span>Socle</span></label>
                 </div>
                 <div class="filter-group">
-                    <h4>Prix</h4>
-                    <input type="range" class="glass-range" min="0" max="1000">
+                    <div class="price-header">
+                        <h4>Prix max</h4>
+                        <span id="price-display">100€</span>
+                    </div>
+                    
+                    <input type="range" id="price-range" class="glass-range" min="0" max="100" value="100" step="1">
+                    
+                    <div class="price-labels">
+                        <span>0€</span>
+                        <span>100€</span>
+                    </div>
                 </div>
             </aside>
 

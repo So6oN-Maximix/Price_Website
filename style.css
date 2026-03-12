@@ -502,6 +502,36 @@ footer {
     align-items: center;
 }
 
+/* FILTER MENU */
+
+.price-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.price-header h4 {
+    margin-bottom: 0;
+}
+
+#price-display {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 5px;
+}
+
+.price-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 5px;
+}
+
 /* GRILLE & CARTES PRODUITS */
 .products-grid {
     display: grid;
