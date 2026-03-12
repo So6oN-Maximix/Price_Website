@@ -1,4 +1,5 @@
 const testBtn = document.getElementById("test");
+const cartProducts = document.getElementById("cart-list");
 
 function addToCart(productObj) {
     const globalCard = document.createElement("div");
@@ -52,6 +53,8 @@ function addToCart(productObj) {
     globalCard.appendChild(productDetails);
     globalCard.appendChild(productQuantity);
     globalCard.appendChild(priceDiv);
+
+    cartProducts.appendChild(globalCard);
 }
 
 testBtn.addEventListener("click", () => addToCart({
