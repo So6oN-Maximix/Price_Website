@@ -9,7 +9,8 @@ const applyFilterBtn = document.getElementById("apply-filters-btn");
 const products = [{
     name: "Produit 01",
     type: "Corps",
-    price: 29.56
+    price: 29.56,
+    promo: 10
 },
 {
     name: "Produit 02",
@@ -124,10 +125,10 @@ applyFilterBtn.addEventListener("click", () => {
     productContainer.innerHTML = "";
     if (filters.length > 0) {
         products.forEach(product => {
-            if (filters.includes(product.type.toLowerCase()) && product.price <= Number(priceDisplay.textContent)) addProduct(product);
+            if (filters.includes(product.type.toLowerCase()) && product.price <= Number(priceRange.value)) addProduct(product);
         });
     } else {
-        products.forEach(product => {if (product.price <= Number(priceDisplay.textContent)) addProduct(product);});
+        products.forEach(product => {if (product.price <= Number(priceRange.value)) addProduct(product);});
     }
 });
 priceRange.addEventListener("input", (event) => {
