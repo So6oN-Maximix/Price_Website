@@ -80,7 +80,7 @@ const serverLunching = http.createServer(async (req, res) => {
                 try {
                     const getProductQuery = await database.query("SELECT product_id FROM products WHERE name = $1", [productName]);
                     const productId = getProductQuery.rows[0].product_id;
-                    await database.query("INSERT INTO cart(product_id) VALUES ($1);", [productId]);
+                    await database.query("INSERT INTO carts(product_id) VALUES ($1);", [productId]);
                     console.log(`Produit ${productId} ajouté dans la BDD`);
                     res.writeHead(200, {"Location": "/shop"});
                 } catch (error) {
@@ -105,9 +105,15 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/loadCart") {
             try {
-                const response = await database.query("SELECT * FROM carts;");
+                const cartProductIdQuery = await database.query("SELECT product_id FROM carts;");
+                const cartProductId = cartProductIdQuery.rows;
+                let productList = [];
+                for (const productId of cartProductId) {
+                    const productQuery = await database.query("SELECT * FROM products WHERE product_id = $1", [productId.product_id]);
+                    productList.push(productQuery.rows[0]);
+                }
                 res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(response.rows));
+                res.end(JSON.stringify(productList));
             } catch (error) {
                 console.error("Erreur API - Loading Cart: ", error);
                 req.writeHead(500);
