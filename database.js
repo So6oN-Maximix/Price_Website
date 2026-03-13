@@ -63,7 +63,7 @@ const createTablesQuery = `
         product_id SERIAL PRIMARY KEY,
         name VARCHAR(100) UNIQUE NOT NULL,
         type VARCHAR(30) NOT NULL,
-        price NUMERIQUE(4, 2) NOT NULL,
+        price NUMERIC(4, 2) NOT NULL,
         promo INT DEFAULT NULL
     );
 

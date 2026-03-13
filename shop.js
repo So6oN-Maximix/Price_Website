@@ -57,7 +57,6 @@ function addProduct(productObj) {
     } else {
         priceElement = document.createElement("span");
         priceElement.classList.add("price");
-        priceElement.classList.add("price");
         priceElement.textContent = productObj.price + "€";
     }
 
