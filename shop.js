@@ -94,8 +94,8 @@ function getFilters() {
     return filters;
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-    loadProducts();
+window.addEventListener("DOMContentLoaded", async () => {
+    await loadProducts();
     addToCartBtnList.forEach(btn => {
         btn.addEventListener("click", async () => {
             const btnId = btn.id;

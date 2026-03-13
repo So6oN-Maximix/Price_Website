@@ -82,7 +82,7 @@ const serverLunching = http.createServer(async (req, res) => {
                     const productId = getProductQuery.rows[0].product_id;
                     await database.query("INSERT INTO cart(product_id) VALUES ($1);", [productId]);
                     console.log(`Produit ${productId} ajouté dans la BDD`);
-                    res.writeHead(302, {"Location": "/shop"});
+                    res.writeHead(200, {"Location": "/shop"});
                 } catch (error) {
                     console.error("Erreur API - Panier: ", error);
                     res.writeHead(500);
@@ -105,7 +105,7 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/loadCart") {
             try {
-                const response = await database.query("SELECT * FROM cart;");
+                const response = await database.query("SELECT * FROM carts;");
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(response.rows));
             } catch (error) {
