@@ -1,6 +1,16 @@
 const testBtn = document.getElementById("test");
 const cartProducts = document.getElementById("cart-list");
 
+let cartProductsList;
+
+async function loadCart() {
+    const serverResponse = await fetch("/api/loadCart");
+    if (serverResponse.ok) {
+        cartProductsList = await serverResponse.json();
+        cartProductsList.forEach(product => addToCart(product));
+    }
+}
+
 function addToCart(productObj) {
     const globalCard = document.createElement("div");
     globalCard.classList.add("cart-item", "glass-card");
@@ -57,8 +67,4 @@ function addToCart(productObj) {
     cartProducts.appendChild(globalCard);
 }
 
-testBtn.addEventListener("click", () => addToCart({
-    name: "Product 04",
-    price: 12,
-    color: "Metal Purple"
-}));
+window.addEventListener("DOMContentLoaded", loadCart);

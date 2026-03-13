@@ -71,20 +71,48 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end();
             });
             return;
+        } else if (req.url === "/api/add-to-cart") {
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const productName = data.product_name;
+                try {
+                    const getProductQuery = await database.query("SELECT product_id FROM products WHERE name = $1", [productName]);
+                    const productId = getProductQuery.rows[0].product_id;
+                    await database.query("INSERT INTO cart(product_id) VALUES ($1);", [productId]);
+                    console.log(`Produit ${productId} ajouté dans la BDD`);
+                    res.writeHead(302, {"Location": "/shop"});
+                } catch (error) {
+                    console.error("Erreur API - Panier: ", error);
+                    res.writeHead(500);
+                }
+                res.end();
+            });
+            return;
         }
     } else if (req.method === "GET") {
         if (req.url === "/api/loadDatas") {
             try {
-                const getProductsQuery = "SELECT * FROM products";
-                const response = await database.query(getProductsQuery);
+                const response = await database.query("SELECT * FROM products;");
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(response.rows));
             } catch (error) {
-                console.error("Erreur API Loading Products: ", error);
+                console.error("Erreur API - Loading Products: ", error);
                 res.writeHead(500);
                 res.end();
             }
             return;
+        } else if (req.url === "/api/loadCart") {
+            try {
+                const response = await database.query("SELECT * FROM cart;");
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(response.rows));
+            } catch (error) {
+                console.error("Erreur API - Loading Cart: ", error);
+                req.writeHead(500);
+                res.end();
+            }
         }
     }
 

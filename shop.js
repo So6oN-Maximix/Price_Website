@@ -7,6 +7,7 @@ const priceDisplay = document.getElementById("price-display");
 const applyFilterBtn = document.getElementById("apply-filters-btn");
 
 let products;
+let addToCartBtnList = [];
 
 async function loadProducts() {
     const serverResponse = await fetch("/api/loadDatas");
@@ -64,9 +65,11 @@ function addProduct(productObj) {
     buttonsDiv.classList.add("product-actions");
     const btnAdd = document.createElement("button");
     btnAdd.classList.add("btn-add");
+    btnAdd.id = "btn-add-" + productObj.name;
     btnAdd.textContent = "Ajouter au panier";
     const btnCustom = document.createElement("button");
     btnCustom.classList.add("btn-custom");
+    btnCustom.id = "btn-custom-" + productObj.name;
     btnCustom.textContent = "Personnaliser";
     buttonsDiv.appendChild(btnAdd);
     buttonsDiv.appendChild(btnCustom);
@@ -81,6 +84,8 @@ function addProduct(productObj) {
     globalCard.appendChild(productCard);
 
     productContainer.appendChild(globalCard);
+
+    addToCartBtnList.push(document.getElementById(`btn-add-${productObj.name}`));
 }
 
 function getFilters() {
@@ -89,7 +94,20 @@ function getFilters() {
     return filters;
 }
 
-window.addEventListener("DOMContentLoaded", loadProducts);
+window.addEventListener("DOMContentLoaded", () => {
+    loadProducts();
+    addToCartBtnList.forEach(btn => {
+        btn.addEventListener("click", async () => {
+            const btnId = btn.id;
+            const productName = btnId.split("-")[2];
+            await fetch("/api/add-to-cart", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({product_name: productName})
+            });
+        });
+    });
+});
 applyFilterBtn.addEventListener("click", () => {
     const filters = getFilters();
     productContainer.innerHTML = "";
@@ -113,4 +131,4 @@ priceDisplay.addEventListener("input", () => {
     }
     priceRange.value = priceValue;
     priceDisplay.value = priceValue;
-})
+});
