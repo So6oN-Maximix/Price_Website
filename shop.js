@@ -6,44 +6,13 @@ const priceRange = document.getElementById("price-range");
 const priceDisplay = document.getElementById("price-display");
 const applyFilterBtn = document.getElementById("apply-filters-btn");
 
-const products = [{
-    name: "Produit 01",
-    type: "Corps",
-    price: 29.56,
-    promo: 10
-},
-{
-    name: "Produit 02",
-    type: "Bouchon",
-    price: 80.49,
-    promo: 20
-},
-{
-    name: "Produit 03",
-    type: "Socle",
-    price: 27.96
-},
-{
-    name: "Produit 04",
-    type: "Habillage",
-    price: 21.02
-},
-{
-    name: "Produit 05",
-    type: "Habillage",
-    price: 54.04
-},
-{
-    name: "Produit 06",
-    type: "Corps",
-    price: 72.30
-},
-{
-    name: "Produit 07",
-    type: "Bouchon",
-    price: 25.28,
-    promo: 50
-}];
+async function loadProducts() {
+    const serverResponse = await fetch("/api/loadDatas");
+    if (serverResponse.ok) {
+        const products = await serverResponse.json();
+        products.forEach(product => addProduct(product));
+    }
+}
 
 function addProduct(productObj) {
     const globalCard = document.createElement("div");
@@ -67,7 +36,7 @@ function addProduct(productObj) {
 
     let priceElement;
     let promoBadge;
-    if (productObj.hasOwnProperty("promo")) {
+    if (productObj.promo) {
         priceElement = document.createElement("div");
         priceElement.classList.add("price-container");
         const priceSpan = document.createElement("span");
@@ -119,7 +88,7 @@ function getFilters() {
     return filters;
 }
 
-window.addEventListener("DOMContentLoaded", () => products.forEach(product => addProduct(product)));
+window.addEventListener("DOMContentLoaded", loadProducts);
 applyFilterBtn.addEventListener("click", () => {
     const filters = getFilters();
     productContainer.innerHTML = "";

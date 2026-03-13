@@ -72,6 +72,19 @@ const serverLunching = http.createServer(async (req, res) => {
             });
             return;
         }
+    } else if (req.method === "GET") {
+        if (req.url === "/api/loadDatas") {
+            try {
+                const getProductsQuery = "SELECT * FROM products";
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(getProductsQuery.rows));
+            } catch (error) {
+                console.error("Erreur API Loading Products: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        }
     }
 
     let filePath = "." + req.url;
