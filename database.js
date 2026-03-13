@@ -60,10 +60,10 @@ const createTablesQuery = `
     );
 
     CREATE TABLE IF NOT EXISTS products(
-        product_id SERIAL PRIMAREY KEY,
-        name VARCHAR(100) NOT NULL,
+        product_id SERIAL PRIMARY KEY,
+        name VARCHAR(100) UNIQUE NOT NULL,
         type VARCHAR(30) NOT NULL,
-        price NUMRICE(4, 2) NOT NULL,
+        price NUMERIQUE(4, 2) NOT NULL,
         promo INT DEFAULT NULL
     );
 

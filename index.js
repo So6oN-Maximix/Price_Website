@@ -76,8 +76,9 @@ const serverLunching = http.createServer(async (req, res) => {
         if (req.url === "/api/loadDatas") {
             try {
                 const getProductsQuery = "SELECT * FROM products";
+                const response = await database.query(getProductsQuery);
                 res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(getProductsQuery.rows));
+                res.end(JSON.stringify(response.rows));
             } catch (error) {
                 console.error("Erreur API Loading Products: ", error);
                 res.writeHead(500);

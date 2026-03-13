@@ -6,10 +6,12 @@ const priceRange = document.getElementById("price-range");
 const priceDisplay = document.getElementById("price-display");
 const applyFilterBtn = document.getElementById("apply-filters-btn");
 
+let products;
+
 async function loadProducts() {
     const serverResponse = await fetch("/api/loadDatas");
     if (serverResponse.ok) {
-        const products = await serverResponse.json();
+        products = await serverResponse.json();
         products.forEach(product => addProduct(product));
     }
 }
@@ -104,7 +106,7 @@ priceRange.addEventListener("input", (event) => {
     priceDisplay.value = priceRange.value;
 });
 priceDisplay.addEventListener("input", () => {
-    const priceValue = Number(priceDisplay.value);
+    let priceValue = Number(priceDisplay.value);
     if (priceValue > 100) {
         priceValue = 100;
     } else if (priceValue < 0) {
