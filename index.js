@@ -96,12 +96,10 @@ const serverLunching = http.createServer(async (req, res) => {
             req.on("data", chunk => body += chunk.toString());
             req.on("end", async () => {
                 const data = JSON.parse(body);
-                const productName = data.product_name;
+                const productId = data.product_id;
                 try {
-                    const getIdQuery = await database.query("SELECT product_id FROM products WHERE name = $1;", [productName]);
-                    const productId = getIdQuery.rows[0].product_id;
                     await database.query("DELETE FROM carts WHERE product_id = $1", [productId]);
-                    console.log(`Article ${productName} retiré du panier !!`);
+                    console.log(`Article ${productId} retiré du panier !!`);
                     res.writeHead(200, {"Location": "/shop"});
                 } catch (error) {
                     console.error("Erreur API - Suppression Panier: ", error);
