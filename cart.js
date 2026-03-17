@@ -1,5 +1,9 @@
 const testBtn = document.getElementById("test");
 const cartProducts = document.getElementById("cart-list");
+const nbrProductsSpan = document.getElementById("nbr-articles");
+const allProductPriceSpan = document.getElementById("all-product-price");
+const deliveryPriceSpan = document.getElementById("delivery-price");
+const totalPriceSpan = document.getElementById("total-price");
 
 let cartProductsList;
 
@@ -7,7 +11,17 @@ async function loadCart() {
     const serverResponse = await fetch("/api/loadCart");
     if (serverResponse.ok) {
         cartProductsList = await serverResponse.json();
-        cartProductsList.forEach(product => addToCart(product));
+        const nbrProducts = cartProductsList.length;
+        nbrProductsSpan.textContent = nbrProducts;
+        let totalProductsPrice = 0;
+        cartProductsList.forEach(product => {
+            addToCart(product);
+            totalProductsPrice += product.price;
+        });
+        allProductPriceSpan.textContent = totalProductsPrice;
+        const deliveryPrice = (totalProductsPrice * 0.15).toFixed(2)
+        deliveryPriceSpan = deliveryPrice;
+        totalPriceSpan = totalProductsPrice + deliveryPrice;
     }
 }
 
