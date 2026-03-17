@@ -16,7 +16,7 @@ async function loadCart() {
         let totalProductsPrice = 0;
         cartProductsList.forEach(product => {
             addToCart(product);
-            totalProductsPrice += product.price;
+            totalProductsPrice += Number(product.price);
         });
         allProductPriceSpan.textContent = totalProductsPrice;
         const deliveryPrice = (totalProductsPrice * 0.15).toFixed(2)
