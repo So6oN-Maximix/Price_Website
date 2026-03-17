@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import database from "./database.js";
 import bcrypt from "bcrypt";
+import { json } from "stream/consumers";
 
 const PORT = process.env.PORT || 8080;
 const sessions = {};
@@ -88,6 +89,25 @@ const serverLunching = http.createServer(async (req, res) => {
                     res.writeHead(500);
                 }
                 res.end();
+            });
+            return;
+        } else if (req.url === "/api/delete-from-cart") {
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const productName = data.product_name;
+                try {
+                    const getIdQuery = await database.query("SELECT product_id FROM products WHERE name = $1;", [productName]);
+                    const productId = getIdQuery.rows[0].product_id;
+                    await database.query("DELETE FROM carts WHERE product_id = $1", [productId]);
+                    console.log(`Article ${productName} retiré du panier !!`);
+                    res.writeHead(200, {"Location": "/shop"});
+                } catch (error) {
+                    console.error("Erreur API - Suppression Panier: ", error);
+                    res.writeHead(500);
+                }
+                res.end()
             });
             return;
         }

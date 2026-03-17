@@ -20,8 +20,8 @@ async function loadCart() {
         });
         allProductPriceSpan.textContent = totalProductsPrice;
         const deliveryPrice = (totalProductsPrice * 0.15).toFixed(2)
-        deliveryPriceSpan = deliveryPrice;
-        totalPriceSpan = totalProductsPrice + deliveryPrice;
+        deliveryPriceSpan.textContent = deliveryPrice;
+        totalPriceSpan.textContent = totalProductsPrice + deliveryPrice;
     }
 }
 
@@ -44,6 +44,7 @@ function addToCart(productObj) {
     productColor.textContent = productObj.color;
     const suppBtn = document.createElement("button");
     suppBtn.classList.add("remove-btn");
+    suppBtn.id = `supp-btn-${productName}`;
     suppBtn.textContent = "Supprimer";
 
     const productQuantity = document.createElement("div");
@@ -79,6 +80,15 @@ function addToCart(productObj) {
     globalCard.appendChild(priceDiv);
 
     cartProducts.appendChild(globalCard);
+
+    const getSuppBtn = document.getElementById(`supp-btn-${productName}`);
+    getSuppBtn.addEventListener("click", async () => {
+        await fetch("/api/delete-from-cart", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({product_name: productName})
+        });
+    });
 }
 
 window.addEventListener("DOMContentLoaded", loadCart);
