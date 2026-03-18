@@ -7,21 +7,23 @@ const totalPriceSpan = document.getElementById("total-price");
 
 let cartProductsList;
 
+function loadDatas() {
+    const nbrItems = cartProductsList.length;
+    nbrProductsSpan.textContent = nbrItems;
+    let totalProductsPrice = 0;
+    cartProductsList.forEach(product => totalProductsPrice += Number(product.price));
+    allProductPriceSpan.textContent = totalProductsPrice;
+    const deliveryPrice = Number((totalProductsPrice * 0.15).toFixed(2));
+    deliveryPriceSpan.textContent = deliveryPrice;
+    totalPriceSpan.textContent = (totalProductsPrice + deliveryPrice).toFixed(2);
+}
+
 async function loadCart() {
     const serverResponse = await fetch("/api/loadCart");
     if (serverResponse.ok) {
         cartProductsList = await serverResponse.json();
-        const nbrProducts = cartProductsList.length;
-        nbrProductsSpan.textContent = nbrProducts;
-        let totalProductsPrice = 0;
-        cartProductsList.forEach(product => {
-            addToCart(product);
-            totalProductsPrice += Number(product.price);
-        });
-        allProductPriceSpan.textContent = totalProductsPrice;
-        const deliveryPrice = Number((totalProductsPrice * 0.15).toFixed(2));
-        deliveryPriceSpan.textContent = deliveryPrice;
-        totalPriceSpan.textContent = totalProductsPrice + deliveryPrice;
+        cartProductsList.forEach(product => addToCart(product));
+        loadDatas();
     }
 }
 
@@ -55,6 +57,7 @@ function addToCart(productObj) {
 
         if (reponse.ok) {
             globalCard.remove();
+            loadDatas();
         }
     });
 
