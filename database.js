@@ -69,7 +69,9 @@ const createTablesQuery = `
 
     CREATE TABLE IF NOT EXISTS carts(
         cart_item_id SERIAL PRIMARY KEY,
-        product_id INT NOT NULL REFERENCES products(product_id)
+        product_id INT NOT NULL REFERENCES products(product_id),
+        nbr_item INT NOT NULL,
+        user_id INT NOT NULL REFERENCES users(user_id)
     );
     `;
 

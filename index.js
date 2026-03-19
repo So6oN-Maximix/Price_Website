@@ -26,7 +26,10 @@ const serverLunching = http.createServer(async (req, res) => {
                         if (isPasswordCorrect) {
                             console.log(`Connexion réussie pour ${email}`);
                             const ticket = Math.random().toString(36).substring(7);
-                            sessions[ticket] = userData.username;
+                            sessions[ticket] = {
+                                username: userData.username,
+                                user_id: userData.user_id
+                            };
                             res.writeHead(302, {
                                 "Location": "/profile",
                                 "Set-Cookie": [`session_id=${ticket}; Path=/; HttpOnly; Secure; SameSite=Strict`,
@@ -73,6 +76,21 @@ const serverLunching = http.createServer(async (req, res) => {
             });
             return;
         } else if (req.url === "/api/add-to-cart") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Non connecté" }));
+                return;
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Session expirée" }));
+                return;
+            }
+            const userId = sessionData.user_id;
+
             let body = "";
             req.on("data", chunk => body += chunk.toString());
             req.on("end", async () => {
@@ -81,8 +99,14 @@ const serverLunching = http.createServer(async (req, res) => {
                 try {
                     const getProductQuery = await database.query("SELECT product_id FROM products WHERE name = $1", [productName]);
                     const productId = getProductQuery.rows[0].product_id;
-                    await database.query("INSERT INTO carts(product_id) VALUES ($1);", [productId]);
-                    console.log(`Produit ${productId} ajouté dans la BDD`);
+                    const isProductInCartQuery = await database.query("SELECT * FROM carts WHERE product_id = $1 AND user_id = $2", [productId, userId]);
+                    if (isProductInCartQuery.rows.length > 0) {
+                        const nbtItem = isProductInCartQuery.rows[0].nbr_item;
+                        await database.query("UPDATE carts SET nbr_item = $1 WHERE product_id = $2 AND user_id = $3", [nbtItem + 1, productId, userId]);
+                    } else {
+                        await database.query("INSERT INTO carts(product_id, nbr_item, user_id) VALUES ($1, 1, $2);", [productId, userId]);
+                        console.log(`Produit ${productId} ajouté dans la BDD`);
+                    }
                     res.writeHead(200, {"Location": "/shop"});
                 } catch (error) {
                     console.error("Erreur API - Panier: ", error);
@@ -108,6 +132,24 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end()
             });
             return;
+        } else if (req.url === "/api/update-product-quantity") {
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const productId = data.product_id;
+                const nbrProduct = data.quantity;
+                try {
+                    await database.query("UPDATE carts SET nbr_item = $1 WHERE product_id = $2", [nbrProduct, productId]);
+                    console.log(`Article ${productId} passé à ${nbrProduct}`);
+                    res.writeHead(200, {"Location": "/cart"});
+                } catch (error) {
+                    console.error("Erreur API - Update Quantite panier: ", error);
+                    res.writeHead(500);
+                }
+                res.end();
+            });
+            return;
         }
     } else if (req.method === "GET") {
         if (req.url === "/api/loadDatas") {
@@ -123,20 +165,23 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/loadCart") {
             try {
-                const cartProductIdQuery = await database.query("SELECT product_id FROM carts;");
-                const cartProductId = cartProductIdQuery.rows;
+                const cartProductsQuery = await database.query("SELECT product_id, nbr_item FROM carts;");
+                const cartProducts = cartProductsQuery.rows;
                 let productList = [];
-                for (const productId of cartProductId) {
-                    const productQuery = await database.query("SELECT * FROM products WHERE product_id = $1", [productId.product_id]);
-                    productList.push(productQuery.rows[0]);
+                for (const product of cartProducts) {
+                    const productQuery = await database.query("SELECT * FROM products WHERE product_id = $1", [product.product_id]);
+                    const productObject = productQuery.rows[0]
+                    productObject.nbr_item = product.nbr_item;
+                    productList.push(productObject);
                 }
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(productList));
             } catch (error) {
                 console.error("Erreur API - Loading Cart: ", error);
-                req.writeHead(500);
+                res.writeHead(500);
                 res.end();
             }
+            return;
         }
     }
 
@@ -150,8 +195,48 @@ const serverLunching = http.createServer(async (req, res) => {
     } else if (req.url === "/register") {
         filePath = "./register.html";
     } else if (req.url === "/profile") {
+        const cookieHeader = req.headers.cookie;
+        let estConnecte = false;
+        if (cookieHeader) {
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            if (cookies.session_id && sessions[cookies.session_id]) {
+                estConnecte = true;
+            }
+        }
+        if (!estConnecte) {
+            console.log("Accès refusé ou session expirée, retour au login !");
+            res.writeHead(302, {
+                "Location": "/login",
+                "Set-Cookie": [
+                    "session_id=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+                    "username=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+                ]
+            });
+            res.end();
+            return;
+        }
         filePath = "./profile.html";
     } else if (req.url === "/cart") {
+        const cookieHeader = req.headers.cookie;
+        let estConnecte = false;
+        if (cookieHeader) {
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            if (cookies.session_id && sessions[cookies.session_id]) {
+                estConnecte = true;
+            }
+        }
+        if (!estConnecte) {
+            console.log("Accès au panier refusé, retour au login !");
+            res.writeHead(302, {
+                "Location": "/login",
+                "Set-Cookie": [
+                    "session_id=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+                    "username=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+                ]
+            });
+            res.end();
+            return;
+        }
         filePath = "./cart.html";
     }
 

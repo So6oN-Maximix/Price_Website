@@ -4,15 +4,24 @@ const nbrProductsSpan = document.getElementById("nbr-articles");
 const allProductPriceSpan = document.getElementById("all-product-price");
 const deliveryPriceSpan = document.getElementById("delivery-price");
 const totalPriceSpan = document.getElementById("total-price");
+const articleText = document.getElementById("article");
 
 let cartProductsList;
 
 function loadDatas() {
     const nbrItems = cartProductsList.length;
     nbrProductsSpan.textContent = nbrItems;
+    if (nbrItems > 1) {
+        articleText.textContent = "articles";
+    } else {
+        articleText.textContent = "article";
+    }
     let totalProductsPrice = 0;
-    cartProductsList.forEach(product => totalProductsPrice += Number(product.price));
-    allProductPriceSpan.textContent = totalProductsPrice;
+    cartProductsList.forEach(product => {
+        const nbrProductElement = document.getElementById(`quantity-${product.name}`);
+        totalProductsPrice += Number(product.price) * Number(nbrProductElement.value);
+    });
+    allProductPriceSpan.textContent = totalProductsPrice.toFixed(2);
     const deliveryPrice = Number((totalProductsPrice * 0.15).toFixed(2));
     deliveryPriceSpan.textContent = deliveryPrice;
     totalPriceSpan.textContent = (totalProductsPrice + deliveryPrice).toFixed(2);
@@ -57,6 +66,7 @@ function addToCart(productObj) {
 
         if (reponse.ok) {
             globalCard.remove();
+            cartProductsList = cartProductsList.filter(produit => produit.name !== productObj.name);
             loadDatas();
         }
     });
@@ -67,12 +77,39 @@ function addToCart(productObj) {
     minusBtn.classList.add("qty-btn");
     minusBtn.textContent = "-";
     const inputElement = document.createElement("input");
+    inputElement.id = `quantity-${productObj.name}`;
     inputElement.type = "text";
-    inputElement.value = "1";
+    inputElement.value = productObj.nbr_item || 1;
     inputElement.readOnly = true;
     const plusBtn = document.createElement("button");
     plusBtn.classList.add("qty-btn");
     plusBtn.textContent = "+";
+    minusBtn.addEventListener("click", async () => {
+        if (inputElement.value > 1) {
+            inputElement.value = Number(inputElement.value) - 1;
+            loadDatas();
+            await fetch("/api/update-product-quantity", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    product_id: productObj.product_id,
+                    quantity: Number(inputElement.value)
+                })
+            });
+        }
+    })
+    plusBtn.addEventListener("click", async () => {
+        inputElement.value = Number(inputElement.value) + 1;
+        loadDatas();
+        await fetch("/api/update-product-quantity", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                product_id: productObj.product_id,
+                quantity: Number(inputElement.value)
+            })
+        });
+    })
 
     const priceDiv = document.createElement("div");
     priceDiv.classList.add("item-price");
