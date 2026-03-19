@@ -1,13 +1,13 @@
-import {Client} from "pg"
+import {Pool} from "pg";
 
-/*const client = new Client({
+/*const client = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
 });*/
 
-const client = new Client({
+const client = new Pool({
     connectionString: "postgres://postgres:LaraCsuge!*@localhost:5432/PRICE_db"
 });
 
@@ -81,16 +81,17 @@ const createTablesQuery = `
 
 const loadProducts = "INSERT INTO products(name, type, price, promo) VALUES ($1, $2, $3, $4) ON CONFLICT (name) DO NOTHING;";
 
-client.connect()
+client.query(createTablesQuery)
     .then(async () => {
-        console.log("Connexion réussi !!");
-        await client.query(createTablesQuery);
-        console.log("Tables prêtes !!");
+        console.log("Connexion réussie et Tables prêtes !!");
+        
         for (const product of products) {
             await client.query(loadProducts, [product.name, product.type, product.price, product.promo]);
         }
         console.log("Produits log dans la Database !!");
     })
-    .catch((error) => console.error("Erreur avec la DB : ", error.stack));
+    .catch((err) => {
+        console.error("Erreur d'initialisation de la DB :", err);
+    });
 
 export default client;
