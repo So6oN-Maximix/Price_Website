@@ -165,7 +165,14 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/loadCart") {
             try {
-                const cartProductsQuery = await database.query("SELECT product_id, nbr_item FROM carts;");
+                const cookieHeader = req.headers.cookie;
+                if (!cookieHeader) return res.end(JSON.stringify([]));
+                const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+                const sessionData = sessions[cookies.session_id];
+                if (!sessionData) return res.end(JSON.stringify([]));
+                const userId = sessionData.user_id;
+
+                const cartProductsQuery = await database.query("SELECT product_id, nbr_item FROM carts WHERE user_id = $1;", [userId]);
                 const cartProducts = cartProductsQuery.rows;
                 let productList = [];
                 for (const product of cartProducts) {
