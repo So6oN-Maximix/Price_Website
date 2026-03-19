@@ -707,6 +707,68 @@ footer {
     border-color: white;
 }
 
+/* --- TOAST NOTIFICATIONS (AJOUT PANIER) --- */
+.toast-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.toast {
+    background: rgba(74, 222, 128, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(74, 222, 128, 0.4);
+    color: #4ade80;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    /* Animation d'entrée */
+    transform: translateX(120%);
+    opacity: 0;
+    animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.toast.remove {
+    background: rgba(248, 113, 113, 0.15);
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    color: #f87171;
+}
+
+.toast.hide {
+    animation: slideOutToast 0.4s ease-in forwards;
+}
+
+@keyframes slideInToast {
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOutToast {
+    to { transform: translateX(120%); opacity: 0; }
+}
+
+/* --- ETATS DU BOUTON AJOUTER --- */
+.btn-add.loading {
+    background: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn-add.success {
+    background: #4ade80;
+    color: black;
+    border-color: #4ade80;
+}
+
 /* --- PROFILE MENU --- */
 
 .profile-container {

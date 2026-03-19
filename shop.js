@@ -94,17 +94,65 @@ function getFilters() {
     return filters;
 }
 
+function showToast(productName) {
+    let toastContainer = document.querySelector(".toast-container");
+    if (!toastContainer) {
+        toastContainer = document.createElement("div");
+        toastContainer.classList.add("toast-container");
+        document.body.appendChild(toastContainer);
+    }
+    const toast = document.createElement("div");
+    toast.classList.add("toast");
+    toast.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        ${productName} ajouté au panier !
+    `;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add("hide");
+        toast.addEventListener("animationend", () => toast.remove());
+    }, 3000);
+}
+
 window.addEventListener("DOMContentLoaded", async () => {
     await loadProducts();
     addToCartBtnList.forEach(btn => {
         btn.addEventListener("click", async () => {
-            const btnId = btn.id;
-            const productName = btnId.split("-")[2];
-            await fetch("/api/add-to-cart", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({product_name: productName})
-            });
+            if (btn.disabled) return;
+            btn.disabled = true;
+            const originalText = btn.textContent;
+            btn.textContent = "Ajout...";
+            btn.classList.add("loading");
+            const productName = btn.id.replace("btn-add-", ""); 
+            try {
+                const response = await fetch("/api/add-to-cart", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({product_name: productName})
+                });
+                if (response.ok) {
+                    btn.textContent = "Ajouté ! ✓";
+                    btn.classList.remove("loading");
+                    btn.classList.add("success");
+                    showToast(productName);
+                } else {
+                    btn.textContent = "Erreur (Non connecté ?)";
+                    btn.classList.remove("loading");
+                }
+            } catch (error) {
+                btn.textContent = "Erreur";
+                btn.classList.remove("loading");
+            }
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.remove("success");
+                btn.disabled = false;
+            }, 2500);
         });
     });
 });
