@@ -1,10 +1,14 @@
 import {Pool} from "pg";
 
-const client = new Pool({
+/*const client = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
+});*/
+
+const client = new Pool({
+    connectionString: "postgres://postgres:LaraCsuge!*@localhost:5432/PRICE_db"
 });
 
 const products = [{

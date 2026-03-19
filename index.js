@@ -116,13 +116,28 @@ const serverLunching = http.createServer(async (req, res) => {
             });
             return;
         } else if (req.url === "/api/delete-from-cart") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Non connecté" }));
+                return;
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Session expirée" }));
+                return;
+            }
+            const userId = sessionData.user_id;
+
             let body = "";
             req.on("data", chunk => body += chunk.toString());
             req.on("end", async () => {
                 const data = JSON.parse(body);
                 const productId = data.product_id;
                 try {
-                    await database.query("DELETE FROM carts WHERE product_id = $1", [productId]);
+                    await database.query("DELETE FROM carts WHERE product_id = $1 AND user_id = $2", [productId, userId]);
                     console.log(`Article ${productId} retiré du panier !!`);
                     res.writeHead(200, {"Location": "/shop"});
                 } catch (error) {
