@@ -147,6 +147,21 @@ const serverLunching = http.createServer(async (req, res) => {
             });
             return;
         } else if (req.url === "/api/update-product-quantity") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Non connecté" }));
+                return;
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Session expirée" }));
+                return;
+            }
+            const userId = sessionData.user_id;
+
             let body = "";
             req.on("data", chunk => body += chunk.toString());
             req.on("end", async () => {
@@ -154,7 +169,7 @@ const serverLunching = http.createServer(async (req, res) => {
                 const productId = data.product_id;
                 const nbrProduct = data.quantity;
                 try {
-                    await database.query("UPDATE carts SET nbr_item = $1 WHERE product_id = $2", [nbrProduct, productId]);
+                    await database.query("UPDATE carts SET nbr_item = $1 WHERE product_id = $2 AND user_id = $3;", [nbrProduct, productId, userId]);
                     console.log(`Article ${productId} passé à ${nbrProduct}`);
                     res.writeHead(200, {"Location": "/cart"});
                 } catch (error) {
