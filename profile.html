@@ -40,66 +40,186 @@
                     <p>Membre depuis <span class="creation-date">2026</span></p>
                 </div>
                 <nav class="profile-menu">
-                    <a href="#dashboard" class="active">Tableau de bord</a>
-                    <a href="#orders">Mes Commandes</a>
-                    <a href="#designs">Mes Créations</a>
-                    <a href="#settings">Paramètres</a>
+                    <a href="#" class="active" id="tab-dashboard">Tableau de bord</a>
+                    <a href="#" id="tab-orders">Mes Commandes</a>
+                    <a href="#" id="tab-creations">Mes Créations</a>
+                    <a href="#" id="tab-settings">Paramètres</a>
                     <button class="logout-btn" id="logout-btn">Déconnexion</button>
                 </nav>
             </aside>
 
             <section class="profile-content">
-                
-                <div class="profile-section">
-                    <h2>Tableau de bord</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card glass-card">
-                            <span>Commandes</span>
-                            <p>12</p>
+                <!-- DASHBOARD -->
+
+                <div id="dashboard-viewer" style="display: flex; flex-direction: column; gap: 40px;">
+                    <div class="profile-section" id="dashboard-viewer">
+                        <h2>Tableau de bord</h2>
+                        <div class="stats-grid">
+                            <div class="stat-card glass-card">
+                                <span>Commandes</span>
+                                <p>12</p>
+                            </div>
+                            <div class="stat-card glass-card">
+                                <span>Designs sauvegardés</span>
+                                <p>5</p>
+                            </div>
+                            <div class="stat-card glass-card">
+                                <span>Points Fidélité</span>
+                                <p>1240</p>
+                            </div>
                         </div>
-                        <div class="stat-card glass-card">
-                            <span>Designs sauvegardés</span>
-                            <p>5</p>
+                    </div>
+
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h2>Mes Créations Récentes</h2>
+                            <a href="#" class="view-all">Voir tout</a>
                         </div>
-                        <div class="stat-card glass-card">
-                            <span>Points Fidélité</span>
-                            <p>1240</p>
+                        <div class="designs-mini-grid">
+                            <div class="design-card glass-card">
+                                <div class="design-preview"></div>
+                                <div class="design-info">
+                                    <h4>Modèle "Nebula"</h4>
+                                    <p>Corps: Titane | Socle: LED</p>
+                                </div>
+                            </div>
+                            <div class="design-card glass-card">
+                                <div class="design-preview"></div>
+                                <div class="design-info">
+                                    <h4>Modèle "Supernova"</h4>
+                                    <p>Corps: Carbone | Socle: Bois</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h2>Dernière Commande</h2>
+                        <div class="order-summary glass-card">
+                            <div class="order-header">
+                                <span>N° 458962</span>
+                                <span class="status-badge">En cours de livraison</span>
+                            </div>
+                            <p>Commandé le 12 Mars 2026</p>
+                            <div class="order-total">Total: 85.00€</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="profile-section">
-                    <div class="section-header">
-                        <h2>Mes Créations Récentes</h2>
-                        <a href="#" class="view-all">Voir tout</a>
-                    </div>
-                    <div class="designs-mini-grid">
-                        <div class="design-card glass-card">
-                            <div class="design-preview"></div>
-                            <div class="design-info">
-                                <h4>Modèle "Nebula"</h4>
-                                <p>Corps: Titane | Socle: LED</p>
-                            </div>
+                <!-- ORDERS RECAP -->
+
+                <div id="view-orders" style="display: none; flex-direction: column; gap: 40px;">
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h2>Historique de mes commandes</h2>
                         </div>
-                        <div class="design-card glass-card">
-                            <div class="design-preview"></div>
-                            <div class="design-info">
-                                <h4>Modèle "Supernova"</h4>
-                                <p>Corps: Carbone | Socle: Bois</p>
+                        <div id="orders-container">
+                            <div class="order-summary glass-card" style="margin-bottom: 25px;">
+                                <div class="order-header">
+                                    <span>Commande n°CMD-84920</span>
+                                    <span class="status-badge status-pending">En préparation</span>
+                                </div>
+                                <p class="order-date">Commandé le 20 Mars 2026</p>
+                                <div class="summary-divider"></div>
+                                
+                                <div class="summary-row">
+                                    <span>1x Produit 02 (Bouchon)</span>
+                                    <span>80.49€</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>1x Produit 04 (Habillage)</span>
+                                    <span>21.02€</span>
+                                </div>
+                                
+                                <div class="summary-divider"></div>
+                                <div class="order-total">Total : 101.51€</div>
+                            </div>
+
+                            <div class="order-summary glass-card" style="margin-bottom: 25px;">
+                                <div class="order-header">
+                                    <span>Commande n°CMD-63711</span>
+                                    <span class="status-badge status-success">Livrée</span>
+                                </div>
+                                <p class="order-date">Commandé le 05 Février 2026</p>
+                                <div class="summary-divider"></div>
+                                
+                                <div class="summary-row">
+                                    <span>1x Produit 01 (Corps)</span>
+                                    <span>29.56€</span>
+                                </div>
+                                
+                                <div class="summary-divider"></div>
+                                <div class="order-total">Total : 29.56€</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="profile-section">
-                    <h2>Dernière Commande</h2>
-                    <div class="order-summary glass-card">
-                        <div class="order-header">
-                            <span>N° 458962</span>
-                            <span class="status-badge">En cours de livraison</span>
+                <!-- CREATIONS -->
+
+                <!-- SETTINGS -->
+
+                <div id="view-settings" style="display: none; flex-direction: column; gap: 40px;">
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h2>Paramètres du compte</h2>
                         </div>
-                        <p>Commandé le 12 Mars 2026</p>
-                        <div class="order-total">Total: 85.00€</div>
+                        
+                        <div class="settings-grid">
+                            <div class="glass-card settings-card">
+                                <h3>Informations personnelles</h3>
+                                <form id="form-personal-info" class="settings-form">
+                                    <div class="input-group">
+                                        <input type="text" id="setting-username" value="Maxime" required>
+                                        <label for="setting-username">Nom d'utilisateur</label>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="email" id="setting-email" value="maxime@test.com" required>
+                                        <label for="setting-email">Adresse e-mail</label>
+                                    </div>
+                                    <button type="submit" class="apply-filters-btn" style="margin-top: 15px;">Sauvegarder les modifications</button>
+                                </form>
+                            </div>
+
+                            <div class="glass-card settings-card">
+                                <h3>Sécurité</h3>
+                                <form id="form-security" class="settings-form">
+                                    <div class="input-group">
+                                        <input type="password" id="setting-old-pwd" required>
+                                        <label for="setting-old-pwd">Mot de passe actuel</label>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="password" id="setting-new-pwd" required>
+                                        <label for="setting-new-pwd">Nouveau mot de passe</label>
+                                    </div>
+                                    <button type="submit" class="apply-filters-btn" style="margin-top: 15px;">Mettre à jour le mot de passe</button>
+                                </form>
+                            </div>
+
+                            <div class="glass-card settings-card">
+                                <h3>Préférences</h3>
+                                <div class="preferences-list">
+                                    <label class="glass-check">
+                                        <input type="checkbox" checked>
+                                        <span>Recevoir la newsletter PRICE</span>
+                                    </label>
+                                    <label class="glass-check">
+                                        <input type="checkbox" checked>
+                                        <span>Notifications de commande par e-mail</span>
+                                    </label>
+                                    <label class="glass-check">
+                                        <input type="checkbox">
+                                        <span>Activer l'authentification à 2 facteurs</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="glass-card settings-card danger-zone">
+                                <h3 style="color: #f87171;">Zone de danger</h3>
+                                <p>La suppression de votre compte est définitive. Toutes vos commandes, données et designs personnalisés seront perdus à jamais.</p>
+                                <button class="delete-account-btn">Supprimer mon compte définitivement</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
