@@ -6,6 +6,8 @@ const deliveryPriceSpan = document.getElementById("delivery-price");
 const totalPriceSpan = document.getElementById("total-price");
 const articleText = document.getElementById("article");
 
+const paiementBtn = document.getElementById("paiement-btn");
+
 let cartProductsList;
 
 function loadDatas() {
@@ -31,6 +33,7 @@ async function loadCart() {
     const serverResponse = await fetch("/api/loadCart");
     if (serverResponse.ok) {
         cartProductsList = await serverResponse.json();
+        cartProducts.innerHTML = "";
         cartProductsList.forEach(product => addToCart(product));
         loadDatas();
     }
@@ -186,3 +189,7 @@ function showToast(message) {
 }
 
 window.addEventListener("DOMContentLoaded", loadCart);
+paiementBtn.addEventListener("click", async () => {
+    await fetch("/api/procede-paiement", {method: "POST"});
+    loadCart();
+});

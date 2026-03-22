@@ -73,6 +73,15 @@ const createTablesQuery = `
         nbr_item INT NOT NULL,
         user_id INT NOT NULL REFERENCES users(user_id)
     );
+
+    CREATE TABLE IF NOT EXISTS passed_carts(
+        cart_item_id SERIAL PRIMARY KEY,
+        cart_id INT NOT NULL,
+        product_id INT NOT NULL REFERENCES products(product_id),
+        nbr_item INT NOT NULL,
+        user_id INT NOT NULL REFERENCES users(user_id),
+        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    )
     `;
 
 const loadProducts = "INSERT INTO products(name, type, price, promo) VALUES ($1, $2, $3, $4) ON CONFLICT (name) DO NOTHING;";

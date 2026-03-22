@@ -179,6 +179,49 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end();
             });
             return;
+        } else if (req.url === "/api/procede-paiement"){
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Non connecté" }));
+                return;
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Session expirée" }));
+                return;
+            }
+            const userId = sessionData.user_id;
+
+            try {
+                const cartQuery = await database.query("SELECT * FROM carts WHERE user_id = $1;", [userId]);
+                const userCart = cartQuery.rows;
+                if (userCart.length === 0) {
+                    res.writeHead(400); 
+                    res.end(JSON.stringify({message: "Panier vide"}));
+                    return;
+                }
+                const maxIdQuery = await database.query("SELECT COALESCE(MAX(cart_id), 0) AS max_id FROM passed_carts WHERE user_id = $1;", [userId]);
+                const newCartId = maxIdQuery.rows[0].max_id + 1;
+                for (const product of userCart) {
+                    await database.query(
+                        "INSERT INTO passed_carts(cart_id, product_id, nbr_item, user_id) VALUES ($1, $2, $3, $4);", 
+                        [newCartId, product.product_id, product.nbr_item, userId]
+                    );
+                }
+                await database.query("DELETE FROM carts WHERE user_id = $1;", [userId]);
+                console.log(`Commande n°${newCartId} validée pour l'utilisateur ${userId} !`);
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify({message: "Commande validée"}));
+
+            } catch (error) {
+                console.error("Erreur API - Paiement: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
         }
     } else if (req.method === "GET") {
         if (req.url === "/api/loadDatas") {
@@ -193,14 +236,13 @@ const serverLunching = http.createServer(async (req, res) => {
             }
             return;
         } else if (req.url === "/api/loadCart") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
             try {
-                const cookieHeader = req.headers.cookie;
-                if (!cookieHeader) return res.end(JSON.stringify([]));
-                const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
-                const sessionData = sessions[cookies.session_id];
-                if (!sessionData) return res.end(JSON.stringify([]));
-                const userId = sessionData.user_id;
-
                 const cartProductsQuery = await database.query("SELECT product_id, nbr_item FROM carts WHERE user_id = $1;", [userId]);
                 const cartProducts = cartProductsQuery.rows;
                 let productList = [];
@@ -214,6 +256,51 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end(JSON.stringify(productList));
             } catch (error) {
                 console.error("Erreur API - Loading Cart: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url.startsWith("/api/get-product-info")){
+            const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+            const productId = parsedUrl.searchParams.get("id");
+            if (!productId) {
+                res.writeHead(400);
+                res.end(JSON.stringify({message: "ID manquant"}));
+                return;
+            }
+            try {
+                const query = await database.query("SELECT * FROM products WHERE product_id = $1;", [productId]);
+                if (query.rows.length === 0) {
+                    res.writeHead(404);
+                    res.end(JSON.stringify({message: "Produit inexistant"}));
+                    return;
+                }
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(query.rows[0]));
+            } catch (error) {
+                console.error("Erreur API - Get Product: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url === "/api/loadOrders") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+            try {
+                const maxIdQuery = await database.query("SELECT COALESCE(MAX(cart_id), 0) AS max_id FROM passed_carts WHERE user_id = $1;", [userId]);
+                let cartsList = [];
+                for (let i=1; i<=maxIdQuery.rows[0].max_id; i++) {
+                    const orderQuery = await database.query("SELECT * FROM passed_carts WHERE user_id = $1 AND cart_id = $2;", [userId, i]);
+                    cartsList.push(orderQuery.rows);
+                }
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(cartsList));
+            } catch (error) {
+                console.error("Erreur API - Loading Orders: ", error);
                 res.writeHead(500);
                 res.end();
             }
