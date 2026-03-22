@@ -305,6 +305,23 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end();
             }
             return;
+        } else if (req.url === "/api/get-email") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+            try {
+                const getEmailQuery = await database.query("SELECT email FROM users WHERE user_id = $1;", [userId]);
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(getEmailQuery.rows[0].email));
+            } catch (error) {
+                console.error("Erreur API - Loading Settings: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
         }
     }
 

@@ -21,7 +21,8 @@ function loadDatas() {
     let totalProductsPrice = 0;
     cartProductsList.forEach(product => {
         const nbrProductElement = document.getElementById(`quantity-${product.name}`);
-        totalProductsPrice += Number(product.price) * Number(nbrProductElement.value);
+        const productPromo = product.promo ? 1 - Number(product.promo)/100 : 1;
+        totalProductsPrice += Number(product.price * productPromo) * Number(nbrProductElement.value);
     });
     allProductPriceSpan.textContent = totalProductsPrice.toFixed(2);
     const deliveryPrice = Number((totalProductsPrice * 0.15).toFixed(2));
@@ -142,7 +143,30 @@ function addToCart(productObj) {
 
     const priceDiv = document.createElement("div");
     priceDiv.classList.add("item-price");
-    priceDiv.textContent = productObj.price + "€";
+    priceDiv.style.display = "flex";
+    priceDiv.style.flexDirection = "column";
+    priceDiv.style.alignItems = "flex-end";
+    priceDiv.style.gap = "2px";
+
+    let prixFinal = Number(productObj.price);
+    if (productObj.promo) {
+        prixFinal = prixFinal - (prixFinal * (Number(productObj.promo) / 100));
+
+        const ancienPrix = document.createElement("span");
+        ancienPrix.textContent = `${productObj.price}€`;
+        ancienPrix.style.textDecoration = "line-through";
+        ancienPrix.style.color = "rgba(255, 255, 255, 0.4)";
+        ancienPrix.style.fontSize = "0.85rem";
+
+        const nouveauPrix = document.createElement("span");
+        nouveauPrix.textContent = `${prixFinal.toFixed(2)}€`;
+        nouveauPrix.style.fontWeight = "bold";
+
+        priceDiv.appendChild(ancienPrix);
+        priceDiv.appendChild(nouveauPrix);
+    } else {
+        priceDiv.textContent = `${prixFinal.toFixed(2)}€`;
+    }
 
     imgDiv.appendChild(imageProduct);
 

@@ -78,8 +78,35 @@ async function addToPassedOrders(cartList) {
         if (productInfo.ok) {
             const productData = await productInfo.json();
             productLine.textContent = `${productCartInfo.nbr_item}x ${productData.name} (${productData.type})`;
-            priceLine.textContent = `${productData.price}€`;
-            totalPrice += Number(productData.price) * Number(productCartInfo.nbr_item);
+            let prixUnitaireFinal = Number(productData.price);
+            let totalLigneAncien = prixUnitaireFinal * Number(productCartInfo.nbr_item);
+            let totalLigneNouveau = 0;
+            if (productData.promo) {
+                prixUnitaireFinal = prixUnitaireFinal - (prixUnitaireFinal * (Number(productData.promo) / 100));
+                totalLigneNouveau = prixUnitaireFinal * Number(productCartInfo.nbr_item);
+
+                priceLine.style.display = "flex";
+                priceLine.style.flexDirection = "column";
+                priceLine.style.alignItems = "flex-end";
+
+                const ancienPrix = document.createElement("span");
+                ancienPrix.textContent = `${totalLigneAncien.toFixed(2)}€`;
+                ancienPrix.style.textDecoration = "line-through";
+                ancienPrix.style.color = "rgba(255, 255, 255, 0.4)";
+                ancienPrix.style.fontSize = "0.85rem";
+
+                const nouveauPrix = document.createElement("span");
+                nouveauPrix.textContent = `${totalLigneNouveau.toFixed(2)}€`;
+                nouveauPrix.style.fontWeight = "bold";
+                priceLine.appendChild(ancienPrix);
+                priceLine.appendChild(nouveauPrix);
+                totalPrice += totalLigneNouveau;
+            } else {
+                totalLigneNouveau = totalLigneAncien;
+                priceLine.style.fontWeight = "bold";
+                priceLine.textContent = `${totalLigneNouveau.toFixed(2)}€`;
+                totalPrice += totalLigneNouveau;
+            }
         } else {
             productLine.textContent = "Produit introuvable";
             priceLine.textContent = "0.00€";
@@ -95,6 +122,7 @@ async function addToPassedOrders(cartList) {
     const deliverySpan = document.createElement("span");
     deliverySpan.textContent = "Livraison";
     const deliveryPrice = document.createElement("span");
+    deliveryPrice.style.fontWeight = "bold";
     deliveryPrice.textContent = `${(totalPrice * 0.15).toFixed(2)}€`;
     deliveryRowLine.appendChild(deliverySpan);
     deliveryRowLine.appendChild(deliveryPrice);
@@ -128,9 +156,23 @@ async function loadPassedOrders() {
     }
 }
 
+async function loadSettingsInfos() {
+    const username = getCookie("username");
+    const usernameReplace = document.getElementById("setting-username");
+    usernameReplace.value = username;
+    const getEmailResponse = await fetch("/api/get-email");
+    if (getEmailResponse.ok) {
+        const email = await getEmailResponse.json();
+        const emailReplace = document.getElementById("setting-email");
+        emailReplace.value = email;
+    }
+}
+
 async function loadDatas(viewerID) {
     if (viewerID === "view-orders") {
-        loadPassedOrders();
+        await loadPassedOrders();
+    } else if (viewerID === "view-settings") {
+        await loadSettingsInfos();
     }
 }
 
