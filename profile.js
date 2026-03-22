@@ -46,7 +46,17 @@ async function addToPassedOrders(cartList) {
     orderStatus.textContent = "Livrée";
 
     const orderDate = document.createElement("p");
-    orderDate.textContent = `Commandé le ${cartList[0].date}`;
+    const dateObj = new Date(cartList[0].date);
+    const datePart = dateObj.toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+    const timePart = dateObj.toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit"
+    }).replace(":", "h");
+    orderDate.textContent = `Commandé le ${datePart} à ${timePart}`;
 
     const divider = document.createElement("div");
     divider.classList.add("summary-divider");
@@ -80,18 +90,26 @@ async function addToPassedOrders(cartList) {
         globalCard.append(summaryRowDiv);
     }
 
+    const deliveryRowLine = document.createElement("div");
+    deliveryRowLine.classList.add("summary-row");
+    const deliverySpan = document.createElement("span");
+    deliverySpan.textContent = "Livraison";
+    const deliveryPrice = document.createElement("span");
+    deliveryPrice.textContent = `${(totalPrice * 0.15).toFixed(2)}€`;
+    deliveryRowLine.appendChild(deliverySpan);
+    deliveryRowLine.appendChild(deliveryPrice);
+
     const totalPriceLine = document.createElement("div");
     totalPriceLine.classList.add("order-total");
-    totalPriceLine.textContent = `Total : ${totalPrice.toFixed(2)}€`;
+    totalPriceLine.textContent = `Total : ${(totalPrice * 1.15).toFixed(2)}€`;
 
     const divider2 = document.createElement("div");
     divider2.classList.add("summary-divider");
 
+    globalCard.appendChild(deliveryRowLine);
     globalCard.appendChild(divider2);
     globalCard.appendChild(totalPriceLine);
     ordersContainer.appendChild(globalCard);
-
-    // AJOUTER UNE LIGNE LIVRAISON
 }
 
 async function loadPassedOrders() {

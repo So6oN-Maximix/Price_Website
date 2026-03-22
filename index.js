@@ -293,7 +293,7 @@ const serverLunching = http.createServer(async (req, res) => {
             try {
                 const maxIdQuery = await database.query("SELECT COALESCE(MAX(cart_id), 0) AS max_id FROM passed_carts WHERE user_id = $1;", [userId]);
                 let cartsList = [];
-                for (let i=1; i<=maxIdQuery.rows[0].max_id; i++) {
+                for (let i=maxIdQuery.rows[0].max_id; i>0; i--) {
                     const orderQuery = await database.query("SELECT * FROM passed_carts WHERE user_id = $1 AND cart_id = $2;", [userId, i]);
                     cartsList.push(orderQuery.rows);
                 }
