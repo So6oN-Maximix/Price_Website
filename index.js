@@ -40,7 +40,7 @@ const serverLunching = http.createServer(async (req, res) => {
                         }
                     } else {
                         console.log(`Echec de connexion ! Mauvais identifiants pour ${email}`);
-                        res.writeHead(302, {"Location": "/login"});
+                        res.writeHead(302, {"Location": "/login?error=1"});
                     }
                 } catch (error) {
                     console.error("Erreur SQL - Login : ", error);
@@ -351,7 +351,7 @@ const serverLunching = http.createServer(async (req, res) => {
     let filePath = "." + req.url;
     if (req.url === "/" || req.url === "") {
         filePath = "./index.html";
-    } else if (req.url === "/login") {
+    } else if (req.url === "/login" || req.url.startsWith("/login?")) {
         filePath = "./login.html";
     } else if (req.url === "/shop") {
         filePath = "./shop.html";

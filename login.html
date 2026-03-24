@@ -29,6 +29,9 @@
                     <input type="password" id="password" name="password" required>
                     <label for="password">Mot de passe</label>
                 </div>
+                <div id="login-error" class="error-message">
+                    Adresse e-mail ou mot de passe incorrect.
+                </div>
                 
                 <button type="submit" class="glass-btn">Se connecter</button>
                 
@@ -41,5 +44,12 @@
         <footer>
             <span>Copyright © 2026 LEOST Maxime</span>
         </footer>
+        <script>
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get("error") === "1") {
+                document.getElementById("login-error").style.display = "block";
+                window.history.replaceState({}, document.title, "/login");
+            }
+        </script>
     </body>
 </html>

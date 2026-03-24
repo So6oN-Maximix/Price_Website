@@ -187,6 +187,22 @@ footer {
 
 /* --- PROFILE MENU --- */
 
+.error-message {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.15);
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    display: none;
+    animation: fadeInError 0.3s ease;
+}
+
+@keyframes fadeInError {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .back-btn {
     position: fixed;
     top: 30px;
@@ -291,6 +307,16 @@ footer {
     font-size: 0.75rem;
     color: white;
     letter-spacing: 1px;
+}
+
+/* --- CORRECTION DE L'AUTOFILL DU NAVIGATEUR --- */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s !important;
+    font-family: inherit !important;
 }
 
 .glass-btn {
