@@ -11,43 +11,50 @@ const products = [{
     name: "Produit 01",
     type: "Corps",
     price: 29.56,
-    promo: 10
+    promo: 10,
+    colors: ["#8F9779", "#006A71", "#CC6A5A", "#383E42"]
 },
 {
     name: "Produit 02",
     type: "Bouchon",
     price: 80.49,
-    promo: 20
+    promo: 20,
+    colors: ["#28282B", "#71797E", "#F5F5F0"]
 },
 {
     name: "Produit 03",
     type: "Socle",
     price: 27.96,
-    promo: null
+    promo: null,
+    colors: ["#28282B", "#F2F4F4", "#FF5F00"]
 },
 {
     name: "Produit 04",
     type: "Habillage",
     price: 21.02,
-    promo: null
+    promo: null,
+    colors: ["#D2A039", "#1A2F4B", "#A4A68C", "#E2C2C6"]
 },
 {
     name: "Produit 05",
     type: "Habillage",
     price: 54.04,
-    promo: null
+    promo: null,
+    colors: ["#9E9E9E", "#72452D"]
 },
 {
     name: "Produit 06",
     type: "Corps",
     price: 72.30,
-    promo: null
+    promo: null,
+    colors: ["#E1D5C9", "#5D6246", "#0A0A0A"]
 },
 {
     name: "Produit 07",
     type: "Bouchon",
     price: 25.28,
-    promo: 50
+    promo: 50,
+    colors: ["#1A2F4B", "#B84A39"]
 }];
 
 const createTablesQuery = `
@@ -64,7 +71,8 @@ const createTablesQuery = `
         name VARCHAR(100) UNIQUE NOT NULL,
         type VARCHAR(30) NOT NULL,
         price NUMERIC(4, 2) NOT NULL,
-        promo INT DEFAULT NULL
+        promo INT DEFAULT NULL,
+        colors TEXT[]
     );
 
     CREATE TABLE IF NOT EXISTS carts(
@@ -84,14 +92,14 @@ const createTablesQuery = `
     )
     `;
 
-const loadProducts = "INSERT INTO products(name, type, price, promo) VALUES ($1, $2, $3, $4) ON CONFLICT (name) DO NOTHING;";
+const loadProducts = "INSERT INTO products(name, type, price, promo, colors) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (name) DO NOTHING;";
 
 client.query(createTablesQuery)
     .then(async () => {
         console.log("Connexion réussie et Tables prêtes !!");
         
         for (const product of products) {
-            await client.query(loadProducts, [product.name, product.type, product.price, product.promo]);
+            await client.query(loadProducts, [product.name, product.type, product.price, product.promo, product.colors]);
         }
         console.log("Produits log dans la Database !!");
     })

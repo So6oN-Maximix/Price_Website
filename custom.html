@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Personnalisation - PRICE</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="profile.js" defer></script>
+        <script src="custom.js" defer></script>
+    </head>
+    <body class="custom-body">
+        <header>
+            <nav class="glass-nav">
+                <a href="/shop">Boutique</a>
+                <a href="/custom" class="active">Personalisation</a>
+                <a href="/" class="logo-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                    </svg>
+                </a>
+                <a href="/community">Communauté</a>
+                <a href="#">A propos de nous</a>
+                <a href="/login" class="logo-link" id="nav-cart-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                </a>
+                <a href="/login" class="logo-link" id="nav-profile-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </a>
+            </nav>
+        </header>
+        <main class="custom-main-container">
+            <aside class="custom-sidebar glass-card">
+                <h2>Personnalise ta gourde</h2>
+                <div class="custom-tabs">
+                    <button class="custom-tab-btn" data-target="bouchon" id="cap-btn">Bouchon</button>
+                    <button class="custom-tab-btn active" data-target="corps" id="body-btn">Corps</button>
+                    <button class="custom-tab-btn" data-target="habillage" id="casing-btn">Habillage</button>
+                    <button class="custom-tab-btn" data-target="socle" id="base-btn">Socle</button>
+                </div>
+
+                <div class="custom-options-container">
+                    <div id="options-bouchon" class="options-grid" style="display: none;">
+                    </div>
+                    <div id="options-corps" class="options-grid" style="display: none;">
+                    </div>
+                    <div id="options-habillage" class="options-grid" style="display: none;">
+                    </div>
+                    <div id="options-socle" class="options-grid" style="display: none;">
+                    </div>
+                </div>
+            </aside>
+
+            <section class="custom-preview-area">
+                <div class="bottle-preview">
+                    <img id="preview-bouchon" src="https://placehold.co/400x800/transparent/white?text=Bouchon" class="bottle-layer layer-bouchon" alt="Bouchon">
+                    <img id="preview-corps" src="https://placehold.co/400x800/transparent/white?text=Corps" class="bottle-layer layer-corps" alt="Corps">
+                    <img id="preview-socle" src="https://placehold.co/400x800/transparent/white?text=Socle" class="bottle-layer layer-socle" alt="Socle">
+                    <img id="preview-habillage" src="https://placehold.co/400x800/transparent/white?text=Habillage" class="bottle-layer layer-habillage" alt="Habillage">
+                </div>
+            </section>
+
+            <div class="custom-summary glass-card">
+                <div class="summary-details">
+                    <div class="summary-line">
+                        <span id="summary-bouchon-name">Bouchon Sport Vert</span>
+                        <span id="summary-bouchon-price">15.50€</span>
+                    </div>
+                    <div class="summary-line">
+                        <span id="summary-corps-name">Corps Acier Blanc</span>
+                        <span id="summary-corps-price">29.56€</span>
+                    </div>
+                    <div class="summary-line">
+                        <span id="summary-habillage-name">Nom du nouvel élément</span>
+                        <span id="summary-habillage-price">0.00€</span>
+                    </div>
+                    <div class="summary-line">
+                        <span id="summary-socle-name">Nom du nouvel élément</span>
+                        <span id="summary-socle-price">0.00€</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <span id="custom-total-price">45.06€</span>
+                    </div>
+                </div>
+                <button class="apply-filters-btn finish-btn">Terminer & Ajouter au panier</button>
+            </div>
+        </main>
+        <footer>
+            <span>Copyright © 2026 LEOST Maxime</span>
+        </footer>
+    </body>
+</html>

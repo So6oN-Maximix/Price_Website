@@ -20,6 +20,7 @@ async function loadProducts() {
 function addProduct(productObj) {
     const globalCard = document.createElement("div");
     globalCard.classList.add("product-card", "glass-card");
+    globalCard.style.cursor = "pointer";
 
     const categoryBadge = document.createElement("div");
     categoryBadge.classList.add("badge-category");
@@ -74,14 +75,40 @@ function addProduct(productObj) {
     buttonsDiv.appendChild(btnAdd);
     buttonsDiv.appendChild(btnCustom);
 
+    const colorDiv = document.createElement("div");
+    colorDiv.classList.add("product-colors");
+    const colorList = productObj.colors;
+    if (colorList) {
+        for (const color of colorList) {
+            const colorElement = document.createElement("div");
+            colorElement.classList.add("color-dot");
+            colorElement.style.backgroundColor = color;
+            colorDiv.appendChild(colorElement);
+        }
+    }
+    const infoHeader = document.createElement("div");
+    infoHeader.classList.add("product-info-header"); 
+    infoHeader.style.alignItems = "center"; 
+    infoHeader.style.marginTop = "10px";
+    infoHeader.appendChild(priceElement);
+    infoHeader.appendChild(colorDiv);
+
     productCard.appendChild(productName);
-    productCard.appendChild(priceElement);
+    productCard.appendChild(infoHeader);
     productCard.appendChild(buttonsDiv);
 
     globalCard.appendChild(categoryBadge);
     if (promoBadge) globalCard.appendChild(promoBadge);
     globalCard.appendChild(imgDiv);
     globalCard.appendChild(productCard);
+    globalCard.addEventListener("click", (event) => {
+        const isButtonClick = event.target.tagName === "BUTTON";
+        const isColorClick = event.target.classList.contains("color-dot");
+        if (isButtonClick || isColorClick) {
+            return; 
+        }
+        window.location.href = `/product?id=${productObj.product_id}`;
+    });
 
     productContainer.appendChild(globalCard);
 

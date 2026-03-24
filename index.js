@@ -278,7 +278,7 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(query.rows[0]));
             } catch (error) {
-                console.error("Erreur API - Get Product: ", error);
+                console.error("Erreur API - Get Product ID: ", error);
                 res.writeHead(500);
                 res.end();
             }
@@ -318,6 +318,29 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end(JSON.stringify(getEmailQuery.rows[0].email));
             } catch (error) {
                 console.error("Erreur API - Loading Settings: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url.startsWith("/api/get-product-type")) {
+            const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+            const productType = parsedUrl.searchParams.get("productType");
+            if (!productType) {
+                res.writeHead(400);
+                res.end(JSON.stringify({message: "Type manquant"}));
+                return;
+            }
+            try {
+                const getProducts = await database.query("SELECT * FROM products WHERE LOWER(type) = LOWER($1);", [productType]);
+                if (getProducts.rows.length === 0) {
+                    res.writeHead(404);
+                    res.end(JSON.stringify({message: "Produit inexistant"}));
+                    return;
+                }
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(getProducts.rows));
+            } catch (error) {
+                console.error("Erreur API - Get Product type: ", error);
                 res.writeHead(500);
                 res.end();
             }
@@ -378,6 +401,12 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         }
         filePath = "./cart.html";
+    } else if (req.url === "/custom"){
+        filePath = "./custom.html";
+    } else if (req.url === "/product" || req.url.startsWith("/product?")){
+        filePath = "./product.html";
+    } else if (req.url === "/community") {
+        filePath = "./community.html";
     }
 
     const extName = String(path.extname(filePath)).toLowerCase();

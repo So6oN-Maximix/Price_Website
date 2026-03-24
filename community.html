@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Communauté - PRICE</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="profile.js"></script>
+    </head>
+    <body class="community-body">
+        <header>
+            <nav class="glass-nav">
+                <a href="/shop">Boutique</a>
+                <a href="/custom">Personalisation</a>
+                <a href="/" class="logo-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                    </svg>
+                </a>
+                <a href="/community" class="active">Communauté</a>
+                <a href="#">A propos de nous</a>
+                <a href="/login" class="logo-link" id="nav-cart-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                </a>
+                <a href="/login" class="logo-link" id="nav-profile-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </a>
+            </nav>
+        </header>
+
+        <main class="community-main-container">
+            <div class="community-header">
+                <h1>Inspirations & Créations</h1>
+                <p>Découvrez les assemblages de la communauté et proposez vos idées.</p>
+            </div>
+            <div class="community-feed" id="community-feed">
+                <article class="post-card glass-card">
+                    <div class="post-header">
+                        <img src="https://placehold.co/40x40/3b82f6/white?text=S" alt="Avatar" class="post-avatar">
+                        <div class="post-user-info">
+                            <span class="post-username">Sophie L.</span>
+                            <span class="post-time">Il y a 2 heures</span>
+                        </div>
+                    </div>
+
+                    <div class="post-image-container">
+                        <img src="https://placehold.co/600x600/1f2937/white?text=Gourde+Fini" alt="Gourde personnalisée" class="post-image">
+                    </div>
+
+                    <div class="post-composition">
+                        <span class="comp-tag">Bouchon Sport Bleu</span>
+                        <span class="comp-tag">Corps Acier</span>
+                        <span class="comp-tag">Socle Silicone Noir</span>
+                    </div>
+
+                    <div class="post-content">
+                        <p>Voici mon setup pour la salle de sport ! Le socle en silicone est parfait pour ne pas faire de bruit quand je la pose. Validé à 100% ! 🔥💧</p>
+                    </div>
+
+                    <div class="summary-divider" style="margin: 15px 0;"></div>
+
+                    <div class="post-actions">
+                        <button class="action-btn like-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                            </svg>
+                            <span>124</span>
+                        </button>
+                        <button class="action-btn comment-btn">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                            </svg>
+                            <span>12</span>
+                        </button>
+                        <button class="action-btn share-btn">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                        </button>
+                        <button class="action-btn save-btn" style="margin-left: auto;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </article>
+            </div>
+        </main>
+        <div class="community-bottom-toggle glass-card">
+            <button class="toggle-mode-btn active" id="btn-compositions">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 21H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v7"></path><path d="M14.5 18a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path><path d="M22 22l-1.5-1.5"></path></svg>
+                Compositions
+            </button>
+            <button class="toggle-mode-btn" id="btn-creations">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                Créations (Idées)
+            </button>
+        </div>
+        <footer>
+            <span>Copyright © 2026 LEOST Maxime</span>
+        </footer>
+    </body>
+</html>

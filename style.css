@@ -707,6 +707,35 @@ footer {
     border-color: white;
 }
 
+/* --- PASTILLES DE COULEURS (BOUTIQUE) --- */
+.product-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    margin-top: 15px;
+}
+
+.product-colors {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.color-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.color-dot:hover {
+    transform: scale(1.2);
+    border-color: #4a5b50;
+}
+
 /* --- TOAST NOTIFICATIONS (AJOUT PANIER) --- */
 .toast-container {
     position: fixed;
@@ -1237,7 +1266,6 @@ footer {
 .summary-divider {
     height: 1px;
     background: rgba(255, 255, 255, 0.1);
-    margin: 20px 0;
 }
 
 .summary-row.total {
@@ -1264,4 +1292,663 @@ footer {
     margin-top: 20px;
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.4);
+}
+
+/* ========================================= */
+/* PAGE PERSONNALISATION (CUSTOM)      */
+/* ========================================= */
+
+.custom-body {
+    overflow: hidden;
+}
+
+.custom-main-container {
+    display: flex;
+    height: calc(100vh - 80px);
+    position: relative;
+    padding: 20px;
+    gap: 30px;
+}
+
+/* --- PANNEAU DE GAUCHE --- */
+.custom-sidebar {
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    gap: 20px;
+    z-index: 10;
+}
+
+.custom-sidebar h2 {
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.custom-tabs {
+    display: flex;
+    gap: 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+    
+    overflow-x: auto; 
+    scrollbar-width: none;
+}
+
+.custom-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.custom-tab-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 5px 8px;
+    transition: all 0.3s;
+    
+    white-space: nowrap; 
+    flex: 1;
+    text-align: center;
+}
+
+.custom-tab-btn.active {
+    color: white;
+    border-bottom: 2px solid white;
+}
+
+/* Grille des options (Couleurs/Matières) */
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.option-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+    gap: 8px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+}
+
+.option-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.option-item.selected {
+    border-color: #4ade80;
+    background: rgba(74, 222, 128, 0.05);
+}
+
+.color-swatch {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.option-item span {
+    font-size: 0.9rem;
+}
+
+.option-price {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.product-thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.05); 
+    border-radius: 8px;
+    padding: 5px;
+    transition: transform 0.2s ease;
+}
+
+.option-item:hover .product-thumbnail {
+    transform: scale(1.1);
+}
+
+.product-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* --- ZONE CENTRALE (PRÉVISUALISATION) --- */
+.custom-preview-area {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.bottle-preview {
+    position: relative;
+    width: 100%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Toutes les images se superposent exactement au même endroit */
+.bottle-layer {
+    position: absolute;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity 0.3s ease;
+}
+
+/* Ordre des calques (z-index) */
+.layer-bouchon { z-index: 4; }
+.layer-corps { z-index: 3; }
+.layer-habillage { z-index: 2; }
+.layer-socle { z-index: 1; }
+
+
+/* --- RÉSUMÉ BAS DROITE --- */
+.custom-summary {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    width: 320px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 20;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.summary-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 0.95rem;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+}
+
+.finish-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 1rem;
+}
+
+/* ========================================= */
+/* PAGE PRODUIT                              */
+/* ========================================= */
+.product-page-body {
+    overflow-x: hidden;
+}
+
+.product-main-container {
+    padding: 120px 50px 80px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.back-link {
+    display: inline-block;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.back-link:hover {
+    color: white;
+    transform: translateX(-5px);
+}
+
+.product-split {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 50px;
+    align-items: start;
+}
+
+/* COLONNE GAUCHE : GALERIE */
+.product-gallery {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.hero-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    padding: 40px;
+    height: 500px;
+}
+
+#detail-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.thumbnail-gallery {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.thumbnail-item {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    object-fit: contain;
+    padding: 5px;
+    transition: all 0.2s ease;
+}
+
+.thumbnail-item:hover, .thumbnail-item.active {
+    border-color: #4ade80;
+    transform: translateY(-3px);
+}
+
+/* COLONNE DROITE : PANNEAU D'INFO */
+.product-info-glass {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    position: sticky;
+    top: 120px;
+}
+
+/* Groupe Titre + Prix */
+.product-title-group h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-top: 10px;
+    letter-spacing: -1px;
+}
+
+.header-badges {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-page-price {
+    font-size: 2.2rem;
+    margin-top: 10px;
+}
+
+.detail-page-price .price-container {
+    margin: 0;
+}
+
+/* Groupe Couleurs */
+.product-selection-group h3, .product-description-group h3 {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.color-name-display {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: white;
+    font-weight: normal;
+}
+
+/* On utilise ton style de vignette existant */
+.vignette-swatch-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.color-dot.active {
+    transform: scale(1.2);
+    border-color: #4ade80;
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
+}
+
+/* Groupe Description */
+#detail-description {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+/* Groupe Actions */
+.product-actions-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+#detail-add-cart {
+    padding: 15px;
+    font-size: 1.1rem;
+}
+
+/* --- BOUTONS PAGE PRODUIT --- */
+.product-actions-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Bouton Principal (Ajouter au panier) - Style Solide & Massif */
+.btn-primary-product {
+    width: 100%;
+    padding: 18px;
+    background: white;
+    color: black;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15); /* Léger halo lumineux */
+}
+
+.btn-primary-product:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25);
+    background: #f8f8f8;
+}
+
+.btn-primary-product:active {
+    transform: translateY(0);
+}
+
+/* Bouton Secondaire (Personnaliser) - Style Glassmorphism Premium */
+.btn-secondary-product {
+    width: 100%;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.03);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.btn-secondary-product:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary-product:active {
+    transform: translateY(0);
+}
+
+/* --- BADGE CATÉGORIE (PAGE PRODUIT) --- */
+.header-badges .badge-category {
+    position: relative;
+    top: 0;
+    left: 0;
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.header-badges .badge-promo {
+    position: relative;
+    top: 0;
+    right: 0;
+    font-size: 1.1rem;
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+/* ========================================= */
+/* PAGE COMMUNAUTÉ                           */
+/* ========================================= */
+.community-body {
+    overflow-x: hidden;
+    padding-bottom: 100px;
+}
+
+.community-main-container {
+    padding: 100px 20px 150px;
+    max-width: 650px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.community-header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.community-header h1 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+}
+
+.community-header p {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.community-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* --- LE POST --- */
+.post-card {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.post-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.post-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-username {
+    font-weight: bold;
+    font-size: 1.05rem;
+}
+
+.post-time {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* L'image du produit */
+.post-image-container {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(0,0,0,0.3);
+}
+
+.post-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 500px;
+}
+
+/* Tags de la composition */
+.post-composition {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.comp-tag {
+    background: rgba(74, 222, 128, 0.1);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Le texte du post */
+.post-content p {
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+}
+
+/* Les boutons d'interaction */
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    padding: 5px;
+}
+
+.action-btn svg {
+    overflow: visible;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.action-btn:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+.action-btn.like-btn:hover { color: #f43f5e; } /* Rouge/Rose au survol */
+.action-btn.comment-btn:hover { color: #3b82f6; } /* Bleu au survol */
+.action-btn.save-btn:hover { color: #eab308; } /* Jaune au survol */
+
+
+/* --- LA BARRE DE NAVIGATION EN BAS --- */
+.community-bottom-toggle {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 600px;
+    display: flex;
+    padding: 8px;
+    border-radius: 20px;
+    z-index: 1000;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.toggle-mode-btn {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 1.05rem;
+    font-weight: 600;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    opacity: 0.6;
+}
+
+.toggle-mode-btn:hover {
+    opacity: 1;
+}
+
+/* Bouton actif (Mode sélectionné) */
+.toggle-mode-btn.active {
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 1;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
