@@ -345,6 +345,40 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end();
             }
             return;
+        } else if (req.url.startsWith("/api/get-user-info")){
+            const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+            const userId = parsedUrl.searchParams.get("id");
+            if (!userId) {
+                res.writeHead(400);
+                res.end(JSON.stringify({message: "ID manquant"}));
+                return;
+            }
+            try {
+                const query = await database.query("SELECT * FROM users WHERE user_id = $1;", [userId]);
+                if (query.rows.length === 0) {
+                    res.writeHead(404);
+                    res.end(JSON.stringify({message: "Utilisateur inexistant"}));
+                    return;
+                }
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(query.rows[0]));
+            } catch (error) {
+                console.error("Erreur API - Get User ID: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url === "/api/loadInspiComments") {
+            try {
+                const commentQuery = await database.query("SELECT * FROM inspi_comments;");
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(commentQuery.rows));
+            } catch (error) {
+                console.error("Erreur API - Loading Inspi Comments: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
         }
     }
 

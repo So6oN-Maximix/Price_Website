@@ -89,17 +89,29 @@ const createTablesQuery = `
         nbr_item INT NOT NULL,
         user_id INT NOT NULL REFERENCES users(user_id),
         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
-    )
-    `;
+    );
 
-const loadProducts = "INSERT INTO products(name, type, price, promo, colors) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (name) DO NOTHING;";
+    CREATE TABLE IF NOT EXISTS inspi_comments(
+        inspi_comment_id SERIAL PRIMARY KEY,
+        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        image TEXT NOT NULL,
+        articles TEXT[] NOT NULL,
+        description TEXT,
+        nb_likes INT NOT NULL,
+        nb_comments INT NOT NULL,
+        user_id INT REFERENCES users(user_id)
+    );
+    `;
 
 client.query(createTablesQuery)
     .then(async () => {
         console.log("Connexion réussie et Tables prêtes !!");
         
         for (const product of products) {
-            await client.query(loadProducts, [product.name, product.type, product.price, product.promo, product.colors]);
+            await client.query(
+                "INSERT INTO products(name, type, price, promo, colors) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (name) DO NOTHING;",
+                [product.name, product.type, product.price, product.promo, product.colors]
+            );
         }
         console.log("Produits log dans la Database !!");
     })
