@@ -222,6 +222,79 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end();
             }
             return;
+        } else if (req.url === "/api/create-post") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Non connecté" }));
+                return;
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Session expirée" }));
+                return;
+            }
+            const userId = sessionData.user_id;
+            
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                try {
+                    await database.query(
+                        "INSERT INTO inspi_comments(image, articles, description, nb_likes, nb_comments, user_id) VALUES($1, $2, $3, 0, 0, $4);",
+                        [data.image, data.articles, data.description, userId]
+                    );
+                    console.log(`Nouveau post créé par l'utilisateur ${userId} !`);
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify({message: "Post publié"}));
+                } catch (error) {
+                console.error("Erreur API - Loading New Post In DB: ", error);
+                res.writeHead(500);
+                res.end();
+                }
+            });
+            return;
+        } else if (req.url === "/api/delete-post") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const userId = sessionData.user_id;
+
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                try {
+                    // 1. Sécurité extrême : On vérifie que le post appartient bien à cet utilisateur !
+                    const checkQuery = await database.query("SELECT user_id FROM inspi_comments WHERE inspi_comment_id = $1;", [data.post_id]);
+                    if (checkQuery.rows.length === 0 || checkQuery.rows[0].user_id !== userId) {
+                        res.writeHead(403); // 403 = Interdit !
+                        return res.end(JSON.stringify({message: "Non autorisé"}));
+                    }
+                    
+                    // 2. Si c'est bon, on supprime !
+                    await database.query("DELETE FROM inspi_comments WHERE inspi_comment_id = $1;", [data.post_id]);
+                    console.log(`Le post ${data.post_id} a été supprimé par l'utilisateur ${userId}`);
+                    res.writeHead(200);
+                    res.end(JSON.stringify({message: "Post supprimé"}));
+                } catch (error) {
+                    console.error("Erreur API - Delete Post: ", error);
+                    res.writeHead(500);
+                    res.end();
+                }
+            });
+            return;
         }
     } else if (req.method === "GET") {
         if (req.url === "/api/loadDatas") {
@@ -370,7 +443,7 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/loadInspiComments") {
             try {
-                const commentQuery = await database.query("SELECT * FROM inspi_comments;");
+                const commentQuery = await database.query("SELECT * FROM inspi_comments ORDER by date DESC;");
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(commentQuery.rows));
             } catch (error) {
@@ -378,6 +451,32 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.writeHead(500);
                 res.end();
             }
+            return;
+        } else if (req.url === "/api/current-user-id") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify(null));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify(null));
+            
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(sessionData.user_id));
+            return;
+        }else if (req.url === "/api/logout") {
+            const cookieHeader = req.headers.cookie;
+            if (cookieHeader) {
+                const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+                if (cookies.session_id) {
+                    delete sessions[cookies.session_id]; 
+                }
+            }
+            res.writeHead(200, {
+                "Set-Cookie": [
+                    "session_id=; Path=/; HttpOnly; Secure; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+                    "username=; Path=/; Secure; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+                ]
+            });
+            res.end();
             return;
         }
     }
@@ -467,7 +566,7 @@ const serverLunching = http.createServer(async (req, res) => {
             });
             res.end(content, "utf-8");
         }
-    })
+    });
 });
 
 serverLunching.listen(PORT, () => console.log(`Site lancé !!`));

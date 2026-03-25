@@ -1978,3 +1978,226 @@ input:-webkit-autofill:active {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+/* --- BOUTON CRÉER UNE PUBLICATION --- */
+.create-post-btn {
+    margin-top: 20px;
+    padding: 12px 25px;
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.4);
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.create-post-btn:hover {
+    background: rgba(74, 222, 128, 0.25);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(74, 222, 128, 0.2);
+    color: white;
+}
+
+.create-post-btn:active {
+    transform: translateY(0);
+}
+
+/* --- MODAL (POP-UP) CRÉATION DE POST --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Classe pour l'animation d'apparition */
+.modal-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 500px;
+    padding: 40px;
+    position: relative;
+    transform: translateY(50px);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.show .modal-content {
+    transform: translateY(0);
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.close-modal-btn:hover {
+    color: white;
+    transform: scale(1.1) rotate(90deg);
+}
+
+.modal-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+.modal-content p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+.new-post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.new-post-form input, .new-post-form textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.new-post-form input:focus, .new-post-form textarea:focus {
+    border-color: #4ade80;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.new-post-form textarea {
+    resize: vertical;
+}
+
+.new-post-form small {
+    display: block;
+    margin-top: 5px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.8rem;
+}
+
+.submit-post-btn {
+    background: #4ade80;
+    color: #0a0a0b;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.submit-post-btn:hover {
+    background: #22c55e;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+}
+
+/* --- SYSTÈME D'AJOUT D'ÉLÉMENTS (TAGS) --- */
+.elements-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+/* Zone d'input + bouton plus */
+.add-element-wrapper {
+    display: flex;
+    gap: 10px;
+}
+
+.add-element-wrapper input {
+    margin: 0;
+    flex-grow: 1;
+}
+
+.add-element-btn {
+    background: rgba(74, 222, 128, 0.15);
+    border: 1px solid rgba(74, 222, 128, 0.4);
+    color: #4ade80;
+    width: 54px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.add-element-btn:hover {
+    background: #4ade80;
+    color: #0a0a0b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(74, 222, 128, 0.3);
+}
+
+/* Design d'un tag ajouté par l'utilisateur */
+.new-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-right: 6px;
+    animation: fadeInTag 0.2s ease-out;
+}
+
+@keyframes fadeInTag {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* La petite croix pour supprimer un tag */
+.remove-tag-btn {
+    background: rgba(248, 113, 113, 0.15);
+    color: #f87171;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.remove-tag-btn:hover {
+    background: #f87171;
+    color: white;
+}

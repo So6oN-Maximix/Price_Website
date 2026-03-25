@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Communauté - PRICE</title>
         <link rel="stylesheet" href="style.css">
-        <script src="profile.js"></script>
-        <script src="community.js"></script>
+        <script src="profile.js" defer></script>
+        <script src="community.js" defer></script>
     </head>
     <body class="community-body">
         <header>
@@ -37,6 +37,13 @@
             <div class="community-header">
                 <h1>Inspis de la Commu</h1>
                 <p>Découvrez les assemblages de la communauté et proposez vos idées.</p>
+                <button class="create-post-btn" id="create-post-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Partager mon setup
+                </button>
             </div>
             <div class="community-feed" id="community-feed">
                 <p style="text-align: center; color: rgba(255, 255, 255, 0.6);">Pas de commentaires postés pour le moment, soyez le premier !!</p>
@@ -52,6 +59,59 @@
                 Créations (Idées)
             </button>
         </div>
+
+        <div id="post-modal" class="modal-overlay">
+            <div class="modal-content glass-card">
+                <button class="close-modal-btn" id="close-modal-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                
+                <h2>Partager mon setup</h2>
+                <p>Montre à la communauté ta création unique !</p>
+
+                <form id="new-post-form" class="new-post-form">
+                    <div class="input-group">
+                        <div class="add-element-wrapper">
+                            <input type="text" id="post-image" required placeholder="URL de ton image (ou choisis un fichier)">
+                            
+                            <input type="file" id="post-image-file" accept="image/*" style="display: none;">
+                            
+                            <button type="button" class="add-element-btn" id="upload-img-btn" title="Importer une image depuis l'ordinateur">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <span style="color: rgba(255, 255, 255, 0.6); font-size: 0.95rem;">Composition de la gourde</span>
+                        <div id="elements-container" class="elements-container"></div>
+                        <div class="add-element-wrapper">
+                            <input type="text" id="element-input" placeholder="Ex: Corps Noir Mat" style="width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 15px; color: white; font-size: 1rem; outline: none;">
+                            <button type="button" id="add-element-btn" class="add-element-btn">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <textarea id="post-description" rows="4" required placeholder="Raconte-nous pourquoi tu aimes ce setup..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-post-btn">Publier mon setup</button>
+                </form>
+            </div>
+        </div>
+
         <footer>
             <span>Copyright © 2026 LEOST Maxime</span>
         </footer>

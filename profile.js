@@ -177,9 +177,8 @@ async function loadDatas(viewerID) {
 }
 
 window.addEventListener("DOMContentLoaded", checkAuthentification);
-document.getElementById("logout-btn")?.addEventListener("click", () => {
-    document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+document.getElementById("logout-btn")?.addEventListener("click", async () => {
+    await fetch("/api/logout"); 
     window.location.href = "/";
 });
 

@@ -23,11 +23,71 @@ async function addToComment(postInfo) {
     }
     const dateSpan = document.createElement("span");
     dateSpan.classList.add("post-time");
-    dateSpan.textContent = `Il y a ${postInfo.date}`;
+    const postDate = new Date(postInfo.date)
+    const datePart = postDate.toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+    const timePart = postDate.toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit"
+    }).replace(":", "h");
+    dateSpan.textContent = `Posté le ${datePart} à ${timePart}`;
 
     userInfoDiv.appendChild(dateSpan);
     postHeader.appendChild(userImg);
     postHeader.appendChild(userInfoDiv);
+
+    /* DELETE BUTTON */
+    if (currentUserId === postInfo.user_id) {
+        const deleteButton = document.createElement("button");
+        deleteButton.classList.add("delete-btn"); 
+        deleteButton.style.color = "rgba(248, 113, 113, 0.7)";
+        deleteButton.style.marginLeft = "auto";
+        deleteButton.style.background = "none";
+        deleteButton.style.border = "none";
+        deleteButton.style.cursor = "pointer";
+        deleteButton.style.transition = "color 0.2s ease, transform 0.2s ease";
+        deleteButton.title = "Supprimer mon post";
+        deleteButton.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+        `;
+
+        deleteButton.addEventListener("mouseenter", () => {
+            deleteButton.style.color = "#f87171";
+            deleteButton.style.transform = "scale(1.1)";
+        });
+        deleteButton.addEventListener("mouseleave", () => {
+            deleteButton.style.color = "rgba(248, 113, 113, 0.7)";
+            deleteButton.style.transform = "scale(1)";
+        });
+
+        deleteButton.addEventListener("click", async () => {
+            if (confirm("Es-tu sûr de vouloir supprimer ce magnifique setup ? L'action est irréversible !")) {
+                try {
+                    const response = await fetch("/api/delete-post", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({post_id: postInfo.inspi_comment_id})
+                    });
+                    
+                    if (response.ok) {
+                        articleElement.remove();
+                    } else {
+                        alert("Erreur lors de la suppression.");
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        });
+
+        postHeader.appendChild(deleteButton);
+    }
 
     /* IMAGE */
     const postImgDiv = document.createElement("div");
@@ -129,13 +189,140 @@ async function addToComment(postInfo) {
     document.getElementById("community-feed").append(articleElement);
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+async function loadComments() {
+    try {
+        const userRes = await fetch("/api/current-user-id");
+        currentUserId = await userRes.json();
+    } catch (e) {
+        currentUserId = null;
+    }
     const serverResponse = await fetch("/api/loadInspiComments");
     if (serverResponse.ok) {
         const responseInfo = await serverResponse.json();
-        document.getElementById("community-feed").innerHTML = "";
-        for (const comment of responseInfo) {
-            addToComment(comment);
+        if (responseInfo.length > 0) {
+            document.getElementById("community-feed").innerHTML = "";
+            for (const comment of responseInfo) {
+                addToComment(comment);
+            }
         }
     }
+}
+
+function addBadgeElement() {
+    const badgeNameInput = document.getElementById("element-input");
+    if (badgeNameInput.value != "") {
+        const badgeName = badgeNameInput.value;
+        compositionElements.push(badgeName);
+        const tag = document.createElement("span");
+        tag.classList.add("comp-tag", "new-tag");
+        tag.innerHTML = `
+            ${badgeName} 
+            <button type="button" class="remove-tag-btn" title="Supprimer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+            </button>
+        `;
+        tag.querySelector(".remove-tag-btn").addEventListener("click", () => {
+            tag.remove();
+            compositionElements = compositionElements.filter(item => item !== valeur);
+        });
+
+        document.getElementById("elements-container").appendChild(tag);
+        badgeNameInput.value = "";
+        badgeNameInput.focus();
+    }
+}
+
+const postButton = document.getElementById("create-post-btn");
+let compositionElements = [];
+let currentUserId = null;
+
+document.addEventListener("DOMContentLoaded", loadComments);
+postButton.addEventListener("click", async () => {
+    try {
+        const checkAuth = await fetch("/api/get-email");
+        const authData = await checkAuth.json();
+        
+        if (Array.isArray(authData) && authData.length === 0) {
+            window.location.href = "/login";
+            return;
+        }
+    } catch (error) {
+        console.error("Erreur lors de la vérification :", error);
+        return;
+    }
+
+    /* Close Menu */
+    const postInfoMenu = document.getElementById("post-modal");
+    postInfoMenu.classList.add("show");
+    document.body.style.overflow = "hidden";
+    const closeButton = document.getElementById("close-modal-btn");
+    closeButton.addEventListener("click", () => {
+        postInfoMenu.classList.remove("show");
+        document.body.style.overflow = "auto";
+    });
+    window.addEventListener("click", (event) => {
+        if (event.target === postInfoMenu) {
+            postInfoMenu.classList.remove("show");
+            document.body.style.overflow = "auto";
+        }
+    });
+
+    /* Upload Picture */
+    const uploadImgBtn = document.getElementById("upload-img-btn");
+    const fileInput = document.getElementById("post-image-file");
+    const imageUrlInput = document.getElementById("post-image");
+    
+    uploadImgBtn.addEventListener("click", () => {
+        fileInput.click();
+    });
+    fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                imageUrlInput.value = event.target.result; 
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    /* Add Badges */
+    const addBadgeElementBtn = document.getElementById("add-element-btn");
+    addBadgeElementBtn.addEventListener("click", addBadgeElement);
+
+    /* Create Post */
+    const postForm = document.getElementById("new-post-form");
+    postForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const imageLink = document.getElementById("post-image").value;
+        const description = document.getElementById("post-description").value;
+        if (compositionElements.length === 0) {
+            alert("N'oublie pas d'ajouter au moins un élément à ta composition !");
+            return;
+        }
+        const postData = {
+            image: imageLink,
+            articles: compositionElements,
+            description: description
+        };
+        try {
+            const response = await fetch("/api/create-post", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(postData)
+            });
+            if (response.ok) {
+                document.getElementById("post-modal").classList.remove("show");
+                document.body.style.overflow = "auto";
+                window.location.reload();
+            } else {
+                alert("Une erreur est survenue lors de la publication.");
+            }
+        } catch (error) {
+            console.error("Erreur API - Add New Post :", error);
+        }
+    });
 });
