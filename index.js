@@ -5,9 +5,7 @@ import database from "./database.js";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
-import dns from "dns";
 
-dns.setDefaultResultOrder('ipv4first');
 const PORT = process.env.PORT || 8080;
 const sessions = {};
 
@@ -652,6 +650,8 @@ const serverLunching = http.createServer(async (req, res) => {
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
+    secure: true,
+    family: 4,
     auth: {
         user: "maxime.leost@gmail.com",
         pass: "vzux rkxl ujde vwob"
