@@ -3,6 +3,8 @@ import fs from "fs";
 import path from "path";
 import database from "./database.js";
 import bcrypt from "bcrypt";
+import nodemailer from "nodemailer";
+import crypto from "crypto";
 
 const PORT = process.env.PORT || 8080;
 const sessions = {};
@@ -276,20 +278,93 @@ const serverLunching = http.createServer(async (req, res) => {
             req.on("end", async () => {
                 const data = JSON.parse(body);
                 try {
-                    // 1. Sécurité extrême : On vérifie que le post appartient bien à cet utilisateur !
                     const checkQuery = await database.query("SELECT user_id FROM inspi_comments WHERE inspi_comment_id = $1;", [data.post_id]);
                     if (checkQuery.rows.length === 0 || checkQuery.rows[0].user_id !== userId) {
-                        res.writeHead(403); // 403 = Interdit !
+                        res.writeHead(403);
                         return res.end(JSON.stringify({message: "Non autorisé"}));
                     }
-                    
-                    // 2. Si c'est bon, on supprime !
                     await database.query("DELETE FROM inspi_comments WHERE inspi_comment_id = $1;", [data.post_id]);
                     console.log(`Le post ${data.post_id} a été supprimé par l'utilisateur ${userId}`);
                     res.writeHead(200);
                     res.end(JSON.stringify({message: "Post supprimé"}));
                 } catch (error) {
                     console.error("Erreur API - Delete Post: ", error);
+                    res.writeHead(500);
+                    res.end();
+                }
+            });
+            return;
+        } else if (req.url === "/api/forgot-password")  {
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const userEmail = data.email
+                try {
+                    const userIdQuery = await database.query("SELECT user_id FROM users WHERE email = $1;", [userEmail]);
+                    if (userIdQuery.rows.length === 0) {
+                        res.writeHead(200, {"Content-Type": "application/json"});
+                        return res.end(JSON.stringify({message: "Si cet email existe, un lien a été envoyé."}));
+                    }
+                    const resetToken = crypto.randomBytes(32).toString('hex');
+                    const protocol = req.headers['x-forwarded-proto'] || 'http';
+                    const host = req.headers.host; 
+                    const resetLink = `${protocol}://${host}/reset-password?token=${resetToken}`;
+                    await database.query(
+                        "INSERT INTO password_resets (token, user_id, expires_at) VALUES ($1, $2, NOW() + INTERVAL '10 minutes');",
+                        [resetToken, userIdQuery.rows[0].user_id]
+                    );
+                    const mailOptions = {
+                        from: '"PRICE Support" <maxime.leost@gmail.com>',
+                        to: userEmail,
+                        subject: 'Réinitialisation de ton mot de passe 🔒',
+                        html: `
+                            <div style="font-family: Arial, sans-serif; text-align: center; color: #333;">
+                                <h2>Oups, un trou de mémoire ? 😅</h2>
+                                <p>Tu as demandé à réinitialiser ton mot de passe pour ton compte PRICE.</p>
+                                <p>Clique sur le bouton ci-dessous pour en créer un nouveau :</p>
+                                <a href="${resetLink}" style="display: inline-block; padding: 10px 20px; margin: 20px 0; background-color: #4ade80; color: #0a0a0b; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                                    Réinitialiser mon mot de passe
+                                </a>
+                                <p style="font-size: 0.8rem; color: #777;">Si tu n'as pas fait cette demande, ignore simplement cet email.</p>
+                            </div>
+                        `
+                    };
+                    await transporter.sendMail(mailOptions);
+                    console.log(`Email de reset envoyé à ${userEmail}`);
+                    
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify({message: "Si cet email existe, un lien a été envoyé."}));
+                } catch (error) {
+                    console.error("Erreur API - Sending Email: ", error);
+                    res.writeHead(500);
+                    res.end();
+                }
+            });
+            return;
+        } else if (req.url === "/api/change-password") {
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const token = data.token;
+                const newPassword = data.password;
+                try {
+                    const tokenQuery = await database.query("SELECT user_id FROM password_resets WHERE token = $1 AND expires_at > NOW();", [token]);
+                    if (tokenQuery.rows.length === 0) {
+                        res.writeHead(400, {"Content-Type": "application/json"});
+                        return res.end(JSON.stringify({message: "Ce lien de réinitialisation est invalide ou a expiré."}));
+                    }
+                    const userId = tokenQuery.rows[0].user_id;
+                    const salt = await bcrypt.genSalt(15);
+                    const hashedPassword = await bcrypt.hash(newPassword, salt);
+                    await database.query("UPDATE users SET password = $1 WHERE user_id = $2;", [hashedPassword, userId]);
+                    await database.query("DELETE FROM password_resets WHERE token = $1;", [token]);
+                    console.log(`Mot de passe modifié avec succès pour l'utilisateur ID: ${userId}`);
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify({message: "Mot de passe mis à jour."}));
+                } catch (error) {
+                    console.error("Erreur API - Changing Password: ", error);
                     res.writeHead(500);
                     res.end();
                 }
@@ -540,6 +615,10 @@ const serverLunching = http.createServer(async (req, res) => {
         filePath = "./product.html";
     } else if (req.url === "/community") {
         filePath = "./community.html";
+    } else if (req.url === "/forget-password"){
+        filePath = "./forget-password.html"
+    } else if (req.url === "/reset-password" ||req.url.startsWith("/reset-password?")) {
+        filePath = "./reset-password.html";
     }
 
     const extName = String(path.extname(filePath)).toLowerCase();
@@ -567,6 +646,14 @@ const serverLunching = http.createServer(async (req, res) => {
             res.end(content, "utf-8");
         }
     });
+});
+
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: "maxime.leost@gmail.com",
+        pass: "vzux rkxl ujde vwob"
+    }
 });
 
 serverLunching.listen(PORT, () => console.log(`Site lancé !!`));

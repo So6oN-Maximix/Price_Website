@@ -60,7 +60,7 @@ const products = [{
 const createTablesQuery = `
     CREATE TABLE IF NOT EXISTS users(
         user_id SERIAL PRIMARY KEY,
-        username VARCHAR(50) UNIQUE NOT NULL,
+        username VARCHAR(50) NOT NULL,
         email VARCHAR(100) UNIQUE NOT NULL,
         password TEXT NOT NULL,
         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
@@ -101,7 +101,13 @@ const createTablesQuery = `
         nb_comments INT NOT NULL,
         user_id INT REFERENCES users(user_id)
     );
-    `;
+
+    CREATE TABLE IF NOT EXISTS password_resets (
+        token VARCHAR(255) PRIMARY KEY,
+        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+        expires_at TIMESTAMP NOT NULL
+    );
+`;
 
 client.query(createTablesQuery)
     .then(async () => {
