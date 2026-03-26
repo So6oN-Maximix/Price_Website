@@ -5,6 +5,10 @@ import database from "./database.js";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import dns from "dns";
+import util from "util";
+
+dns.setDefaultResultOrder("ipv4first");
 
 const PORT = process.env.PORT || 8080;
 const sessions = {};
@@ -314,6 +318,23 @@ const serverLunching = http.createServer(async (req, res) => {
                         "INSERT INTO password_resets (token, user_id, expires_at) VALUES ($1, $2, NOW() + INTERVAL '10 minutes');",
                         [resetToken, userIdQuery.rows[0].user_id]
                     );
+
+                    const resolve4 = util.promisify(dns.resolve4);
+                    const ipv4Addresses = await resolve4("smtp.gmail.com");
+                    const gmailIPv4 = ipv4Addresses[0]; 
+                    const transporter = nodemailer.createTransport({
+                        host: gmailIPv4,
+                        port: 465,
+                        secure: true,
+                        auth: {
+                            user: "maxime.leost@gmail.com",
+                            pass: "vzux rkxl ujde vwob"
+                        },
+                        tls: {
+                            servername: "smtp.gmail.com"
+                        }
+                    });
+
                     const mailOptions = {
                         from: '"PRICE Support" <maxime.leost@gmail.com>',
                         to: userEmail,
@@ -646,17 +667,6 @@ const serverLunching = http.createServer(async (req, res) => {
             res.end(content, "utf-8");
         }
     });
-});
-
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    family: 4,
-    auth: {
-        user: "maxime.leost@gmail.com",
-        pass: "vzux rkxl ujde vwob"
-    }
 });
 
 serverLunching.listen(PORT, () => console.log(`Site lancé !!`));
