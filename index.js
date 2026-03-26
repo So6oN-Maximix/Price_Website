@@ -319,24 +319,14 @@ const serverLunching = http.createServer(async (req, res) => {
                         [resetToken, userIdQuery.rows[0].user_id]
                     );
 
-                    const resolve4 = util.promisify(dns.resolve4);
-                    const ipv4Addresses = await resolve4("smtp.gmail.com");
-                    const gmailIPv4 = ipv4Addresses[0]; 
                     const transporter = nodemailer.createTransport({
-                        host: "smtp.gmail.com",
+                        host: "smtp-relay.brevo.com",
                         port: 587,
                         secure: false,
-                        requireTLS: true,
                         auth: {
-                            user: "maxime.leost@gmail.com",
-                            pass: "vzux rkxl ujde vwob"
-                        },
-                        tls: {
-                            rejectUnauthorized: false,
-                            minVersion: 'TLSv1.2'
-                        },
-                        connectionTimeout: 10000,
-                        greetingTimeout: 10000
+                            user: "a61c37001@smtp-brevo.com",
+                            pass: "xsmtpsib-a5e3524e757b2a141a11db7673b0e483587926ba5d4b4621de3f43feaa8f02cb-nk2ODqPI0R7tLlNA"
+                        }
                     });
 
                     const mailOptions = {
