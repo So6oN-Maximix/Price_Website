@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import dns from "dns";
-import util from "util";
+import "dotenv/config";
 
 dns.setDefaultResultOrder("ipv4first");
 
@@ -324,8 +324,8 @@ const serverLunching = http.createServer(async (req, res) => {
                         port: 587,
                         secure: false,
                         auth: {
-                            user: "a61c37001@smtp-brevo.com",
-                            pass: "xsmtpsib-a5e3524e757b2a141a11db7673b0e483587926ba5d4b4621de3f43feaa8f02cb-nk2ODqPI0R7tLlNA"
+                            user: process.env.BREVO_USER,
+                            pass: process.env.BREVO_PASS
                         }
                     });
 
