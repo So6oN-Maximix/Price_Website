@@ -319,21 +319,14 @@ const serverLunching = http.createServer(async (req, res) => {
                         [resetToken, userIdQuery.rows[0].user_id]
                     );
 
-                    const transporter = nodemailer.createTransport({
-                        host: "smtp-relay.brevo.com",
-                        port: 587,
-                        secure: false,
-                        auth: {
-                            user: process.env.BREVO_USER,
-                            pass: process.env.BREVO_PASS
-                        }
-                    });
-
-                    const mailOptions = {
-                        from: '"PRICE Support" <maxime.leost@gmail.com>',
-                        to: userEmail,
-                        subject: 'Réinitialisation de ton mot de passe 🔒',
-                        html: `
+                    const brevoData = {
+                        sender: { 
+                            name: "PRICE Support", 
+                            email: "maxime.leost@gmail.com"
+                        },
+                        to: [{ email: userEmail }],
+                        subject: "Réinitialisation de ton mot de passe 🔒",
+                        htmlContent: `
                             <div style="font-family: Arial, sans-serif; text-align: center; color: #333;">
                                 <h2>Oups, un trou de mémoire ? 😅</h2>
                                 <p>Tu as demandé à réinitialiser ton mot de passe pour ton compte PRICE.</p>
@@ -345,8 +338,21 @@ const serverLunching = http.createServer(async (req, res) => {
                             </div>
                         `
                     };
-                    await transporter.sendMail(mailOptions);
-                    console.log(`Email de reset envoyé à ${userEmail}`);
+                    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+                        method: "POST",
+                        headers: {
+                            "accept": "application/json",
+                            "api-key": process.env.BREVO_API_KEY,
+                            "content-type": "application/json"
+                        },
+                        body: JSON.stringify(brevoData)
+                    });
+
+                    if (!response.ok) {
+                        const errorDetails = await response.text();
+                        throw new Error(`Erreur API Brevo : ${errorDetails}`);
+                    }
+                    console.log(`Email de reset envoyé par API à ${userEmail}`);
                     
                     res.writeHead(200, {"Content-Type": "application/json"});
                     res.end(JSON.stringify({message: "Si cet email existe, un lien a été envoyé."}));
