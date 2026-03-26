@@ -323,15 +323,16 @@ const serverLunching = http.createServer(async (req, res) => {
                     const ipv4Addresses = await resolve4("smtp.gmail.com");
                     const gmailIPv4 = ipv4Addresses[0]; 
                     const transporter = nodemailer.createTransport({
-                        host: gmailIPv4,
-                        port: 465,
-                        secure: true,
+                        host: "smtp.gmail.com",
+                        port: 587,
+                        secure: false,
                         auth: {
                             user: "maxime.leost@gmail.com",
                             pass: "vzux rkxl ujde vwob"
                         },
                         tls: {
-                            servername: "smtp.gmail.com"
+                            rejectUnauthorized: false,
+                            minVersion: 'TLSv1.2'
                         }
                     });
 
