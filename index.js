@@ -326,6 +326,7 @@ const serverLunching = http.createServer(async (req, res) => {
                         host: "smtp.gmail.com",
                         port: 587,
                         secure: false,
+                        requireTLS: true,
                         auth: {
                             user: "maxime.leost@gmail.com",
                             pass: "vzux rkxl ujde vwob"
@@ -333,7 +334,9 @@ const serverLunching = http.createServer(async (req, res) => {
                         tls: {
                             rejectUnauthorized: false,
                             minVersion: 'TLSv1.2'
-                        }
+                        },
+                        connectionTimeout: 10000,
+                        greetingTimeout: 10000
                     });
 
                     const mailOptions = {
