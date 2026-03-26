@@ -5,7 +5,9 @@ import database from "./database.js";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import dns from "dns";
 
+dns.setDefaultResultOrder('ipv4first');
 const PORT = process.env.PORT || 8080;
 const sessions = {};
 
