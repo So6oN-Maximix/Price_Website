@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import database from "./database.js";
 import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
 import crypto from "crypto";
 import dns from "dns";
 import "dotenv/config";
@@ -391,6 +390,37 @@ const serverLunching = http.createServer(async (req, res) => {
                 }
             });
             return;
+        } else if (req.url === "/api/update-profile-pic") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const userId = sessionData.user_id;
+
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const profilPic = data.profil_pic;
+                try {
+                    await database.query("UPDATE users SET profil_pic = $1 WHERE user_id = $2;", [profilPic, userId]);
+                    console.log(`Photo de profil sauvegardée pour l'utilisateur ID: ${userId}`);
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify({message: "Photo de profil sauvegardée"}));
+                } catch (error) {
+                    console.error("Erreur API - Saving Profil Picture: ", error);
+                    res.writeHead(500);
+                    res.end();
+                }
+            });
+            return;
         }
     } else if (req.method === "GET") {
         if (req.url === "/api/loadDatas") {
@@ -573,6 +603,146 @@ const serverLunching = http.createServer(async (req, res) => {
                 ]
             });
             res.end();
+            return;
+        } else if (req.url.startsWith("/api/get-image?")) {
+            const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+            const userUsername = parsedUrl.searchParams.get("username");
+            if (!userUsername) {
+                res.writeHead(400);
+                res.end(JSON.stringify({message: "Username manquant"}));
+                return;
+            }
+            try {
+                const profilPicQuery = await database.query("SELECT profil_pic FROM users WHERE username = $1;", [userUsername]);
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(profilPicQuery.rows[0]));
+            } catch (error) {
+                console.error("Erreur API - Loading Profil Picture: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url.startsWith("/api/add-like")) {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const userId = sessionData.user_id;
+
+            const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+            const postId = parsedUrl.searchParams.get("id");
+            if (!postId) {
+                res.writeHead(400);
+                res.end(JSON.stringify({message: "ID manquant"}));
+                return;
+            }
+
+            try {
+                const nbLikeQuery = await database.query("SELECT nb_likes FROM inspi_comments WHERE inspi_comment_id = $1;", [postId]);
+                const nbLike = nbLikeQuery.rows[0].nb_likes;
+                await database.query("INSERT INTO post_likes (user_id, post_id) VALUES ($1, $2);", [userId, postId]);
+                await database.query("UPDATE inspi_comments SET nb_likes = $1 WHERE inspi_comment_id = $2;", [nbLike + 1, postId]);
+                console.log(`Like ajouté pour le post ID: ${userId}`);
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify({message: "Post Liké"}));
+            } catch (error) {
+                console.error("Erreur API - Adding Like: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url.startsWith("/api/remove-like")) {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const userId = sessionData.user_id;
+
+            const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+            const postId = parsedUrl.searchParams.get("id");
+            if (!postId) {
+                res.writeHead(400);
+                res.end(JSON.stringify({message: "ID manquant"}));
+                return;
+            }
+
+            try {
+                const nbLikeQuery = await database.query("SELECT nb_likes FROM inspi_comments WHERE inspi_comment_id = $1;", [postId]);
+                const nbLike = nbLikeQuery.rows[0].nb_likes;
+                await database.query("DELETE FROM post_likes WHERE user_id = $1 AND post_id = $2;", [userId, postId]);
+                await database.query("UPDATE inspi_comments SET nb_likes = $1 WHERE inspi_comment_id = $2;", [nbLike - 1, postId]);
+                console.log(`Like retiré pour le post ID: ${userId}`);
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify({message: "Post Liké"}));
+            } catch (error) {
+                console.error("Erreur API - Adding Like: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url === "/api/load-posts") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+
+            try {
+                const postsListQuery = await database.query("SELECT * FROM inspi_comments WHERE user_id = $1", [userId]);
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(postsListQuery.rows));
+            } catch (error) {
+                console.error("Erreur API - Loading User's Post: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url.startsWith("/api/check-like?")) {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+
+            const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+            const postId = parsedUrl.searchParams.get("id");
+            if (!postId) {
+                res.writeHead(400);
+                res.end(JSON.stringify({message: "ID manquant"}));
+                return;
+            }
+
+            try {
+                const isLikedQuery = await database.query("SELECT * FROM post_likes WHERE user_id = $1 AND post_id = $2;", [userId, postId]);
+                let isLiked;
+                if (isLikedQuery.rows.length === 0) {
+                    isLiked = false;
+                } else {
+                    isLiked = true;
+                }
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(isLiked));
+            } catch (error) {
+                console.error("Erreur API - Loading Likes: ", error);
+                res.writeHead(500);
+                res.end();
+            }
             return;
         }
     }

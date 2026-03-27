@@ -1,12 +1,16 @@
 const dashboardViewer = document.getElementById("dashboard-viewer");
 const ordersViewer = document.getElementById("view-orders");
+const postsViewer = document.getElementById("view-posts");
 const settingsViewer = document.getElementById("view-settings");
-const viewers = [dashboardViewer, ordersViewer, settingsViewer];
+const viewers = [dashboardViewer, ordersViewer, postsViewer, settingsViewer];
 
 const dashboardTabBtn = document.getElementById("tab-dashboard");
 const ordersTabBtn = document.getElementById("tab-orders");
+const postsTabBtn = document.getElementById("tab-posts");
 const settingsTab = document.getElementById("tab-settings");
-const menuButtons = [dashboardTabBtn, ordersTabBtn, settingsTab];
+const menuButtons = [dashboardTabBtn, ordersTabBtn, postsTabBtn, settingsTab];
+
+let currentUserId = null;
 
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -16,7 +20,6 @@ function getCookie(name) {
 }
 
 async function checkAuthentification() {
-    const avatarLettersElement = document.getElementById("avatar-letters");
     const usernameElement = document.getElementById("username");
     const username = getCookie("username");
     const profileLink = document.getElementById("nav-profile-link");
@@ -25,7 +28,12 @@ async function checkAuthentification() {
         if (profileLink) profileLink.href = "/profile";
         if (cartElement) cartElement.href = "/cart";
         if (usernameElement) usernameElement.textContent = username;
-        if (avatarLettersElement) avatarLettersElement.textContent = username.split("")[0].toUpperCase();
+        const imageJSONQuery = await fetch(`/api/get-image?username=${username}`);
+        if (imageJSONQuery.ok) {
+            const imageJSON = await imageJSONQuery.json();
+            const profilPicElement = document.getElementById("current-pic");
+            if (profilPicElement) profilPicElement.src = imageJSON.profil_pic;
+        }
     } else {
         if (window.location.pathname === "/profile") window.location.href = "/login";
     }
@@ -168,18 +176,71 @@ async function loadSettingsInfos() {
     }
 }
 
+async function loadPosts() {
+    if (!currentUserId) {
+        try {
+            const userRes = await fetch("/api/current-user-id");
+            if (userRes.ok) {
+                currentUserId = await userRes.json();
+            }
+        } catch (e) {
+            console.error("Erreur lors de la récupération de l'ID utilisateur");
+        }
+    }
+
+    const loadPostFetch = await fetch("/api/load-posts");
+    if (loadPostFetch.ok) {
+        const postList = await loadPostFetch.json();
+        if (postList.length > 0) {
+            document.getElementById("my-posts-container").innerHTML = "";
+            for (const post of postList) {
+                addToComment(post, "my-posts-container");
+            }
+        }else {
+            document.getElementById("my-posts-container").innerHTML = "<p style='color: rgba(255,255,255,0.5); text-align: center; width: 100%; padding: 40px 0;'>Vous n'avez pas encore publié de setup.</p>";
+        }
+    }
+}
+
 async function loadDatas(viewerID) {
     if (viewerID === "view-orders") {
         await loadPassedOrders();
     } else if (viewerID === "view-settings") {
         await loadSettingsInfos();
+    } else if (viewerID === "view-posts") {
+        await loadPosts();
     }
 }
 
 window.addEventListener("DOMContentLoaded", checkAuthentification);
 document.getElementById("logout-btn")?.addEventListener("click", async () => {
-    await fetch("/api/logout"); 
+    await fetch("/api/logout");
     window.location.href = "/";
+});
+
+document.getElementById("profile-pic-input")?.addEventListener("change", async function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        const base64Image = e.target.result;
+        document.getElementById("current-pic").src = base64Image;
+        try {
+            const response = await fetch("/api/update-profile-pic", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({profil_pic: base64Image})
+            });
+            if(response.ok) {
+                console.log("Photo de profil sauvegardée en BDD !");
+            } else {
+                alert("Erreur lors de la sauvegarde.");
+            }
+        } catch (error) {
+            console.error("Erreur d'upload :", error);
+        }
+    };
+    reader.readAsDataURL(file);
 });
 
 if (dashboardTabBtn) menuButtons.forEach((btn, index) => {

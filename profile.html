@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Mon Profil - PRICE</title>
         <link rel="stylesheet" href="style.css">
+        <script src="post-builder.js" defer></script>
         <script src="profile.js" defer></script>
     </head>
     <body>
@@ -35,7 +36,13 @@
         <main class="profile-container">
             <aside class="profile-sidebar glass-card">
                 <div class="user-info">
-                    <div class="user-avatar" id="avatar-letters">??</div>
+                    <div class="profile-pic-container" onclick="document.getElementById('profile-pic-input').click();">
+                        <img src="assets/profilepicture.png" id="current-pic" alt="Photo de profil">
+                        <div class="profile-pic-overlay">
+                            <i class="fa-solid fa-pencil"></i>
+                        </div>
+                    </div>
+                    <input type="file" id="profile-pic-input" accept="image/*" style="display: none;">
                     <h3 id="username">Chargement ...</h3>
                     <p>Membre depuis <span class="creation-date">2026</span></p>
                 </div>
@@ -43,6 +50,8 @@
                     <a href="#" class="active" id="tab-dashboard">Tableau de bord</a>
                     <a href="#" id="tab-orders">Mes Commandes</a>
                     <a href="#" id="tab-creations">Mes Créations</a>
+                    <a href="#" id="tab-posts">Mes Posts</a>
+                    <a href="#" id="tab-activité">Mon Activité</a>
                     <a href="#" id="tab-settings">Paramètres</a>
                     <button class="logout-btn" id="logout-btn">Déconnexion</button>
                 </nav>
@@ -120,6 +129,27 @@
                 </div>
 
                 <!-- CREATIONS -->
+
+                <!-- POSTS -->
+
+                <div id="view-posts" style="display: none; flex-direction: column; gap: 40px;">
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h2>Mes posts publiés</h2>
+                            <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; margin-top: 5px;">
+                                Gérez les configurations que vous avez partagées avec la communauté.
+                            </p>
+                        </div>
+                        
+                        <div id="my-posts-container" class="my-posts-grid">
+                            <p id="empty-posts-msg" style="color: rgba(255,255,255,0.5); text-align: center; width: 100%; padding: 40px 0;">
+                                Chargement de vos posts...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTIVITY -->
 
                 <!-- SETTINGS -->
 

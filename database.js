@@ -63,6 +63,7 @@ const createTablesQuery = `
         username VARCHAR(50) NOT NULL,
         email VARCHAR(100) UNIQUE NOT NULL,
         password TEXT NOT NULL,
+        profil_pic TEXT,
         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
     );
 
@@ -100,6 +101,14 @@ const createTablesQuery = `
         nb_likes INT NOT NULL,
         nb_comments INT NOT NULL,
         user_id INT REFERENCES users(user_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS post_likes (
+        like_id SERIAL PRIMARY KEY,
+        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+        post_id INT REFERENCES inspi_comments(inspi_comment_id) ON DELETE CASCADE,
+        liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(user_id, post_id)
     );
 
     CREATE TABLE IF NOT EXISTS password_resets (
