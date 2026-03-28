@@ -78,17 +78,17 @@ const createTablesQuery = `
 
     CREATE TABLE IF NOT EXISTS carts(
         cart_item_id SERIAL PRIMARY KEY,
-        product_id INT NOT NULL REFERENCES products(product_id),
+        product_id INT NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
         nbr_item INT NOT NULL,
-        user_id INT NOT NULL REFERENCES users(user_id)
+        user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS passed_carts(
         cart_item_id SERIAL PRIMARY KEY,
         cart_id INT NOT NULL,
-        product_id INT NOT NULL REFERENCES products(product_id),
+        product_id INT NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
         nbr_item INT NOT NULL,
-        user_id INT NOT NULL REFERENCES users(user_id),
+        user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
     );
 
@@ -100,10 +100,27 @@ const createTablesQuery = `
         description TEXT,
         nb_likes INT NOT NULL,
         nb_comments INT NOT NULL,
-        user_id INT REFERENCES users(user_id)
+        user_id INT REFERENCES users(user_id) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS post_likes (
+        like_id SERIAL PRIMARY KEY,
+        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+        post_id INT REFERENCES inspi_comments(inspi_comment_id) ON DELETE CASCADE,
+        liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(user_id, post_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS post_comments(
+        post_comment_id SERIAL PRIMARY KEY,
+        comment TEXT NOT NULL,
+        nb_likes INT NOT NULL,
+        post_id INT REFERENCES inspi_comments(inspi_comment_id) ON DELETE CASCADE,
+        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS comment_likes (
         like_id SERIAL PRIMARY KEY,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
         post_id INT REFERENCES inspi_comments(inspi_comment_id) ON DELETE CASCADE,
@@ -121,7 +138,6 @@ const createTablesQuery = `
 client.query(createTablesQuery)
     .then(async () => {
         console.log("Connexion réussie et Tables prêtes !!");
-        
         for (const product of products) {
             await client.query(
                 "INSERT INTO products(name, type, price, promo, colors) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (name) DO NOTHING;",

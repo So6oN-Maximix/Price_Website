@@ -2306,3 +2306,104 @@ input:-webkit-autofill:active {
     gap: 8px;
     margin-top: 5px;
 }
+
+/* --- STYLE DES COMMENTAIRES --- */
+
+/* Scrollbar personnalisée pour la liste des commentaires */
+#comments-list::-webkit-scrollbar {
+    width: 6px;
+}
+#comments-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+#comment-input:focus {
+    border-color: #4ade80 !important;
+}
+
+#new-comment-form button:hover {
+    transform: scale(1.1);
+    background: #22c55e !important;
+}
+
+/* Le design d'un commentaire généré par le JS */
+.comment-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    animation: fadeInTag 0.3s ease-out;
+}
+
+.comment-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comment-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.comment-username {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: white;
+}
+
+.comment-text {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 3px;
+    line-height: 1.4;
+}
+
+.comment-date {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 5px;
+}
+
+/* --- MINI BOUTONS D'ACTION POUR COMMENTAIRES --- */
+.mini-action-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 2px;
+    transition: all 0.2s ease;
+}
+
+/* Hover du bouton Like */
+.mini-action-btn.like-comment-btn:hover {
+    color: #f43f5e;
+    transform: translateY(-1px);
+}
+
+/* État Liké du commentaire */
+.mini-action-btn.like-comment-btn.liked {
+    color: #f43f5e;
+}
+
+.mini-action-btn.like-comment-btn.liked svg {
+    fill: #f43f5e;
+    animation: heartBeat 0.3s ease-in-out;
+}
+
+/* Hover de la petite poubelle */
+.mini-action-btn.delete-comment-btn:hover {
+    color: #f87171;
+    transform: scale(1.1);
+}

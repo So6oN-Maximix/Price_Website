@@ -68,7 +68,8 @@ const serverLunching = http.createServer(async (req, res) => {
                     try {
                         const salt = await bcrypt.genSalt(15);
                         const hashedPassword = await bcrypt.hash(password, salt);
-                        await database.query("INSERT INTO users (username, email, password) VALUES ($1, $2, $3);", [username, email, hashedPassword]);
+                        const defaultAvatar = `https://ui-avatars.com/api/?name=${username}&background=012911&color=ffffff&bold=true&length=1`;
+                        await database.query("INSERT INTO users (username, email, password, profil_pic) VALUES ($1, $2, $3, $4);", [username, email, hashedPassword, defaultAvatar]);
                         console.log(`Bienvenue ${username}`);
                         res.writeHead(302, {"Location": "/profile"});
                     } catch (error) {
@@ -421,6 +422,97 @@ const serverLunching = http.createServer(async (req, res) => {
                 }
             });
             return;
+        } else if (req.url === "/api/create-comment") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const userId = sessionData.user_id;
+
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const postId = data.post_id;
+                const comment = data.comment;
+                try {
+                    await database.query("INSERT INTO post_comments(comment, nb_likes, post_id, user_id) VALUES ($1, 0, $2, $3);", [comment, postId, userId]);
+                    const currentCommentsQuery = await database.query("SELECT nb_comments FROM inspi_comments WHERE inspi_comment_id = $1;", [postId]);
+                    const currentComments = currentCommentsQuery.rows[0].nb_comments;
+                    await database.query("UPDATE inspi_comments SET nb_comments = $1 WHERE inspi_comment_id = $2;", [currentComments + 1, postId])
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify({message: "Commentaire sauvegardée"}));
+                } catch (error) {
+                    console.error("Erreur API - Saving Post Comment: ", error);
+                    res.writeHead(500);
+                    res.end();
+                }
+            });
+            return;
+        } else if (req.url === "/api/update-comments-number") {
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const postId = data.post_id;
+                const nbComments = data.nb_comments;
+                try {
+                    await database.query("UPDATE inspi_comments SET nb_comments = $1 WHERE inspi_comment_id = $2;", [nbComments, postId]),
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify({message: "Nombre de commentaire sauvegardée"}));
+                } catch (error) {
+                    console.error("Erreur API - Saving Number Post Comment: ", error);
+                    res.writeHead(500);
+                    res.end();
+                }
+            });
+            return;
+        } else if (req.url === "/api/delete-comment") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const userId = sessionData.user_id;
+
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const commentId = data.post_comment_id;
+                const postId = data.post_id;
+                try {
+                    const checkQuery = await database.query("SELECT user_id FROM post_comments WHERE post_comment_id = $1;", [commentId]);
+                    if (checkQuery.rows.length === 0 || checkQuery.rows[0].user_id !== userId) {
+                        res.writeHead(403);
+                        return res.end(JSON.stringify({message: "Non autorisé"}));
+                    }
+                    await database.query("DELETE FROM post_comments WHERE post_comment_id = $1;", [commentId]);
+                    const nbComments = await database.query("SELECT nb_comments FROM inspi_comments WHERE inspi_comment_id = $1;", [postId]);
+                    await database.query("UPDATE inspi_comments SET nb_comments = $1 WHERE inspi_comment_id = $2;", [nbComments.rows[0].nb_comments - 1, postId]);
+                    console.log(`Le commentaire ${commentId} a été supprimé par l'utilisateur ${userId}`);
+                    res.writeHead(200);
+                    res.end(JSON.stringify({message: "Commentaire supprimé"}));
+                } catch (error) {
+                    console.error("Erreur API - Delete Comment: ", error);
+                    res.writeHead(500);
+                    res.end();
+                }
+            });
+            return;
         }
     } else if (req.method === "GET") {
         if (req.url === "/api/loadDatas") {
@@ -740,6 +832,24 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end(JSON.stringify(isLiked));
             } catch (error) {
                 console.error("Erreur API - Loading Likes: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url.startsWith("/api/get-comments?")) {
+            const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+            const postId = parsedUrl.searchParams.get("id");
+            if (!postId) {
+                res.writeHead(400);
+                res.end(JSON.stringify({message: "ID manquant"}));
+                return;
+            }
+            try {
+                const commentListQuery = await database.query("SELECT * FROM post_comments WHERE post_id = $1;", [postId]);
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(commentListQuery.rows));
+            } catch (error) {
+                console.error("Erreur API - Loading Post Comments: ", error);
                 res.writeHead(500);
                 res.end();
             }

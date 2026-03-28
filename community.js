@@ -45,6 +45,7 @@ function addBadgeElement() {
 }
 
 const postButton = document.getElementById("create-post-btn");
+const postCommentButton = document.getElementById("send-comment-btn");
 let compositionElements = [];
 
 document.addEventListener("DOMContentLoaded", loadComments);

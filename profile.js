@@ -183,7 +183,7 @@ async function loadPosts() {
             if (userRes.ok) {
                 currentUserId = await userRes.json();
             }
-        } catch (e) {
+        } catch (error) {
             console.error("Erreur lors de la récupération de l'ID utilisateur");
         }
     }
