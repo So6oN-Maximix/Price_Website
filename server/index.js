@@ -857,15 +857,15 @@ const serverLunching = http.createServer(async (req, res) => {
         }
     }
 
-    let filePath = "." + req.url;
+    let filePath = "./public" + req.url;
     if (req.url === "/" || req.url === "") {
-        filePath = "./index.html";
+        filePath = "./public/index.html";
     } else if (req.url === "/login" || req.url.startsWith("/login?")) {
-        filePath = "./login.html";
+        filePath = "./public/login.html";
     } else if (req.url === "/shop") {
-        filePath = "./shop.html";
+        filePath = "./public/shop.html";
     } else if (req.url === "/register") {
-        filePath = "./register.html";
+        filePath = "./public/register.html";
     } else if (req.url === "/profile") {
         const cookieHeader = req.headers.cookie;
         let estConnecte = false;
@@ -887,7 +887,7 @@ const serverLunching = http.createServer(async (req, res) => {
             res.end();
             return;
         }
-        filePath = "./profile.html";
+        filePath = "./public/profile.html";
     } else if (req.url === "/cart") {
         const cookieHeader = req.headers.cookie;
         let estConnecte = false;
@@ -909,17 +909,17 @@ const serverLunching = http.createServer(async (req, res) => {
             res.end();
             return;
         }
-        filePath = "./cart.html";
+        filePath = "./public/cart.html";
     } else if (req.url === "/custom"){
-        filePath = "./custom.html";
+        filePath = "./public/custom.html";
     } else if (req.url === "/product" || req.url.startsWith("/product?")){
-        filePath = "./product.html";
+        filePath = "./public/product.html";
     } else if (req.url === "/community") {
-        filePath = "./community.html";
+        filePath = "./public/community.html";
     } else if (req.url === "/forget-password"){
-        filePath = "./forget-password.html"
+        filePath = "./public/forget-password.html"
     } else if (req.url === "/reset-password" ||req.url.startsWith("/reset-password?")) {
-        filePath = "./reset-password.html";
+        filePath = "./public/reset-password.html";
     }
 
     const extName = String(path.extname(filePath)).toLowerCase();
@@ -934,7 +934,7 @@ const serverLunching = http.createServer(async (req, res) => {
 
     fs.readFile(filePath, (err, content) => {
         if (err) {
-            fs.readFile("./404.html", (err404, content404) => {
+            fs.readFile("./public/404.html", (err404, content404) => {
                 res.writeHead(404, { "Content-Type": "text/html; charset=utf-8"});
                 res.end(content404, "utf-8");
             });
@@ -949,4 +949,4 @@ const serverLunching = http.createServer(async (req, res) => {
     });
 });
 
-serverLunching.listen(PORT, () => console.log(`Site lancé !!`));
+serverLunching.listen(PORT, () => console.log(`Site lancé au PORT: ${PORT} !!`));
