@@ -51,8 +51,8 @@ PRICE/
 
 1. **Cloner le dépôt :**
     ```bash
-    git clone [https://github.com/So6oN-Maximix/PRICE.git](https://github.com/So6oN-Maximix/PRICE.git)
-    cd PRICE
+    git clone [https://github.com/So6oN-Maximix/Price_Website.git](https://github.com/So6oN-Maximix/Price_Website.git)
+    cd Price_Website
     ```
 2. **Installation des dépendances :**
     ```bash
