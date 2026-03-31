@@ -854,6 +854,110 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end();
             }
             return;
+        } else if (req.url.startsWith("/api/add-comment-like")) {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const userId = sessionData.user_id;
+
+            const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+            const commentId = parsedUrl.searchParams.get("id");
+            if (!commentId) {
+                res.writeHead(400);
+                res.end(JSON.stringify({message: "ID manquant"}));
+                return;
+            }
+
+            try {
+                const nbLikeQuery = await database.query("SELECT nb_likes FROM post_comments WHERE post_comment_id = $1;", [commentId]);
+                const nbLike = nbLikeQuery.rows[0].nb_likes;
+                await database.query("INSERT INTO comment_likes (user_id, comment_id) VALUES ($1, $2);", [userId, commentId]);
+                await database.query("UPDATE post_comments SET nb_likes = $1 WHERE post_comment_id = $2;", [nbLike + 1, commentId]);
+                console.log(`Like ajouté pour le commentaire ID: ${commentId}`);
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify({message: "Commentaire Liké"}));
+            } catch (error) {
+                console.error("Erreur API - Adding Like: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url.startsWith("/api/remove-comment-like")) {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const userId = sessionData.user_id;
+
+            const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+            const commentId = parsedUrl.searchParams.get("id");
+            if (!commentId) {
+                res.writeHead(400);
+                res.end(JSON.stringify({message: "ID manquant"}));
+                return;
+            }
+
+            try {
+                const nbLikeQuery = await database.query("SELECT nb_likes FROM post_comments WHERE post_comment_id = $1;", [commentId]);
+                const nbLike = nbLikeQuery.rows[0].nb_likes;
+                await database.query("DELETE FROM comment_likes WHERE user_id = $1 AND comment_id = $2;", [userId, commentId]);
+                await database.query("UPDATE post_comments SET nb_likes = $1 WHERE post_comment_id = $2;", [nbLike - 1, commentId]);
+                console.log(`Like retiré pour le commentaire ID: ${commentId}`);
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify({message: "Commentaire Déliké"}));
+            } catch (error) {
+                console.error("Erreur API - Removing Like: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url.startsWith("/api/check-comment-like?")) {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+
+            const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+            const commentId = parsedUrl.searchParams.get("id");
+            if (!commentId) {
+                res.writeHead(400);
+                res.end(JSON.stringify({message: "ID manquant"}));
+                return;
+            }
+
+            try {
+                const isLikedQuery = await database.query("SELECT * FROM comment_likes WHERE user_id = $1 AND comment_id = $2;", [userId, commentId]);
+                let isLiked;
+                if (isLikedQuery.rows.length === 0) {
+                    isLiked = false;
+                } else {
+                    isLiked = true;
+                }
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(isLiked));
+            } catch (error) {
+                console.error("Erreur API - Loading Likes: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
         }
     }
 

@@ -123,9 +123,9 @@ const createTablesQuery = `
     CREATE TABLE IF NOT EXISTS comment_likes (
         like_id SERIAL PRIMARY KEY,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
-        post_id INT REFERENCES inspi_comments(inspi_comment_id) ON DELETE CASCADE,
+        comment_id INT REFERENCES post_comments(post_comment_id) ON DELETE CASCADE,
         liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(user_id, post_id)
+        UNIQUE(user_id, comment_id)
     );
 
     CREATE TABLE IF NOT EXISTS password_resets (
