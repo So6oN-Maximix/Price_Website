@@ -2407,3 +2407,146 @@ input:-webkit-autofill:active {
     color: #f87171;
     transform: scale(1.1);
 }
+
+/* =========================================
+   PAGE A PROPOS (ABOUT)
+========================================= */
+
+.about-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    color: #ffffff;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Le texte en dégradé Vert -> Bleu */
+.gradient-text {
+    font-size: 3rem;
+    background: linear-gradient(90deg, #4ade80, #3b82f6);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1.3rem;
+    color: #a1a1aa; /* Gris clair */
+    margin-bottom: 40px;
+}
+
+/* La citation en haut */
+.quote-card {
+    font-size: 1.2rem;
+    font-style: italic;
+    padding: 20px 30px;
+    border-left: 5px solid #4ade80;
+    margin-bottom: 50px;
+    background: rgba(255, 255, 255, 0.05); /* Effet verre */
+    border-radius: 0 15px 15px 0;
+}
+
+/* Les sections Image + Texte */
+.about-section {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 50px;
+    align-items: center;
+}
+
+.flex-row-reverse {
+    flex-direction: row-reverse;
+}
+
+.about-text {
+    flex: 1;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.about-text h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #4ade80;
+}
+
+.about-text p {
+    line-height: 1.7;
+    margin-bottom: 15px;
+    color: #d4d4d8;
+}
+
+.about-text ul {
+    line-height: 1.7;
+    color: #d4d4d8;
+    padding-left: 20px;
+}
+
+/* Les images à côté du texte */
+.about-image {
+    flex: 1;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+/* Petit effet de zoom stylé quand on passe la souris sur la photo */
+.about-image:hover img {
+    transform: scale(1.05);
+}
+
+/* Liste avec les gouttes d'eau */
+.concept-list {
+    list-style: none;
+    padding: 0 !important;
+}
+
+.concept-list li {
+    margin-bottom: 12px;
+    padding-left: 25px;
+    position: relative;
+}
+
+.concept-list li::before {
+    content: "💧";
+    position: absolute;
+    left: 0;
+    font-size: 1rem;
+}
+
+/* Grille finale (Communauté et Engagement) */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+/* Adaptation pour les téléphones */
+@media (max-width: 768px) {
+    .about-section, .flex-row-reverse {
+        flex-direction: column;
+    }
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+    .gradient-text {
+        font-size: 2.2rem;
+    }
+    .about-image {
+        width: 100%;
+    }
+}

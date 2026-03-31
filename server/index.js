@@ -250,7 +250,7 @@ const serverLunching = http.createServer(async (req, res) => {
                 const data = JSON.parse(body);
                 try {
                     await database.query(
-                        "INSERT INTO inspi_comments(image, articles, description, nb_likes, nb_comments, user_id) VALUES($1, $2, $3, 0, 0, $4);",
+                        "INSERT INTO inspi_posts(image, articles, description, nb_likes, nb_comments, user_id) VALUES($1, $2, $3, 0, 0, $4);",
                         [data.image, data.articles, data.description, userId]
                     );
                     console.log(`Nouveau post créé par l'utilisateur ${userId} !`);
@@ -282,12 +282,12 @@ const serverLunching = http.createServer(async (req, res) => {
             req.on("end", async () => {
                 const data = JSON.parse(body);
                 try {
-                    const checkQuery = await database.query("SELECT user_id FROM inspi_comments WHERE inspi_comment_id = $1;", [data.post_id]);
+                    const checkQuery = await database.query("SELECT user_id FROM inspi_posts WHERE inspi_post_id = $1;", [data.post_id]);
                     if (checkQuery.rows.length === 0 || checkQuery.rows[0].user_id !== userId) {
                         res.writeHead(403);
                         return res.end(JSON.stringify({message: "Non autorisé"}));
                     }
-                    await database.query("DELETE FROM inspi_comments WHERE inspi_comment_id = $1;", [data.post_id]);
+                    await database.query("DELETE FROM inspi_posts WHERE inspi_post_id = $1;", [data.post_id]);
                     console.log(`Le post ${data.post_id} a été supprimé par l'utilisateur ${userId}`);
                     res.writeHead(200);
                     res.end(JSON.stringify({message: "Post supprimé"}));
@@ -444,9 +444,9 @@ const serverLunching = http.createServer(async (req, res) => {
                 const comment = data.comment;
                 try {
                     await database.query("INSERT INTO post_comments(comment, nb_likes, post_id, user_id) VALUES ($1, 0, $2, $3);", [comment, postId, userId]);
-                    const currentCommentsQuery = await database.query("SELECT nb_comments FROM inspi_comments WHERE inspi_comment_id = $1;", [postId]);
+                    const currentCommentsQuery = await database.query("SELECT nb_comments FROM inspi_posts WHERE inspi_post_id = $1;", [postId]);
                     const currentComments = currentCommentsQuery.rows[0].nb_comments;
-                    await database.query("UPDATE inspi_comments SET nb_comments = $1 WHERE inspi_comment_id = $2;", [currentComments + 1, postId])
+                    await database.query("UPDATE inspi_posts SET nb_comments = $1 WHERE inspi_post_id = $2;", [currentComments + 1, postId])
                     res.writeHead(200, {"Content-Type": "application/json"});
                     res.end(JSON.stringify({message: "Commentaire sauvegardée"}));
                 } catch (error) {
@@ -464,7 +464,7 @@ const serverLunching = http.createServer(async (req, res) => {
                 const postId = data.post_id;
                 const nbComments = data.nb_comments;
                 try {
-                    await database.query("UPDATE inspi_comments SET nb_comments = $1 WHERE inspi_comment_id = $2;", [nbComments, postId]),
+                    await database.query("UPDATE inspi_posts SET nb_comments = $1 WHERE inspi_post_id = $2;", [nbComments, postId]),
                     res.writeHead(200, {"Content-Type": "application/json"});
                     res.end(JSON.stringify({message: "Nombre de commentaire sauvegardée"}));
                 } catch (error) {
@@ -501,8 +501,8 @@ const serverLunching = http.createServer(async (req, res) => {
                         return res.end(JSON.stringify({message: "Non autorisé"}));
                     }
                     await database.query("DELETE FROM post_comments WHERE post_comment_id = $1;", [commentId]);
-                    const nbComments = await database.query("SELECT nb_comments FROM inspi_comments WHERE inspi_comment_id = $1;", [postId]);
-                    await database.query("UPDATE inspi_comments SET nb_comments = $1 WHERE inspi_comment_id = $2;", [nbComments.rows[0].nb_comments - 1, postId]);
+                    const nbComments = await database.query("SELECT nb_comments FROM inspi_posts WHERE inspi_post_id = $1;", [postId]);
+                    await database.query("UPDATE inspi_posts SET nb_comments = $1 WHERE inspi_post_id = $2;", [nbComments.rows[0].nb_comments - 1, postId]);
                     console.log(`Le commentaire ${commentId} a été supprimé par l'utilisateur ${userId}`);
                     res.writeHead(200);
                     res.end(JSON.stringify({message: "Commentaire supprimé"}));
@@ -661,7 +661,7 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/loadInspiComments") {
             try {
-                const commentQuery = await database.query("SELECT * FROM inspi_comments ORDER by date DESC;");
+                const commentQuery = await database.query("SELECT * FROM inspi_posts ORDER by date DESC;");
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(commentQuery.rows));
             } catch (error) {
@@ -737,10 +737,10 @@ const serverLunching = http.createServer(async (req, res) => {
             }
 
             try {
-                const nbLikeQuery = await database.query("SELECT nb_likes FROM inspi_comments WHERE inspi_comment_id = $1;", [postId]);
+                const nbLikeQuery = await database.query("SELECT nb_likes FROM inspi_posts WHERE inspi_post_id = $1;", [postId]);
                 const nbLike = nbLikeQuery.rows[0].nb_likes;
                 await database.query("INSERT INTO post_likes (user_id, post_id) VALUES ($1, $2);", [userId, postId]);
-                await database.query("UPDATE inspi_comments SET nb_likes = $1 WHERE inspi_comment_id = $2;", [nbLike + 1, postId]);
+                await database.query("UPDATE inspi_posts SET nb_likes = $1 WHERE inspi_post_id = $2;", [nbLike + 1, postId]);
                 console.log(`Like ajouté pour le post ID: ${userId}`);
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify({message: "Post Liké"}));
@@ -773,10 +773,10 @@ const serverLunching = http.createServer(async (req, res) => {
             }
 
             try {
-                const nbLikeQuery = await database.query("SELECT nb_likes FROM inspi_comments WHERE inspi_comment_id = $1;", [postId]);
+                const nbLikeQuery = await database.query("SELECT nb_likes FROM inspi_posts WHERE inspi_post_id = $1;", [postId]);
                 const nbLike = nbLikeQuery.rows[0].nb_likes;
                 await database.query("DELETE FROM post_likes WHERE user_id = $1 AND post_id = $2;", [userId, postId]);
-                await database.query("UPDATE inspi_comments SET nb_likes = $1 WHERE inspi_comment_id = $2;", [nbLike - 1, postId]);
+                await database.query("UPDATE inspi_posts SET nb_likes = $1 WHERE inspi_post_id = $2;", [nbLike - 1, postId]);
                 console.log(`Like retiré pour le post ID: ${userId}`);
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify({message: "Post Liké"}));
@@ -795,7 +795,7 @@ const serverLunching = http.createServer(async (req, res) => {
             const userId = sessionData.user_id;
 
             try {
-                const postsListQuery = await database.query("SELECT * FROM inspi_comments WHERE user_id = $1", [userId]);
+                const postsListQuery = await database.query("SELECT * FROM inspi_posts WHERE user_id = $1", [userId]);
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(postsListQuery.rows));
             } catch (error) {
@@ -1024,6 +1024,8 @@ const serverLunching = http.createServer(async (req, res) => {
         filePath = "./public/forget-password.html"
     } else if (req.url === "/reset-password" ||req.url.startsWith("/reset-password?")) {
         filePath = "./public/reset-password.html";
+    } else if (req.url === "/about-us") {
+        filePath = "./public/about-us.html"
     }
 
     const extName = String(path.extname(filePath)).toLowerCase();

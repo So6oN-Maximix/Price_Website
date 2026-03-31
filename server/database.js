@@ -92,8 +92,8 @@ const createTablesQuery = `
         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
     );
 
-    CREATE TABLE IF NOT EXISTS inspi_comments(
-        inspi_comment_id SERIAL PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS inspi_posts(
+        inspi_post_id SERIAL PRIMARY KEY,
         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         image TEXT NOT NULL,
         articles TEXT[] NOT NULL,

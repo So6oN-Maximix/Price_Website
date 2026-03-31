@@ -82,7 +82,7 @@ async function addToComment(postInfo, containerId) {
           const response = await fetch("/api/delete-post", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ post_id: postInfo.inspi_comment_id }),
+            body: JSON.stringify({ post_id: postInfo.inspi_post_id }),
           });
 
           if (response.ok) {
@@ -148,7 +148,7 @@ async function addToComment(postInfo, containerId) {
         <span>${postInfo.nb_likes}</span>
     `;
   const isLikedFetch = await fetch(
-    `/api/check-like?id=${postInfo.inspi_comment_id}`,
+    `/api/check-like?id=${postInfo.inspi_post_id}`,
   );
   if (isLikedFetch.ok) {
     const isLiked = await isLikedFetch.json();
@@ -175,11 +175,11 @@ async function addToComment(postInfo, containerId) {
     if (!likeButton.classList.contains("liked")) {
       likeButton.classList.add("liked");
       nbLikesSpan.textContent = currentLikeCount + 1;
-      await fetch(`/api/add-like?id=${postInfo.inspi_comment_id}`);
+      await fetch(`/api/add-like?id=${postInfo.inspi_post_id}`);
     } else {
       likeButton.classList.remove("liked");
       nbLikesSpan.textContent = currentLikeCount - 1;
-      await fetch(`/api/remove-like?id=${postInfo.inspi_comment_id}`);
+      await fetch(`/api/remove-like?id=${postInfo.inspi_post_id}`);
     }
   });
 
@@ -192,7 +192,7 @@ async function addToComment(postInfo, containerId) {
         </svg>
     `;
   const nbCommentsSpan = document.createElement("span");
-  nbCommentsSpan.id = `post-${postInfo.inspi_comment_id}`;
+  nbCommentsSpan.id = `post-${postInfo.inspi_post_id}`;
   nbCommentsSpan.textContent = postInfo.nb_comments;
   commentButton.appendChild(nbCommentsSpan);
   commentButton.addEventListener("click", async () => {
@@ -208,12 +208,12 @@ async function addToComment(postInfo, containerId) {
       return;
     }
     document.getElementById("new-comment-form").dataset.postId =
-      postInfo.inspi_comment_id;
+      postInfo.inspi_post_id;
 
     const commentSection = document.getElementById("comments-modal");
     commentSection.classList.add("show");
     document.body.style.overflow = "hidden";
-    await loadPostComments(postInfo.inspi_comment_id);
+    await loadPostComments(postInfo.inspi_post_id);
 
     const closeBtn = document.getElementById("close-comments-btn");
     closeBtn.addEventListener("click", () => {

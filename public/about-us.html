@@ -3,24 +3,21 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>PRICE</title>
+        <title>À propos - PRICE</title>
         <link rel="stylesheet" href="/css/style.css">
-        <script src="/js/script.js" defer></script>
-        <script src="/js/profile.js" defer></script>
     </head>
-    <body class="video-scroll-page">
-        <div class="background-overlay"></div>
-        <header>
+    <body>
+        <header style="padding: 20px;">
             <nav class="glass-nav">
                 <a href="/shop">Boutique</a>
                 <a href="/custom">Personalisation</a>
-                <a href="/" class="logo-link active">
+                <a href="/" class="logo-link">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
                     </svg>
                 </a>
                 <a href="/community">Communauté</a>
-                <a href="/about-us">A propos de nous</a>
+                <a href="/about-us" class="active">A propos de nous</a>
                 <a href="/login" class="logo-link" id="nav-cart-link">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                         <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
@@ -33,23 +30,44 @@
                 </a>
             </nav>
         </header>
-
-        <main>
-            <div class="video-background active" id="video-step">
-                <video autoplay muted loop playsinline id="bg-video">
-                    <source src="./assets/Video_test_2.mp4" type="video/mp4">
-                </video>
+        <main class="about-container">
+            <div class="about-header text-center">
+                <h1 class="gradient-text">À propos de notre gourde</h1>
+                <h2 class="subtitle">L'innovation au service de votre quotidien</h2>
+                <blockquote class="glass-card quote-card">
+                    "--- SLOGAN ---"
+                </blockquote>
             </div>
 
-            <div class="scroll-content">
-                <div class="text-step" id="step-1">
-                    <h1>L'Expérience commence</h1>
+            <section class="about-section flex-row">
+                <div class="about-text glass-card">
+                    <h3>Notre Histoire</h3>
+                    <p>Bla bla bla ...</p>
                 </div>
+                <div class="about-image">
+                    <img src="/assets/Main_menu_inspiration.jpg" alt="Créateur PRICE">
+                </div>
+            </section>
 
-                <div class="text-step" id="step-2">
-                    <h2>Le site se construit</h2>
-                    <p>Bientot de nouvelles fonctionnalités</p>
+            <section class="about-section flex-row-reverse">
+                <div class="about-text glass-card">
+                    <h3>Notre Concept : 100% Vous</h3>
+                    <p>Bla bla bla ...</p>
                 </div>
+                <div class="about-image">
+                    <img src="/assets/Shop_inspi.jpg" alt="Gourde personnalisée PRICE">
+                </div>
+            </section>
+
+            <div class="about-grid">
+                <section class="about-text glass-card">
+                    <h3>Plus qu'une boutique, une Communauté</h3>
+                    <p>Bla bla bla ...</p>
+                </section>
+                <section class="about-text glass-card">
+                    <h3>Notre Engagement</h3>
+                    <p>Bla bla bla ...</p>
+                </section>
             </div>
         </main>
         <footer>
