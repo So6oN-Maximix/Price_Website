@@ -34,10 +34,21 @@ const serverLunching = http.createServer(async (req, res) => {
                                 username: userData.username,
                                 user_id: userData.user_id
                             };
+                            
+                            let redirectTo = "/profile";
+                            const cookieHeader = req.headers.cookie;
+                            if (cookieHeader) {
+                                const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+                                if (cookies.return_to) {
+                                    redirectTo = cookies.return_to;
+                                }
+                            }
+
                             res.writeHead(302, {
-                                "Location": "/profile",
+                                "Location": redirectTo,
                                 "Set-Cookie": [`session_id=${ticket}; Path=/; HttpOnly; Secure; SameSite=Strict`,
-                                                `username=${userData.username}; Path=/; Secure; SameSite=Strict`]
+                                                `username=${userData.username}; Path=/; Secure; SameSite=Strict`,
+                                                "return_to=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"]
                             });
                         } else {
                             console.log("Échec : Mauvais mot de passe");
@@ -513,6 +524,47 @@ const serverLunching = http.createServer(async (req, res) => {
                 }
             });
             return;
+        } else if (req.url === "/api/update-custom") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const userId = sessionData.user_id;
+
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const selectedProducts = data.product_list;
+                try {
+                    const getUserIdQuery = await database.query("SELECT user_id FROM customisation WHERE user_id = $1;", [userId]);
+                    const isCustomExists = getUserIdQuery.rows.length > 0 ? true : false;
+                    if (!isCustomExists) {
+                        await database.query("INSERT INTO customisation(bouchon_id, corps_id, habillage_id, socle_id, user_id) VALUES ($1, $2, $3, $4, $5);", [null, null, null, null, userId]);
+                        console.log(`La customisation de l'utilisateur ${userId} a été crée`);
+                    }
+                    for (const type in selectedProducts) {
+                        if (selectedProducts[type] != "") {
+                            await database.query(`UPDATE customisation SET ${type}_id = $1 WHERE user_id = $2;`, [selectedProducts[type], userId]);
+                        }
+                    }
+                    console.log(`La customisation de l'utilisateur ${userId} a été mise à jour`);
+                    res.writeHead(200);
+                    res.end(JSON.stringify({message: "BDD customisation mise à jour"}));
+                } catch (error) {
+                    console.error("Erreur API - Load Custom: ", error);
+                    res.writeHead(500);
+                    res.end();
+                }
+            });
+            return;
         }
     } else if (req.method === "GET") {
         if (req.url === "/api/loadDatas") {
@@ -958,6 +1010,66 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end();
             }
             return;
+        } else if (req.url.startsWith("/api/get-selected?")) {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+
+            const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+            const productType = parsedUrl.searchParams.get("type");
+            if (!productType) {
+                res.writeHead(400);
+                res.end(JSON.stringify({message: "Type manquant"}));
+                return;
+            }
+
+            try {
+                const getSelectedProductQuery = await database.query(`SELECT ${productType}_id FROM customisation WHERE user_id = $1;`, [userId]);
+                if (getSelectedProductQuery.rows.length > 0 && getSelectedProductQuery.rows[0][`${productType}_id`] !== null) {
+                    const selectedProductId = getSelectedProductQuery.rows[0][`${productType}_id`];
+                    const selectedProductName = await database.query("SELECT name FROM products WHERE product_id = $1;", [selectedProductId]);
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify(selectedProductName.rows[0].name));
+                } else {
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify(false));
+                }
+            } catch (error) {
+                console.error("Erreur API - Getting Selected Product: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url === "/api/get-selected") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+
+            const types = ["Bouchon", "Corps", "Habillage", "Socle"];
+            let selectedProducts = {};
+            try {
+                const selectedProductsQuery = await database.query("SELECT * FROM customisation WHERE user_id = $1;", [userId]);
+                if (selectedProductsQuery.rows.length > 0) {
+                    const queryLine = selectedProductsQuery.rows[0];
+                    for (const type of types) {
+                        const productTypeId = queryLine[`${type.toLowerCase()}_id`] != null ? queryLine[`${type.toLowerCase()}_id`] : "";
+                        selectedProducts[type] = productTypeId;
+                    }
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify(selectedProducts));
+                }
+            } catch (error) {
+                console.error("Erreur API - Getting All Selected Product: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
         }
     }
 
@@ -985,7 +1097,8 @@ const serverLunching = http.createServer(async (req, res) => {
                 "Location": "/login",
                 "Set-Cookie": [
                     "session_id=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
-                    "username=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+                    "username=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+                    `return_to=${req.url}; Path=/; HttpOnly`
                 ]
             });
             res.end();
@@ -1007,7 +1120,8 @@ const serverLunching = http.createServer(async (req, res) => {
                 "Location": "/login",
                 "Set-Cookie": [
                     "session_id=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
-                    "username=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+                    "username=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+                    `return_to=${req.url}; Path=/; HttpOnly`
                 ]
             });
             res.end();
@@ -1015,6 +1129,27 @@ const serverLunching = http.createServer(async (req, res) => {
         }
         filePath = "./public/cart.html";
     } else if (req.url === "/custom"){
+        const cookieHeader = req.headers.cookie;
+        let estConnecte = false;
+        if (cookieHeader) {
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            if (cookies.session_id && sessions[cookies.session_id]) {
+                estConnecte = true;
+            }
+        }
+        if (!estConnecte) {
+            console.log("Accès à la personnalisation refusée, retour au login !");
+            res.writeHead(302, {
+                "Location": "/login",
+                "Set-Cookie": [
+                    "session_id=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+                    "username=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+                    `return_to=${req.url}; Path=/; HttpOnly`
+                ]
+            });
+            res.end();
+            return;
+        }
         filePath = "./public/custom.html";
     } else if (req.url === "/product" || req.url.startsWith("/product?")){
         filePath = "./public/product.html";

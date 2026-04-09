@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
-        <a href="/" class="back-btn">
+        <a href="/" class="back-btn" id="back-btn">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                 <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
             </svg>
@@ -50,6 +50,18 @@
                 document.getElementById("login-error").style.display = "block";
                 window.history.replaceState({}, document.title, "/login");
             }
+            document.getElementById("back-btn").addEventListener("click", (event) => {
+                event.preventDefault();
+                const cookies = document.cookie.split('; ');
+                const returnCookie = cookies.find(row => row.startsWith('return_to='));
+                if (returnCookie) {
+                    const destination = returnCookie.split('=')[1];
+                    window.location.href = destination;
+                } else {
+                    window.location.href = "/";
+                }
+                document.cookie = "return_to=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+            });
         </script>
     </body>
 </html>

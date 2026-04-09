@@ -55,6 +55,7 @@ postButton.addEventListener("click", async () => {
         const authData = await checkAuth.json();
         
         if (Array.isArray(authData) && authData.length === 0) {
+            document.cookie = "return_to=/community; Path=/"
             window.location.href = "/login";
             return;
         }

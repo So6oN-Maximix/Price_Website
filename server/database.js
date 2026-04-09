@@ -1,10 +1,14 @@
 import {Pool} from "pg";
 
-const client = new Pool({
+/*const client = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
+});*/
+
+const client = new Pool({
+    connectionString: "postgresql://postgres:LaraCsuge!*@localhost:5432/PRICE_db"
 });
 
 const products = [{
@@ -106,7 +110,7 @@ const createTablesQuery = `
     CREATE TABLE IF NOT EXISTS post_likes (
         like_id SERIAL PRIMARY KEY,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
-        post_id INT REFERENCES inspi_comments(inspi_comment_id) ON DELETE CASCADE,
+        post_id INT REFERENCES inspi_posts(inspi_post_id) ON DELETE CASCADE,
         liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         UNIQUE(user_id, post_id)
     );
@@ -115,7 +119,7 @@ const createTablesQuery = `
         post_comment_id SERIAL PRIMARY KEY,
         comment TEXT NOT NULL,
         nb_likes INT NOT NULL,
-        post_id INT REFERENCES inspi_comments(inspi_comment_id) ON DELETE CASCADE,
+        post_id INT REFERENCES inspi_posts(inspi_post_id) ON DELETE CASCADE,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
     );
@@ -132,6 +136,15 @@ const createTablesQuery = `
         token VARCHAR(255) PRIMARY KEY,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
         expires_at TIMESTAMP NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS customisation (
+        custom_id SERIAL PRIMARY KEY,
+        bouchon_id INT REFERENCES products(product_id) ON DELETE RESTRICT,
+        corps_id INT REFERENCES products(product_id) ON DELETE RESTRICT,
+        habillage_id INT REFERENCES products(product_id) ON DELETE RESTRICT,
+        socle_id INT REFERENCES products(product_id) ON DELETE RESTRICT,
+        user_id INT REFERENCES users(user_id) ON DELETE CASCADE
     );
 `;
 
