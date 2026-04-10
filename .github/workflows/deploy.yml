@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Récupérer le code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Copier les fichiers (SCP)
         uses: appleboy/scp-action@master
