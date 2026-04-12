@@ -207,3 +207,16 @@ priceDisplay.addEventListener("input", () => {
     priceRange.value = priceValue;
     priceDisplay.value = priceValue;
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const filterTitle = document.querySelector(".shop-sidebar h3");
+    const sidebar = document.querySelector(".shop-sidebar");
+    
+    if (filterTitle && sidebar) {
+        filterTitle.addEventListener("click", () => {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle("open");
+            }
+        });
+    }
+});

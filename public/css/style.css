@@ -2550,3 +2550,120 @@ input:-webkit-autofill:active {
         width: 100%;
     }
 }
+
+/* ============================================================== */
+/* 📱 RESPONSIVE DESIGN - SMARTPHONES ET TABLETTES (Max 768px)  */
+/* ============================================================== */
+
+@media screen and (max-width: 768px) {
+
+    /* --- 1. RÉGLAGES GLOBAUX --- */
+    html, body {
+        overflow-x: hidden; /* Empêche le site de glisser de gauche à droite */
+        font-size: 14px; /* Réduit un tout petit peu la police globale */
+    }
+
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+
+    /* --- 2. LA BARRE DE NAVIGATION (.glass-nav) --- */
+    /* On passe les liens sur deux lignes si besoin, et on réduit l'espacement */
+    .glass-nav {
+        width: 95%; 
+        left: 50%;
+        transform: translateX(-50%);
+        top: 15px;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        gap: 4px;
+        padding: 8px 10px;
+        border-radius: 20px;
+    }
+
+    .glass-nav a {
+        font-size: 0.65rem;
+        white-space: nowrap;
+        letter-spacing: -0.3px; 
+    }
+
+    .glass-nav svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* --- 3. BOUTIQUE (Grille et Filtres) --- */
+    
+    .shop-container {
+        /* On passe tout sur une seule colonne : les filtres passent au-dessus des produits */
+        grid-template-columns: 1fr;
+        padding: 120px 20px 50px; /* On réduit les marges sur les côtés */
+        gap: 15px;
+    }
+
+    .search-container {
+        padding: 20px;
+        margin-bottom: -90px; /* Rapproche la barre de recherche des filtres */
+    }
+
+    /* Le panneau des filtres devient un bouton déroulant */
+    .shop-sidebar {
+        position: static; /* Annule l'effet "collant" du PC */
+        padding: 15px 20px;
+        margin-top: 10px;
+    }
+
+    .shop-sidebar h3 {
+        margin: 0;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1rem;
+    }
+
+    /* On ajoute une petite flèche "▼" au bout du titre "Filtres" */
+    .shop-sidebar h3::after {
+        content: '▼';
+        font-size: 0.8rem;
+        transition: transform 0.3s ease;
+    }
+
+    /* On cache le contenu des filtres par défaut sur téléphone */
+    .shop-sidebar .filter-group,
+    .shop-sidebar .apply-filters-btn {
+        display: none;
+    }
+
+    /* --- CLASSE MAGIQUE (Quand le menu est ouvert) --- */
+    .shop-sidebar.open h3::after {
+        transform: rotate(180deg); /* La flèche se retourne (▲) */
+    }
+
+    .shop-sidebar.open .filter-group {
+        display: block;
+        margin-top: 20px;
+    }
+
+    .shop-sidebar.open .apply-filters-btn {
+        display: block;
+    }
+
+    /* On passe les produits sur 2 colonnes (au lieu de 4 sur PC) */
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    /* On réduit légèrement la taille des images pour que ça rentre bien */
+    .product-img {
+        height: 150px;
+    }
+    
+    /* On gère les longs noms de gourdes qui pourraient déborder */
+    .product-info h4 {
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
