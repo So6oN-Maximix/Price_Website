@@ -360,7 +360,19 @@ async function addComment(commentObj, containerId) {
 
   const dateSpan = document.createElement("span");
   dateSpan.classList.add("comment-date");
-  dateSpan.textContent = commentObj.date;
+  const postDate = new Date(commentObj.date);
+  const datePart = postDate.toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const timePart = postDate
+    .toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+    .replace(":", "h");
+  dateSpan.textContent = `Posté le ${datePart} à ${timePart}`;
 
   const likeButton = document.createElement("button");
   likeButton.classList.add("mini-action-btn", "like-comment-btn");

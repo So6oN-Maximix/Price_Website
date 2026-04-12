@@ -68,7 +68,6 @@ function addToOptionMenu(productObj) {
         });
         updateTotal();
         checkValidity();
-        console.log(selectedProducts);
     });
 
     const optionZone = document.getElementById(`options-${productType.toLowerCase()}`);
@@ -181,5 +180,17 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
         updateTotal();
         checkValidity();
+    }
+});
+
+document.addEventListener('click', (event) => {
+    const sidebar = document.querySelector('.custom-sidebar');
+    const summary = document.querySelector('.custom-summary');
+    const triggerBar = document.querySelector('.mobile-trigger-bar');
+    if (window.innerWidth <= 768) {
+        if (!sidebar.contains(event.target) && !summary.contains(event.target) && !triggerBar.contains(event.target)) {
+            sidebar.classList.remove('active');
+            summary.classList.remove('active');
+        }
     }
 });

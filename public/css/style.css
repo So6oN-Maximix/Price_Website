@@ -1353,6 +1353,10 @@ input:-webkit-autofill:active {
 /* PAGE PERSONNALISATION (CUSTOM)      */
 /* ========================================= */
 
+.mobile-trigger-bar {
+    display: none;
+}
+
 .custom-body {
     overflow: hidden;
 }
@@ -2559,19 +2563,7 @@ input:-webkit-autofill:active {
 /* 📱 RESPONSIVE DESIGN - SMARTPHONES ET TABLETTES (Max 768px)  */
 /* ============================================================== */
 
-@media screen and (max-width: 768px) {
-
-    /* --- 1. RÉGLAGES GLOBAUX --- */
-    html, body {
-        overflow-x: hidden; /* Empêche le site de glisser de gauche à droite */
-        font-size: 14px; /* Réduit un tout petit peu la police globale */
-    }
-
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.5rem; }
-
-    /* --- 2. LA BARRE DE NAVIGATION (.glass-nav) --- */
-    /* On passe les liens sur deux lignes si besoin, et on réduit l'espacement */
+@media screen and (max-width: 430px) {
     .glass-nav {
         width: 95%; 
         left: 50%;
@@ -2602,6 +2594,52 @@ input:-webkit-autofill:active {
     .glass-nav .nav-icon {
         display: block;
     }
+
+    /* LIMIATION DU NOMBRE DE PRODUIT DE LA BOUTIQUE A 1 PAR LIGNE*/
+
+    .shop-grid, .products-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+    }
+
+    .product-img {
+        height: 250px;
+        object-fit: cover;
+    }
+
+    /* REDUCTION DE LA TAILLE DES CHAMPS DE LOGIN ET REGISTER */
+
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px 0; 
+    }
+
+    .glass-login {
+        width: 90%;
+        max-width: 450px;
+        margin: 0 auto;
+        padding: 25px 20px;
+    }
+
+    .glass-login input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+@media screen and (max-width: 768px) {
+
+    /* --- 1. RÉGLAGES GLOBAUX --- */
+    html, body {
+        overflow-x: hidden; /* Empêche le site de glisser de gauche à droite */
+        font-size: 14px; /* Réduit un tout petit peu la police globale */
+    }
+
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+
 
     /* --- 3. BOUTIQUE (Grille et Filtres) --- */
     
@@ -2677,5 +2715,137 @@ input:-webkit-autofill:active {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    /* REDUCTION TAILLE BARRE DE RECHERCHE - SHOP */
+
+    .search-container {
+        padding: 5px 15px; 
+        margin-top: 70px; 
+        margin-bottom: -120px; 
+    }
+
+    .search-group {
+        padding: 10px 15px;
+    }
+
+    .search-group input {
+        padding: 15px 35px 5px 0;
+        font-size: 0.95rem;
+    }
+
+    .search-group label {
+        top: 20px;
+        left: 15px;
+        font-size: 0.9rem;
+    }
+
+    .search-group input:focus ~ label,
+    .search-group input:valid ~ label {
+        top: 5px;
+        left: 15px;
+        font-size: 0.7rem;
+    }
+
+    .search-icon {
+        right: 15px;
+    }
+
+    /* REDUCTION DE LA HAUTEUR DES CHAMPS DE LOGIN ET REGISTER */
+
+    .login-container {
+        min-height: 80vh; 
+        padding: 20px 0;
+    }
+
+    .glass-login {
+        padding: 20px 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .glass-login input {
+        padding: 10px 15px; 
+        font-size: 0.95rem;
+    }
+
+    .glass-login button {
+        padding: 12px;
+        margin-top: 5px;
+    }
+
+    /* --- 6. MENU DE CUSTOMISATION MOBILE (Tiroirs) --- */
+
+    /* On force le container à ne plus être en ligne (flex) pour libérer l'image */
+    .custom-main-container {
+        display: block !important;
+        padding: 0 !important;
+        height: 100vh !important;
+    }
+
+    /* Le panneau des options (Sidebar) devient un tiroir */
+    .custom-sidebar {
+        position: fixed !important;
+        bottom: -100% !important; /* Caché en bas */
+        left: 0 !important;
+        width: 100% !important;
+        height: 70vh !important; /* On lui donne une bonne hauteur */
+        background: rgba(15, 15, 15, 0.98) !important;
+        backdrop-filter: blur(20px);
+        z-index: 9999 !important;
+        transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 30px 30px 0 0;
+        padding: 25px !important;
+    }
+
+    /* Le panneau du résumé devient aussi un tiroir */
+    .custom-summary {
+        position: fixed !important;
+        bottom: -100% !important; /* Caché en bas */
+        right: 0 !important; /* On annule le 'right: 30px' du PC */
+        left: 0 !important;
+        width: 100% !important;
+        background: rgba(15, 15, 15, 0.98) !important;
+        backdrop-filter: blur(20px);
+        z-index: 9999 !important;
+        transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 30px 30px 0 0;
+        padding: 25px !important;
+    }
+
+    /* Classes pour faire monter les tiroirs */
+    .custom-sidebar.active, 
+    .custom-summary.active {
+        bottom: 0 !important;
+    }
+
+    /* On s'assure que l'aperçu de la gourde prend tout l'écran en fond */
+    .custom-preview-area {
+        height: 80vh;
+        width: 100%;
+    }
+
+    /* Style des boutons de commande en bas */
+    .mobile-trigger-bar {
+        display: flex !important;
+        position: fixed;
+        bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        gap: 15px;
+        width: 90%;
+        z-index: 999; /* Juste en dessous des tiroirs ouverts */
+    }
+
+    .mobile-trigger-bar button {
+        flex: 1;
+        padding: 15px;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: bold;
+        backdrop-filter: blur(10px);
     }
 }

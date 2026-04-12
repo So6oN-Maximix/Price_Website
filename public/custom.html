@@ -57,7 +57,13 @@
                 </a>
             </nav>
         </header>
+
         <main class="custom-main-container">
+            <div class="mobile-trigger-bar">
+                <button onclick="document.querySelector('.custom-sidebar').classList.toggle('active')">🎨 Options</button>
+                <button onclick="document.querySelector('.custom-summary').classList.toggle('active')">💰 Prix</button>
+            </div>
+
             <aside class="custom-sidebar glass-card">
                 <h2>Personnalise ta gourde</h2>
                 <div class="custom-tabs">
