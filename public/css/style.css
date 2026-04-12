@@ -96,6 +96,10 @@ header {
     transform: scale(1.1);
 }
 
+.glass-nav .nav-icon {
+    display: none;
+}
+
 /* --- VIDEO --- */
 
 .video-background {
@@ -2589,6 +2593,14 @@ input:-webkit-autofill:active {
     .glass-nav svg {
         width: 18px;
         height: 18px;
+    }
+
+    .glass-nav .nav-text {
+        display: none;
+    }
+    
+    .glass-nav .nav-icon {
+        display: block;
     }
 
     /* --- 3. BOUTIQUE (Grille et Filtres) --- */
