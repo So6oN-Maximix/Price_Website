@@ -1490,6 +1490,20 @@ input:-webkit-autofill:active {
     text-align: center;
 }
 
+/* --- ICÔNE "AUCUN" (∅) --- */
+.empty-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    min-height: 80px;
+    flex-shrink: 0;
+    font-size: 2.5rem;
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 300;
+}
+
 /* --- ZONE CENTRALE (PRÉVISUALISATION) --- */
 .custom-preview-area {
     flex-grow: 1;
@@ -2568,6 +2582,10 @@ input:-webkit-autofill:active {
 /* ============================================================== */
 
 @media screen and (max-width: 430px) {
+    footer {
+        display: none;
+    }
+
     .glass-nav {
         width: 95%; 
         left: 50%;
@@ -2583,7 +2601,6 @@ input:-webkit-autofill:active {
     .glass-nav a {
         font-size: 0.8rem;
         white-space: nowrap;
-        letter-spacing: -0.3px; 
     }
 
     .glass-nav svg {
@@ -2877,42 +2894,71 @@ input:-webkit-autofill:active {
     /* --- 6. MENU DE CUSTOMISATION MOBILE (Tiroirs) --- */
 
     .custom-main-container {
-        display: block !important;
-        padding: 0 !important;
-        height: 100vh !important;
+        display: block;
+        padding: 0;
+        height: 100vh;
     }
 
     .custom-sidebar {
-        position: fixed !important;
-        bottom: -100% !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 70vh !important;
-        background: rgba(15, 15, 15, 0.98) !important;
+        position: fixed ;
+        bottom: -100%;
+        left: 0;
+        width: 100%;
+        height: 70vh;
+        background: rgba(15, 15, 15, 0.98);
         backdrop-filter: blur(20px);
-        z-index: 9999 !important;
+        z-index: 9999;
         transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         border-radius: 30px 30px 0 0;
-        padding: 25px !important;
+        padding: 25px;
+        box-sizing: border-box;
+
+        height: 75vh;
+        max-height: 75vh;
+        overflow: hidden;
     }
 
     .custom-summary {
-        position: fixed !important;
-        bottom: -100% !important;
-        right: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        background: rgba(15, 15, 15, 0.98) !important;
+        position: fixed;
+        bottom: -100%;
+        right: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(15, 15, 15, 0.98);
         backdrop-filter: blur(20px);
-        z-index: 9999 !important;
+        z-index: 9999;
         transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         border-radius: 30px 30px 0 0;
-        padding: 25px !important;
+        padding: 25px;
     }
 
     .custom-sidebar.active, 
     .custom-summary.active {
-        bottom: 0 !important;
+        bottom: 0;
+    }
+
+    .options-grid {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding-bottom: 25px;
+        align-content: start;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .options-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* --- PROTECTION DU TITRE ET DES ONGLETS --- */
+    .custom-sidebar h2,
+    .custom-tabs {
+        flex-shrink: 0;
+    }
+
+    .custom-tabs {
+        min-height: 45px;
+        margin-bottom: 5px;
     }
 
     .custom-preview-area {
@@ -2921,7 +2967,7 @@ input:-webkit-autofill:active {
     }
 
     .mobile-trigger-bar {
-        display: flex !important;
+        display: flex;
         position: fixed;
         bottom: 25px;
         left: 50%;

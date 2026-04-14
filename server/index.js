@@ -552,7 +552,8 @@ const serverLunching = http.createServer(async (req, res) => {
                     }
                     for (const type in selectedProducts) {
                         if (selectedProducts[type] != "") {
-                            await database.query(`UPDATE customisation SET ${type}_id = $1 WHERE user_id = $2;`, [selectedProducts[type], userId]);
+                            const selectedId = selectedProducts[type] === -1 ? null : selectedProducts[type];
+                            await database.query(`UPDATE customisation SET ${type}_id = $1 WHERE user_id = $2;`, [selectedId, userId]);
                         }
                     }
                     console.log(`La customisation de l'utilisateur ${userId} a été mise à jour`);
@@ -614,12 +615,17 @@ const serverLunching = http.createServer(async (req, res) => {
             try {
                 const query = await database.query("SELECT * FROM products WHERE product_id = $1;", [productId]);
                 if (query.rows.length === 0) {
-                    res.writeHead(404);
-                    res.end(JSON.stringify({message: "Produit inexistant"}));
-                    return;
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify({
+                        name: "∅",
+                        type: cible,
+                        price: 0.00,
+                        promo: null
+                    }));
+                } else {
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify(query.rows[0]));
                 }
-                res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(query.rows[0]));
             } catch (error) {
                 console.error("Erreur API - Get Product ID: ", error);
                 res.writeHead(500);
@@ -674,7 +680,7 @@ const serverLunching = http.createServer(async (req, res) => {
                 return;
             }
             try {
-                const getProducts = await database.query("SELECT * FROM products WHERE LOWER(type) = LOWER($1);", [productType]);
+                const getProducts = await database.query("SELECT * FROM products WHERE type = $1;", [productType]);
                 if (getProducts.rows.length === 0) {
                     res.writeHead(404);
                     res.end(JSON.stringify({message: "Produit inexistant"}));
@@ -1051,7 +1057,7 @@ const serverLunching = http.createServer(async (req, res) => {
             if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
-            const types = ["Bouchon", "Corps", "Habillage", "Socle"];
+            const types = ["bouchon", "corps", "habillage", "socle"];
             let selectedProducts = {};
             try {
                 const selectedProductsQuery = await database.query("SELECT * FROM customisation WHERE user_id = $1;", [userId]);

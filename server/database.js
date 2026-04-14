@@ -9,49 +9,49 @@ const client = new Pool({
 
 const products = [{
     name: "Produit 01",
-    type: "Corps",
+    type: "corps",
     price: 29.56,
     promo: 10,
     colors: ["#8F9779", "#006A71", "#CC6A5A", "#383E42"]
 },
 {
     name: "Produit 02",
-    type: "Bouchon",
+    type: "bouchon",
     price: 80.49,
     promo: 20,
     colors: ["#28282B", "#71797E", "#F5F5F0"]
 },
 {
     name: "Produit 03",
-    type: "Socle",
+    type: "socle",
     price: 27.96,
     promo: null,
     colors: ["#28282B", "#F2F4F4", "#FF5F00"]
 },
 {
     name: "Produit 04",
-    type: "Habillage",
+    type: "habillage",
     price: 21.02,
     promo: null,
     colors: ["#D2A039", "#1A2F4B", "#A4A68C", "#E2C2C6"]
 },
 {
     name: "Produit 05",
-    type: "Habillage",
+    type: "habillage",
     price: 54.04,
     promo: null,
     colors: ["#9E9E9E", "#72452D"]
 },
 {
     name: "Produit 06",
-    type: "Corps",
+    type: "corps",
     price: 72.30,
     promo: null,
     colors: ["#E1D5C9", "#5D6246", "#0A0A0A"]
 },
 {
     name: "Produit 07",
-    type: "Bouchon",
+    type: "bouchon",
     price: 25.28,
     promo: 50,
     colors: ["#1A2F4B", "#B84A39"]

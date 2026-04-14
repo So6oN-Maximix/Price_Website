@@ -1,23 +1,31 @@
 const tabButtons = document.querySelectorAll(".custom-tab-btn");
 const optionContainers = document.querySelectorAll(".options-grid");
 
-let selectedProducts = {"Bouchon": "", "Corps": "", "Habillage": "", "Socle": ""};
+let selectedProducts = {"bouchon": "", "corps": "", "habillage": "", "socle": ""};
 
 function addToOptionMenu(productObj) {
     const optionItemDiv = document.createElement("div");
     optionItemDiv.classList.add("option-item", "glass-card");
-    optionItemDiv.id = `${productObj.name}-card`;
+    const keyCard = productObj.name === "∅" ? null : productObj.product_id;
+    optionItemDiv.id = `${productObj.type}-${keyCard}-card`;
 
-    const imgElement = document.createElement("img");
-    imgElement.src = `https://placehold.co/100x100/transparent/white?text=${productObj.name.split(" ").join("-")}`;
-    imgElement.alt = productObj.name;
-    imgElement.classList.add("product-thumbnail");
+    if (productObj.name === "∅") {
+        const emptyIcon = document.createElement("div");
+        emptyIcon.classList.add("product-thumbnail", "empty-icon"); 
+        emptyIcon.textContent = "∅";
+        optionItemDiv.appendChild(emptyIcon);
+    } else {
+        const imgElement = document.createElement("img");
+        imgElement.src = `https://placehold.co/100x100/transparent/white?text=${productObj.name.split(" ").join("-")}`;
+        imgElement.alt = productObj.name;
+        imgElement.classList.add("product-thumbnail");
+        optionItemDiv.appendChild(imgElement);
+    }
 
     const productName = document.createElement("span");
     productName.classList.add("product-name");
-    productName.textContent = productObj.name;
+    productName.textContent = productObj.name === "∅" ? "Aucun" : productObj.name;
 
-    optionItemDiv.appendChild(imgElement);
     optionItemDiv.appendChild(productName);
 
     if (productObj.promo) {
@@ -51,13 +59,11 @@ function addToOptionMenu(productObj) {
     const productType = productObj.type;
     optionItemDiv.addEventListener("click", async () => {
         if (optionItemDiv.classList.contains("selected")) return;
-        selectedProducts[productType] = productObj.product_id;
+        selectedProducts[productType] = productObj.name === "∅" ? null : productObj.product_id;
 
         const parentGrid = optionItemDiv.parentElement;
         const currentlySelected = parentGrid.querySelectorAll(".selected");
-        currentlySelected.forEach(element => {
-            element.classList.remove("selected");
-        });
+        currentlySelected.forEach(element => element.classList.remove("selected"));
         optionItemDiv.classList.add("selected");
 
         addToSummary(productObj);
@@ -70,45 +76,47 @@ function addToOptionMenu(productObj) {
         checkValidity();
     });
 
-    const optionZone = document.getElementById(`options-${productType.toLowerCase()}`);
+    const optionZone = document.getElementById(`options-${productType}`);
     if (optionZone) optionZone.appendChild(optionItemDiv);
 }
 
 function addToSummary(productObj) {
     const productType = productObj.type;
-    const productTypeLine = document.getElementById(`${productType.toLowerCase()}-summary`);
-    const productNameLine = document.getElementById(`summary-${productType.toLowerCase()}-name`)
+    const productTypeLine = document.getElementById(`${productType}-summary`);
+    const productNameLine = document.getElementById(`summary-${productType}-name`);
+
+    const displayName = productObj.name === "∅" ? `Aucun ${productType}` : productObj.name;
+
+    let finalPrice = Number(productObj.price);
+    if (productObj.promo) finalPrice *= 1 - Number(productObj.promo) / 100;
+    const priceText = `${finalPrice.toFixed(2)}€`;
+
     if (!productNameLine) {
         const productNameSpan = document.createElement("span");
         productNameSpan.classList.add("item-name");
-        productNameSpan.id = `summary-${productType.toLowerCase()}-name`;
-        productNameSpan.textContent = productObj.name;
+        productNameSpan.id = `summary-${productType}-name`;
+        productNameSpan.textContent = productObj.name === "∅" ? `Aucun ${productType}` : productObj.name;
+
         const productPriceSpan = document.createElement("span");
         productPriceSpan.classList.add("item-price");
         productPriceSpan.id = `summary-${productType.toLowerCase()}-price`;
-        let productPrice = Number(productObj.price);
-        if (productObj.promo) productPrice *= 1 - Number(productObj.promo) / 100;
-        productPriceSpan.textContent = `${productPrice.toFixed(2)}€`;
-        productPriceSpan.dataset.price = productPrice.toFixed(2);
+        productPriceSpan.textContent = priceText;
+        productPriceSpan.dataset.price = finalPrice.toFixed(2);
 
         productTypeLine.appendChild(productNameSpan);
         productTypeLine.appendChild(productPriceSpan);
     } else {
-        const productPriceSpan = document.getElementById(`summary-${productType.toLowerCase()}-price`);
-        productNameLine.textContent = productObj.name;
-        let productPrice = Number(productObj.price);
-        if (productObj.promo) productPrice *= 1 - Number(productObj.promo) / 100;
-        productPriceSpan.textContent = `${productPrice.toFixed(2)}€`;
-        productPriceSpan.dataset.price = productPrice.toFixed(2);
+        productNameLine.textContent = displayName;
+        const productPriceSpan = document.getElementById(`summary-${productType}-price`);
+        productPriceSpan.textContent = priceText;
+        productPriceSpan.dataset.price = finalPrice.toFixed(2);
     }
 }
 
 function updateTotal() {
     let total = 0;
     const allPriceSpans = document.querySelectorAll(".item-price");
-    allPriceSpans.forEach(span => {
-        total += Number(span.dataset.price); 
-    });
+    allPriceSpans.forEach(span => total += Number(span.dataset.price));
     document.getElementById("custom-total-price").textContent = `${total.toFixed(2)}€`;
 }
 
@@ -133,53 +141,69 @@ tabButtons.forEach(btn => {
     btn.addEventListener("click", async () => {
         tabButtons.forEach(button => button.classList.remove("active"));
         btn.classList.add("active");
-        optionContainers.forEach(container => {
-            container.style.display = "none";
-        });
+        optionContainers.forEach(container => container.style.display = "none");
         const cible = btn.getAttribute("data-target");
         const zoneToLoad = document.getElementById(`options-${cible}`);
         if (zoneToLoad) {
             zoneToLoad.style.display = "grid";
-            const serverResponse = await fetch(`/api/get-product-type?productType=${cible}`);
-            if (serverResponse.ok) {
-                zoneToLoad.innerHTML = "";
-                const productTypeList = await serverResponse.json();
-                for (const productType of productTypeList) {
-                    addToOptionMenu(productType);
-                }
-                const selectedProductQuery = await fetch(`/api/get-selected?type=${cible}`);
-                if (selectedProductQuery.ok) {
-                    const selectedProductName = await selectedProductQuery.json();
-                    if (selectedProductName) {
-                        const cardToSelect = document.getElementById(`${selectedProductName}-card`);
-                        if (cardToSelect) {
-                            cardToSelect.click();
-                        }
+            if (zoneToLoad.innerHTML.trim() === "") {
+                const serverResponse = await fetch(`/api/get-product-type?productType=${cible}`);
+                if (serverResponse.ok) {
+                    zoneToLoad.innerHTML = "";
+                    addToOptionMenu({
+                        name: "∅",
+                        type: cible,
+                        price: 0.00,
+                        promo: null
+                    });
+                    const productTypeList = await serverResponse.json();
+                    for (const productType of productTypeList) {
+                        addToOptionMenu(productType);
                     }
                 }
             }
+            const selectedProductId = selectedProducts[cible];
+            const currentlySelected = zoneToLoad.querySelectorAll(".selected");
+            currentlySelected.forEach(elem => elem.classList.remove("selected"));
+
+            let cardIdToSelect = `${cible}-${selectedProductId}-card`;
+            if (selectedProductId === null || selectedProductId === undefined) cardIdToSelect = `${cible}-null-card`;
+
+            const cardToSelct = document.getElementById(cardIdToSelect);
+            if (cardToSelct) cardToSelct.classList.add("selected");
         }
     });
 });
+
 window.addEventListener("DOMContentLoaded", async () => {
     document.querySelector(".custom-tab-btn.active").click();
     const getSelectedFetch = await fetch("/api/get-selected");
     if (getSelectedFetch.ok) {
-        selectedProducts = await getSelectedFetch.json();
+        const databaseProducts = await getSelectedFetch.json();
         for (const type in selectedProducts) {
-            if (selectedProducts[type]) {
-                const productNameLine = document.getElementById(`summary-${type.toLowerCase()}-name`);
-                if (!productNameLine) {
-                    const productInfoRequest = await fetch(`/api/get-product-info?id=${selectedProducts[type]}`);
-                    if (productInfoRequest.ok) {
-                        const productObj = await productInfoRequest.json();
-                        addToSummary(productObj);
-                    }
+            let value = databaseProducts[type.toLowerCase()];
+            if (value === undefined || value === "") value = null;
+            selectedProducts[type] = value;
+            if (value === null) {
+                addToSummary({
+                    name: "∅",
+                    type: type,
+                    price: 0.00,
+                    promo: null
+                });
+            } else {
+                const productInfoRequest = await fetch(`/api/get-product-info?id=${value}`);
+                if (productInfoRequest.ok) {
+                    const productObj = await productInfoRequest.json();
+                    addToSummary(productObj);
                 }
             }
         }
         updateTotal();
         checkValidity();
+
+        const firstActiveTab = document.querySelector(".custom-tab-btn.active");
+        if (firstActiveTab) firstActiveTab.click();
     }
 });
 

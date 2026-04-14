@@ -24,7 +24,7 @@ function addProduct(productObj) {
 
     const categoryBadge = document.createElement("div");
     categoryBadge.classList.add("badge-category");
-    categoryBadge.textContent = productObj.type;
+    categoryBadge.textContent = productObj.type.charAt(0).toUpperCase() + productObj.type.slice(1);
 
     const imgDiv = document.createElement("div");
     imgDiv.classList.add("product-img");
