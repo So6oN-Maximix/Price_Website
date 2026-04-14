@@ -263,3 +263,31 @@ if (dashboardTabBtn) menuButtons.forEach((btn, index) => {
         });
     });
 });
+
+/* ============================================================== */
+/* MENU DÉROULANT DE NAVIGATION (ENGRENAGE)                       */
+/* ============================================================== */
+
+function toggleNavMenu(event, dropdownId) {
+    event.preventDefault(); // Empêche le clic de faire sauter la page
+    
+    // 1. On ferme tous les autres sous-menus ouverts
+    document.querySelectorAll('.nav-dropdown-menu').forEach(menu => {
+        if(menu.id !== dropdownId) menu.classList.remove('show');
+    });
+
+    // 2. On ouvre ou on ferme celui qu'on a cliqué
+    const dropdown = document.getElementById(dropdownId);
+    if (dropdown) {
+        dropdown.classList.toggle('show');
+    }
+}
+
+// 3. Fermer le menu si on clique n'importe où ailleurs sur l'écran
+document.addEventListener('click', (event) => {
+    if (!event.target.closest('.nav-item-dropdown')) {
+        document.querySelectorAll('.nav-dropdown-menu').forEach(menu => {
+            menu.classList.remove('show');
+        });
+    }
+});

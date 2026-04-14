@@ -96,8 +96,12 @@ header {
     transform: scale(1.1);
 }
 
-.glass-nav .nav-icon {
+.glass-nav .nav-icon, .glass-nav .nav-item-dropdown {
     display: none;
+}
+
+.glass-nav .on-pc {
+    display: block;
 }
 
 /* --- VIDEO --- */
@@ -2536,7 +2540,7 @@ input:-webkit-autofill:active {
     font-size: 1rem;
 }
 
-/* Grille finale (Communauté et Engagement) */
+/* Grille finale */
 .about-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -2577,7 +2581,7 @@ input:-webkit-autofill:active {
     }
 
     .glass-nav a {
-        font-size: 0.65rem;
+        font-size: 0.8rem;
         white-space: nowrap;
         letter-spacing: -0.3px; 
     }
@@ -2587,11 +2591,11 @@ input:-webkit-autofill:active {
         height: 18px;
     }
 
-    .glass-nav .nav-text {
+    .glass-nav .nav-text, .glass-nav .on-pc {
         display: none;
     }
     
-    .glass-nav .nav-icon {
+    .glass-nav .nav-icon, .glass-nav .nav-item-dropdown {
         display: block;
     }
 
@@ -2627,37 +2631,138 @@ input:-webkit-autofill:active {
         width: 100%;
         box-sizing: border-box;
     }
+
+    /* --- MENU DÉROULANT --- */
+
+    .nav-item-dropdown {
+        position: relative; 
+    }
+
+    .nav-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 50px;
+        right: 0;
+        left: auto;
+        transform: none;
+        
+        background: rgba(20, 20, 20, 0.95);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        padding: 8px;
+        min-width: 160px;
+        z-index: 1000;
+        
+        flex-direction: column;
+        gap: 5px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        transform-origin: top right;
+    }
+
+    /* Quand le JS ajoute la classe 'show' */
+    .nav-dropdown-menu.show {
+        display: flex;
+        animation: unfoldMenu 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    /* Animation de déroulement stylée */
+    @keyframes unfoldMenu {
+        from {
+            opacity: 0;
+            transform: scale(0.8) translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    .nav-dropdown-menu a {
+        padding: 12px 15px !important;
+        color: white !important;
+        text-decoration: none;
+        font-size: 0.9rem !important;
+        border-radius: 10px;
+        text-align: left;
+        width: 100%;
+        white-space: nowrap; 
+        transition: background 0.2s;
+    }
+
+    .nav-dropdown-menu a:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* ============================================================== */
+    /* 📱 PAGE DÉTAIL PRODUIT (MOBILE)                                */
+    /* ============================================================== */
+
+    /* On passe la page sur une seule colonne */
+    .product-split {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+    }
+
+    /* On réduit la taille de la grande image pour gagner de la place */
+    .hero-image-container {
+        height: 350px !important;
+        padding: 20px;
+    }
+
+    /* On réorganise l'intérieur du panneau d'information */
+    .product-info-glass {
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 20px !important; 
+        position: static !important;
+    }
+
+    /* $On force la description à aller TOUT EN BAS */
+    .product-description-group,
+    #detail-description {
+        order: 10 !important;
+        margin-top: 20px !important;
+        padding-top: 20px !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* On s'assure que les boutons d'achat restent juste sous le prix/couleurs */
+    .product-actions-group {
+        order: 5 !important;
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+    }
 }
 
 @media screen and (max-width: 768px) {
 
-    /* --- 1. RÉGLAGES GLOBAUX --- */
+    /* --- RÉGLAGES GLOBAUX --- */
     html, body {
-        overflow-x: hidden; /* Empêche le site de glisser de gauche à droite */
-        font-size: 14px; /* Réduit un tout petit peu la police globale */
+        overflow-x: hidden;
+        font-size: 14px;
     }
 
     h1 { font-size: 2rem; }
     h2 { font-size: 1.5rem; }
 
 
-    /* --- 3. BOUTIQUE (Grille et Filtres) --- */
+    /* --- BOUTIQUE (Grille et Filtres) --- */
     
     .shop-container {
-        /* On passe tout sur une seule colonne : les filtres passent au-dessus des produits */
         grid-template-columns: 1fr;
-        padding: 120px 20px 50px; /* On réduit les marges sur les côtés */
+        padding: 120px 20px 50px;
         gap: 15px;
     }
 
     .search-container {
         padding: 20px;
-        margin-bottom: -90px; /* Rapproche la barre de recherche des filtres */
+        margin-bottom: -90px;
     }
 
-    /* Le panneau des filtres devient un bouton déroulant */
     .shop-sidebar {
-        position: static; /* Annule l'effet "collant" du PC */
+        position: static;
         padding: 15px 20px;
         margin-top: 10px;
     }
@@ -2670,23 +2775,20 @@ input:-webkit-autofill:active {
         align-items: center;
         font-size: 1rem;
     }
-
-    /* On ajoute une petite flèche "▼" au bout du titre "Filtres" */
+    
     .shop-sidebar h3::after {
         content: '▼';
         font-size: 0.8rem;
         transition: transform 0.3s ease;
     }
 
-    /* On cache le contenu des filtres par défaut sur téléphone */
     .shop-sidebar .filter-group,
     .shop-sidebar .apply-filters-btn {
         display: none;
     }
 
-    /* --- CLASSE MAGIQUE (Quand le menu est ouvert) --- */
     .shop-sidebar.open h3::after {
-        transform: rotate(180deg); /* La flèche se retourne (▲) */
+        transform: rotate(180deg);
     }
 
     .shop-sidebar.open .filter-group {
@@ -2698,18 +2800,15 @@ input:-webkit-autofill:active {
         display: block;
     }
 
-    /* On passe les produits sur 2 colonnes (au lieu de 4 sur PC) */
     .products-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
 
-    /* On réduit légèrement la taille des images pour que ça rentre bien */
     .product-img {
         height: 150px;
     }
     
-    /* On gère les longs noms de gourdes qui pourraient déborder */
     .product-info h4 {
         font-size: 0.9rem;
         white-space: nowrap;
@@ -2766,7 +2865,7 @@ input:-webkit-autofill:active {
     }
 
     .glass-login input {
-        padding: 10px 15px; 
+        padding: 10px 0px; 
         font-size: 0.95rem;
     }
 
@@ -2777,20 +2876,18 @@ input:-webkit-autofill:active {
 
     /* --- 6. MENU DE CUSTOMISATION MOBILE (Tiroirs) --- */
 
-    /* On force le container à ne plus être en ligne (flex) pour libérer l'image */
     .custom-main-container {
         display: block !important;
         padding: 0 !important;
         height: 100vh !important;
     }
 
-    /* Le panneau des options (Sidebar) devient un tiroir */
     .custom-sidebar {
         position: fixed !important;
-        bottom: -100% !important; /* Caché en bas */
+        bottom: -100% !important;
         left: 0 !important;
         width: 100% !important;
-        height: 70vh !important; /* On lui donne une bonne hauteur */
+        height: 70vh !important;
         background: rgba(15, 15, 15, 0.98) !important;
         backdrop-filter: blur(20px);
         z-index: 9999 !important;
@@ -2799,11 +2896,10 @@ input:-webkit-autofill:active {
         padding: 25px !important;
     }
 
-    /* Le panneau du résumé devient aussi un tiroir */
     .custom-summary {
         position: fixed !important;
-        bottom: -100% !important; /* Caché en bas */
-        right: 0 !important; /* On annule le 'right: 30px' du PC */
+        bottom: -100% !important;
+        right: 0 !important;
         left: 0 !important;
         width: 100% !important;
         background: rgba(15, 15, 15, 0.98) !important;
@@ -2814,19 +2910,16 @@ input:-webkit-autofill:active {
         padding: 25px !important;
     }
 
-    /* Classes pour faire monter les tiroirs */
     .custom-sidebar.active, 
     .custom-summary.active {
         bottom: 0 !important;
     }
 
-    /* On s'assure que l'aperçu de la gourde prend tout l'écran en fond */
     .custom-preview-area {
         height: 80vh;
         width: 100%;
     }
 
-    /* Style des boutons de commande en bas */
     .mobile-trigger-bar {
         display: flex !important;
         position: fixed;
@@ -2835,7 +2928,7 @@ input:-webkit-autofill:active {
         transform: translateX(-50%);
         gap: 15px;
         width: 90%;
-        z-index: 999; /* Juste en dessous des tiroirs ouverts */
+        z-index: 2;
     }
 
     .mobile-trigger-bar button {
