@@ -1,3 +1,28 @@
+function showToast(productName) {
+    let toastContainer = document.querySelector(".toast-container");
+    if (!toastContainer) {
+        toastContainer = document.createElement("div");
+        toastContainer.classList.add("toast-container");
+        document.body.appendChild(toastContainer);
+    }
+    const toast = document.createElement("div");
+    toast.classList.add("toast");
+    toast.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        ${productName} ajouté au panier !
+    `;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add("hide");
+        toast.addEventListener("animationend", () => toast.remove());
+    }, 3000);
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get("id");
@@ -77,3 +102,38 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("detail-name").textContent = "Erreur de chargement";
     }
 });
+
+const addToCartBtn = document.getElementById("detail-add-cart");
+addToCartBtn.addEventListener("click", async () => {
+    if (addToCartBtn.disabled) return;
+    addToCartBtn.disabled = true;
+    const originalText = addToCartBtn.textContent;
+    addToCartBtn.textContent = "Ajout...";
+    addToCartBtn.classList.add("loading");
+    const productName = document.getElementById("detail-name").textContent;
+    try {
+        const response = await fetch("/api/add-to-cart", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({product_name: productName})
+        });
+        if (response.ok) {
+            addToCartBtn.textContent = "Ajouté ! ✓";
+            addToCartBtn.classList.remove("loading");
+            addToCartBtn.classList.add("success");
+            showToast(productName);
+        } else {
+            addToCartBtn.textContent = "Erreur (Non connecté ?)";
+            addToCartBtn.classList.remove("loading");
+        }
+    } catch (error) {
+        console.log(error);
+        addToCartBtn.textContent = "Erreur";
+        addToCartBtn.classList.remove("loading");
+    }
+    setTimeout(() => {
+        addToCartBtn.textContent = originalText;
+        addToCartBtn.classList.remove("success");
+        addToCartBtn.disabled = false;
+    }, 2500);
+})

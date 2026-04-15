@@ -74,6 +74,9 @@ function addToOptionMenu(productObj) {
         });
         updateTotal();
         checkValidity();
+        if (typeof window.update3DModel === "function") {
+            window.update3DModel(productType, selectedProducts[productType]);
+        }
     });
 
     const optionZone = document.getElementById(`options-${productType}`);
@@ -181,7 +184,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (getSelectedFetch.ok) {
         const databaseProducts = await getSelectedFetch.json();
         for (const type in selectedProducts) {
-            let value = databaseProducts[type.toLowerCase()];
+            let value = databaseProducts[type];
             if (value === undefined || value === "") value = null;
             selectedProducts[type] = value;
             if (value === null) {
@@ -201,6 +204,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
         updateTotal();
         checkValidity();
+        await loadAnimation(selectedProducts);
 
         const firstActiveTab = document.querySelector(".custom-tab-btn.active");
         if (firstActiveTab) firstActiveTab.click();
