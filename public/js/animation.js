@@ -47,18 +47,40 @@ window.update3DModel = async function(type, productId) {
         if (response.ok) {
             const productInfos = await response.json();
             const fileName = `${productInfos.type}_${productInfos.name.trim().toLowerCase().split(" ").join("_")}.glb`;
-            
-            loader.load(repoModels + fileName, function (gltf) {
-                const newModel = gltf.scene;
-                
-                newModel.rotation.y = -Math.PI / 2;
-                newModel.position.y = -30;
-                newModel.position.z = -50;
-                newModel.scale.set(0.2, 0.2, 0.2);
-                
-                scene.add(newModel);
-                loadedMeshes[typeLower] = newModel;
-            });
+            const loaderUI = document.getElementById("loading-3d");
+            if (loaderUI) {
+                loaderUI.style.display = "block";
+                loaderUI.textContent = "Chargement 3D : 0%";
+            }
+            loader.load(
+                repoModels + fileName, 
+                function (gltf) {
+                    const newModel = gltf.scene;
+                    newModel.rotation.y = -Math.PI / 2;
+                    newModel.position.y = -30;
+                    newModel.position.z = -50;
+                    newModel.scale.set(0.2, 0.2, 0.2);
+                    
+                    scene.add(newModel);
+                    loadedMeshes[typeLower] = newModel;
+                    if (loaderUI) loaderUI.style.display = "none";
+                },
+                function (xhr) {
+                    if (xhr.lengthComputable) {
+                        const percentComplete = (xhr.loaded / xhr.total) * 100;
+                        if (loaderUI) {
+                            loaderUI.textContent = `Chargement 3D : ${Math.round(percentComplete)}%`;
+                        }
+                    }
+                },
+                function (error) {
+                    console.error("Erreur lors du chargement du modèle 3D :", error);
+                    if (loaderUI) {
+                        loaderUI.textContent = "Erreur de chargement";
+                        setTimeout(() => loaderUI.style.display = "none", 2000);
+                    }
+                }
+            );
         }
     } catch (error) {
         console.error("Erreur lors du chargement du nouveau modèle 3D :", error);
