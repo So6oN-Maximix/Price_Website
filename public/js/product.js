@@ -136,4 +136,4 @@ addToCartBtn.addEventListener("click", async () => {
         addToCartBtn.classList.remove("success");
         addToCartBtn.disabled = false;
     }, 2500);
-})
+});

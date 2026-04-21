@@ -139,6 +139,31 @@ function checkValidity() {
     }
 }
 
+function showToast() {
+    let toastContainer = document.querySelector(".toast-container");
+    if (!toastContainer) {
+        toastContainer = document.createElement("div");
+        toastContainer.classList.add("toast-container");
+        document.body.appendChild(toastContainer);
+    }
+    const toast = document.createElement("div");
+    toast.classList.add("toast");
+    toast.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Personnalisation ajouté au panier !
+    `;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add("hide");
+        toast.addEventListener("animationend", () => toast.remove());
+    }, 3000);
+}
+
 checkValidity();
 tabButtons.forEach(btn => {
     btn.addEventListener("click", async () => {
@@ -221,4 +246,48 @@ document.addEventListener('click', (event) => {
             summary.classList.remove('active');
         }
     }
+});
+
+const finishButton = document.getElementById("finish-button");
+finishButton.addEventListener("click", async () => {
+    if (finishButton.disabled) return;
+    finishButton.disabled = true;
+    const originalText = finishButton.textContent;
+    finishButton.textContent = "Ajout...";
+    finishButton.classList.add("loading");
+    try {
+        for (const type in selectedProducts) {
+            if (selectedProducts[type] !== null) {
+                const productInfoRequest = await fetch(`/api/get-product-info?id=${selectedProducts[type]}`);
+                if (productInfoRequest.ok) {
+                    const productObj = await productInfoRequest.json();
+                    const productName = productObj.name;
+
+                    const response = await fetch("/api/add-to-cart", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({product_name: productName})
+                    });
+                    if (!response.ok) {
+                        finishButton.textContent = "Erreur (Non connecté ?)";
+                        finishButton.classList.remove("loading");
+                    }
+                }
+            }
+        }
+        finishButton.textContent = "Ajouté ! ✓";
+        finishButton.classList.remove("loading");
+        finishButton.classList.add("success");
+        showToast();
+        await fetch("/api/clear-custom");
+    } catch (error) {
+        console.log(error);
+        finishButton.textContent = "Erreur";
+        finishButton.classList.remove("loading");
+    }
+    setTimeout(() => {
+        finishButton.textContent = originalText;
+        finishButton.classList.remove("success");
+        finishButton.disabled = false;
+    }, 2500);
 });
