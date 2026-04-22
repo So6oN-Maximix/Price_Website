@@ -2752,6 +2752,81 @@ input:-webkit-autofill:active {
         margin-top: 10px !important;
         margin-bottom: 10px !important;
     }
+
+    /* ============================================================== */
+    /* TABLEAU DE BORD - MOBILE                                       */
+    /* ============================================================== */
+
+    .stats-grid {
+        grid-template-columns: 1fr; 
+        gap: 15px;
+    }
+
+    .stat-card {
+        padding: 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+    }
+
+    .stat-card p {
+        font-size: 1.5rem;
+        margin-top: 0;
+    }
+
+    .designs-mini-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .design-card {
+        padding: 12px;
+    }
+
+    .design-preview {
+        width: 60px;
+        height: 60px;
+    }
+
+    .design-info h4 {
+        font-size: 0.95rem;
+    }
+
+    .order-summary {
+        position: relative;
+        padding: 20px;
+    }
+
+    .order-header {
+        display: block;
+        margin-bottom: 15px;
+    }
+
+    .order-header span:first-child {
+        display: block;
+        max-width: 50%;
+        margin-top: 5px;
+    }
+
+    .status-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 0.7rem;
+        text-align: center;
+    }
+
+    .order-total {
+        text-align: left;
+        margin-top: 15px;
+    }
+
+    .profile-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
 }
 
 @media screen and (max-width: 768px) {
