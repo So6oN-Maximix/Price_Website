@@ -3068,6 +3068,17 @@ input:-webkit-autofill:active {
 
     /* --- PROFILE MENU --- */
 
+    .profile-container {
+        display: flex;
+        flex-direction: column;
+        padding: 100px 20px 100px;
+        width: 100%;
+    }
+
+    .profile-content {
+        width: 100%;
+    }
+
     .profile-sidebar {
         display: none;
     }
@@ -3189,22 +3200,38 @@ input:-webkit-autofill:active {
     .profile-bar-menus a.logout-btn-2,
     .profile-item-dropup a.logout-btn-2,
     .profile-dropup-menu a.logout-btn-2 {
-        color: #f87171;
+        color: #fb2727;
         opacity: 0.8;
     }
 
     #logout-btn-2, 
     #logout-btn-2 span {
-        color: #f87171;
+        color: #fb2727;
     }
 
     #logout-btn-2 svg,
     #logout-btn-2 svg path {
-        fill: #f87171;
+        fill: #fb2727;
     }
     
     .profile-bar-menus a.logout-btn-2:active,
     .profile-bar-menus a.logout-btn-2:hover {
-        opacity: 1.5;
+        opacity: 1;
+    }
+
+    /* --- CENTRAGE POSTS PROFILE --- */
+
+    .my-posts-grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+        max-width: 650px; 
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .my-posts-grid > * {
+        width: 100%;
     }
 }
