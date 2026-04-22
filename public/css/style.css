@@ -318,6 +318,7 @@ footer {
 }
 
 /* --- CORRECTION DE L'AUTOFILL DU NAVIGATEUR --- */
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
@@ -3063,5 +3064,147 @@ input:-webkit-autofill:active {
         margin-top: 10px;
         padding-top: 10px;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* --- PROFILE MENU --- */
+
+    .profile-sidebar {
+        display: none;
+    }
+    
+    /* BAR */
+
+    .profile-bar-menus {
+        display: flex;
+        position: fixed;
+        top: auto !important;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 95%;
+        z-index: 10000;
+        
+        justify-content: space-around;
+        padding: 10px 15px;
+        height: auto;
+    }
+
+    .profile-bar-menus a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        
+        color: white;
+        text-decoration: none;
+        opacity: 0.5;
+        background: transparent !important;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .profile-bar-menus a svg {
+        transition: transform 0.3s ease;
+    }
+
+    .profile-bar-menus a.active {
+        opacity: 1;
+        color: white;
+        font-weight: bold;
+    }
+
+    .profile-bar-menus a.active svg {
+        transform: translateY(-3px); 
+    }
+
+    /* Menu déroulant */
+
+    .profile-item-dropup {
+        position: relative; 
+    }
+
+    .profile-dropup-menu {
+        display: none;
+        position: absolute;
+        top: auto;
+        bottom: calc(100% + 15px);
+        right: 0;
+        left: auto;
+        transform: none;
+        
+        background: rgba(20, 20, 20, 0.95);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        padding: 8px;
+        min-width: 160px;
+        z-index: 1000;
+        
+        flex-direction: column;
+        gap: 5px;
+        box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+        transform-origin: bottom right;
+    }
+
+    /* Quand le JS ajoute la classe 'show' */
+    .profile-dropup-menu.show {
+        display: flex;
+        animation: unfoldMenu 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    /* Animation de déroulement stylée */
+    @keyframes unfoldMenu {
+        from {
+            opacity: 0;
+            transform: scale(0.8) translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    .profile-dropup-menu a {
+        padding: 12px 15px !important;
+        color: white !important;
+        text-decoration: none;
+        font-size: 0.9rem !important;
+        border-radius: 10px;
+        text-align: left;
+        width: 100%;
+        white-space: nowrap; 
+        transition: background 0.2s;
+    }
+
+    .profile-dropup-menu a:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .profile-bar-menus a.logout-btn-2,
+    .profile-item-dropup a.logout-btn-2,
+    .profile-dropup-menu a.logout-btn-2 {
+        color: #f87171;
+        opacity: 0.8;
+    }
+
+    #logout-btn-2, 
+    #logout-btn-2 span {
+        color: #f87171;
+    }
+
+    #logout-btn-2 svg,
+    #logout-btn-2 svg path {
+        fill: #f87171;
+    }
+    
+    .profile-bar-menus a.logout-btn-2:active,
+    .profile-bar-menus a.logout-btn-2:hover {
+        opacity: 1.5;
     }
 }

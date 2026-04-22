@@ -7,8 +7,15 @@ const viewers = [dashboardViewer, ordersViewer, postsViewer, settingsViewer];
 const dashboardTabBtn = document.getElementById("tab-dashboard");
 const ordersTabBtn = document.getElementById("tab-orders");
 const postsTabBtn = document.getElementById("tab-posts");
-const settingsTab = document.getElementById("tab-settings");
-const menuButtons = [dashboardTabBtn, ordersTabBtn, postsTabBtn, settingsTab];
+const settingsTabBtn = document.getElementById("tab-settings");
+const menuButtons = [dashboardTabBtn, ordersTabBtn, postsTabBtn, settingsTabBtn];
+
+const dashboardTabBtnTel = document.getElementById("tab-dashboard-tel");
+const ordersTabBtnTel = document.getElementById("tab-orders-tel");
+const postsTabBtnTel = document.getElementById("tab-posts-tel");
+const settingsTabBtnTel = document.getElementById("tab-settings-tel");
+const plusBtn = document.getElementById("plus-btn");
+const menuButtonsTel = [dashboardTabBtnTel, ordersTabBtnTel, postsTabBtnTel, settingsTabBtnTel, plusBtn];
 
 let currentUserId = null;
 
@@ -217,6 +224,10 @@ document.getElementById("logout-btn")?.addEventListener("click", async () => {
     await fetch("/api/logout");
     window.location.href = "/";
 });
+document.getElementById("logout-btn-2")?.addEventListener("click", async () => {
+    await fetch("/api/logout");
+    window.location.href = "/";
+});
 
 document.getElementById("profile-pic-input")?.addEventListener("change", async function(event) {
     const file = event.target.files[0];
@@ -245,14 +256,8 @@ document.getElementById("profile-pic-input")?.addEventListener("change", async f
 
 if (dashboardTabBtn) menuButtons.forEach((btn, index) => {
     btn.addEventListener("click", () => {
+        menuButtons.forEach((button) => button.classList.remove("active"));
         btn.classList.add("active");
-        menuButtons.forEach((button, idx) => {
-            if (idx != index) {
-                if (button.classList.contains("active")) {
-                    button.classList.remove("active");
-                }
-            }
-        });
         viewers.forEach((viewer, idx) => {
             if (idx === index) {
                 viewer.style.display = "flex";
@@ -264,29 +269,49 @@ if (dashboardTabBtn) menuButtons.forEach((btn, index) => {
     });
 });
 
-/* ============================================================== */
-/* MENU DÉROULANT DE NAVIGATION (ENGRENAGE)                       */
-/* ============================================================== */
+if (dashboardTabBtnTel) menuButtonsTel.forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+        menuButtonsTel.forEach((button) => button.classList.remove("active"));
+        const btnText = btn.querySelector("span").innerHTML;
+        if (btnText !== "Plus") {
+            if (btnText === "Posts" || btnText === "Paramètres") {
+                plusBtn.classList.add("active");
+                document.getElementById("profile-dropup").classList.remove("show");
+            } else {
+                btn.classList.add("active");
+            }
+            viewers.forEach((viewer, idx) => {
+                if (idx === index) {
+                    viewer.style.display = "flex";
+                    loadDatas(viewer.id);
+                } else {
+                    viewer.style.display = "none";
+                }
+            });
+        }
+    });
+});
 
-function toggleNavMenu(event, dropdownId) {
-    event.preventDefault(); // Empêche le clic de faire sauter la page
-    
-    // 1. On ferme tous les autres sous-menus ouverts
-    document.querySelectorAll('.nav-dropdown-menu').forEach(menu => {
+/* MENUS DÉROULANTS DE NAVIGATION ET PROFIL */
+
+function toggleNavMenu(event, dropdownId, classSelected) {
+    event.preventDefault();
+    document.querySelectorAll(classSelected).forEach(menu => {
         if(menu.id !== dropdownId) menu.classList.remove('show');
     });
-
-    // 2. On ouvre ou on ferme celui qu'on a cliqué
     const dropdown = document.getElementById(dropdownId);
     if (dropdown) {
         dropdown.classList.toggle('show');
     }
 }
-
-// 3. Fermer le menu si on clique n'importe où ailleurs sur l'écran
 document.addEventListener('click', (event) => {
     if (!event.target.closest('.nav-item-dropdown')) {
         document.querySelectorAll('.nav-dropdown-menu').forEach(menu => {
+            menu.classList.remove('show');
+        });
+    }
+    if (!event.target.closest('.profile-item-dropup')) {
+        document.querySelectorAll('.profile-dropup-menu').forEach(menu => {
             menu.classList.remove('show');
         });
     }
