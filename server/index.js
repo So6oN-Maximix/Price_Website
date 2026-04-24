@@ -185,10 +185,17 @@ const serverLunching = http.createServer(async (req, res) => {
             req.on("data", chunk => body += chunk.toString());
             req.on("end", async () => {
                 const data = JSON.parse(body);
-                const productId = data.product_id;
+                const isProductCustom = data.is_custom;
                 try {
-                    await database.query("DELETE FROM carts WHERE product_id = $1 AND user_id = $2", [productId, userId]);
-                    console.log(`Article ${productId} retiré du panier !!`);
+                    if (isProductCustom) {
+                        const customName = data.custom_name;
+                        await database.query("DELETE FROM carts WHERE custom_name = $1 AND user_id = $2;", [customName, userId]);
+                        console.log(`Custom ${customName} retiré du panier !!`);
+                    } else {
+                        const productId = data.product_id;
+                        await database.query("DELETE FROM carts WHERE product_id = $1 AND user_id = $2;", [productId, userId]);
+                        console.log(`Article ${productId} retiré du panier !!`);
+                    }
                     res.writeHead(200, {"Location": "/shop"});
                 } catch (error) {
                     console.error("Erreur API - Suppression Panier: ", error);
@@ -257,10 +264,17 @@ const serverLunching = http.createServer(async (req, res) => {
                 const maxIdQuery = await database.query("SELECT COALESCE(MAX(cart_id), 0) AS max_id FROM passed_carts WHERE user_id = $1;", [userId]);
                 const newCartId = maxIdQuery.rows[0].max_id + 1;
                 for (const product of userCart) {
-                    await database.query(
-                        "INSERT INTO passed_carts(cart_id, product_id, nbr_item, user_id) VALUES ($1, $2, $3, $4);", 
-                        [newCartId, product.product_id, product.nbr_item, userId]
-                    );
+                    if (product.is_custom) {
+                        await database.query(
+                            "INSERT INTO passed_carts(cart_id, nbr_item, user_id, is_custom, custom_name, custom_price, custom_data) VALUES ($1, $2, $3, true, $4, $5, $6);", 
+                            [newCartId, product.nbr_item, userId, product.custom_name, product.custom_price, product.custom_data]
+                        );
+                    } else {
+                        await database.query(
+                            "INSERT INTO passed_carts(cart_id, product_id, nbr_item, user_id) VALUES ($1, $2, $3, $4);", 
+                            [newCartId, product.product_id, product.nbr_item, userId]
+                        );
+                    }
                 }
                 await database.query("DELETE FROM carts WHERE user_id = $1;", [userId]);
                 console.log(`Commande n°${newCartId} validée pour l'utilisateur ${userId} !`);

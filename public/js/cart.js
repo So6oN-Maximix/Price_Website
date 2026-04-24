@@ -87,7 +87,10 @@ function addToCart(productObj) {
             const reponse = await fetch("/api/delete-from-cart", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({product_id: productObj.product_id}) 
+                body: JSON.stringify({
+                    product_id: productObj.product_id,
+                    is_custom: false
+                }) 
             });
 
             if (reponse.ok) {
@@ -262,6 +265,49 @@ function addCustomToCart(dataPack) {
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
         </svg>
     `;
+
+    removeBtn.addEventListener("click", async () => {
+        if (removeBtn.disabled) return;
+        removeBtn.disabled = true;
+        const originalText = removeBtn.textContent;
+        removeBtn.textContent = "Suppression...";
+        removeBtn.style.opacity = "0.5";
+        removeBtn.style.cursor = "not-allowed";
+
+        try {
+            const reponse = await fetch("/api/delete-from-cart", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    custom_name: dataPack.custom_name,
+                    is_custom: true
+                }) 
+            });
+
+            if (reponse.ok) {
+                showToast(`${dataPack.custom_name} retiré !`);
+                globalCustomCard.remove();
+                cartProductsList = cartProductsList.filter(product => product.custom_name !== dataPack.custom_name);
+                loadDatas();
+            } else {
+                removeBtn.textContent = "Erreur";
+                removeBtn.style.opacity = "1";
+                removeBtn.style.cursor = "pointer";
+                setTimeout(() => {
+                    removeBtn.disabled = false;
+                    removeBtn.textContent = originalText;
+                }, 2000);
+            }
+        } catch (error) {
+            removeBtn.textContent = "Erreur";
+            removeBtn.style.opacity = "1";
+            removeBtn.style.cursor = "pointer";
+            setTimeout(() => {
+                removeBtn.disabled = false;
+                removeBtn.textContent = originalText;
+            }, 2000);
+        }
+    });
 
     const toggleBtn = document.createElement("button");
     toggleBtn.classList.add("toggle-details-btn");

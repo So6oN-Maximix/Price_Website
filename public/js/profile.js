@@ -85,51 +85,89 @@ async function addToPassedOrders(cartList) {
 
     let totalPrice = 0;
     for (const productCartInfo of cartList) {
-        let summaryRowDiv = document.createElement("div");
-        summaryRowDiv.classList.add("summary-row");
+        let summaryRowContainer = document.createElement("div");
+        summaryRowContainer.style.display = "flex";
+        summaryRowContainer.style.flexDirection = "column";
+        summaryRowContainer.style.marginBottom = "15px";
+
+        let topRow = document.createElement("div");
+        topRow.classList.add("summary-row");
+        topRow.style.marginBottom = "0";
+
         const productLine = document.createElement("span");
-        const productInfo = await fetch (`/api/get-product-info?id=${productCartInfo.product_id}`);
         const priceLine = document.createElement("span");
-        if (productInfo.ok) {
-            const productData = await productInfo.json();
-            productLine.textContent = `${productCartInfo.nbr_item}x ${productData.name} (${productData.type})`;
-            let prixUnitaireFinal = Number(productData.price);
-            let totalLigneAncien = prixUnitaireFinal * Number(productCartInfo.nbr_item);
-            let totalLigneNouveau = 0;
-            if (productData.promo) {
-                prixUnitaireFinal = prixUnitaireFinal - (prixUnitaireFinal * (Number(productData.promo) / 100));
-                totalLigneNouveau = prixUnitaireFinal * Number(productCartInfo.nbr_item);
 
-                priceLine.style.display = "flex";
-                priceLine.style.flexDirection = "column";
-                priceLine.style.alignItems = "flex-end";
+        if (productCartInfo.is_custom) {
+            productLine.innerHTML = `<b>${productCartInfo.nbr_item}x</b> ✨ ${productCartInfo.custom_name}`;
+            
+            const itemTotal = Number(productCartInfo.custom_price) * Number(productCartInfo.nbr_item);
+            priceLine.style.fontWeight = "bold";
+            priceLine.textContent = `${itemTotal.toFixed(2)}€`;
+            totalPrice += itemTotal;
 
-                const ancienPrix = document.createElement("span");
-                ancienPrix.textContent = `${totalLigneAncien.toFixed(2)}€`;
-                ancienPrix.style.textDecoration = "line-through";
-                ancienPrix.style.color = "rgba(255, 255, 255, 0.4)";
-                ancienPrix.style.fontSize = "0.85rem";
+            topRow.appendChild(productLine);
+            topRow.appendChild(priceLine);
+            summaryRowContainer.appendChild(topRow);
 
-                const nouveauPrix = document.createElement("span");
-                nouveauPrix.textContent = `${totalLigneNouveau.toFixed(2)}€`;
-                nouveauPrix.style.fontWeight = "bold";
-                priceLine.appendChild(ancienPrix);
-                priceLine.appendChild(nouveauPrix);
-                totalPrice += totalLigneNouveau;
-            } else {
-                totalLigneNouveau = totalLigneAncien;
-                priceLine.style.fontWeight = "bold";
-                priceLine.textContent = `${totalLigneNouveau.toFixed(2)}€`;
-                totalPrice += totalLigneNouveau;
+            const detailsLine = document.createElement("span");
+            detailsLine.style.fontSize = "0.8rem";
+            detailsLine.style.color = "rgba(255, 255, 255, 0.4)";
+            detailsLine.style.marginTop = "4px";
+            
+            let parts = productCartInfo.custom_data;
+            if (typeof parts === 'string') parts = JSON.parse(parts);
+            
+            if (parts && parts.bouchon) {
+                detailsLine.textContent = `Bouchon: ${parts.bouchon.name} | Corps: ${parts.corps.name} | Habillage: ${parts.habillage.name} | Socle: ${parts.socle.name}`;
+                summaryRowContainer.appendChild(detailsLine);
             }
         } else {
-            productLine.textContent = "Produit introuvable";
-            priceLine.textContent = "0.00€";
-        }
-        summaryRowDiv.appendChild(productLine);
-        summaryRowDiv.appendChild(priceLine);
+            const productInfo = await fetch (`/api/get-product-info?id=${productCartInfo.product_id}`);
+            
+            if (productInfo.ok) {
+                const productData = await productInfo.json();
+                productLine.innerHTML = `<b>${productCartInfo.nbr_item}x</b> ${productData.name} <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">(${productData.type})</span>`;
+                
+                let prixUnitaireFinal = Number(productData.price);
+                let totalLigneAncien = prixUnitaireFinal * Number(productCartInfo.nbr_item);
+                let totalLigneNouveau = 0;
+                
+                if (productData.promo) {
+                    prixUnitaireFinal = prixUnitaireFinal - (prixUnitaireFinal * (Number(productData.promo) / 100));
+                    totalLigneNouveau = prixUnitaireFinal * Number(productCartInfo.nbr_item);
 
-        globalCard.append(summaryRowDiv);
+                    priceLine.style.display = "flex";
+                    priceLine.style.flexDirection = "column";
+                    priceLine.style.alignItems = "flex-end";
+
+                    const ancienPrix = document.createElement("span");
+                    ancienPrix.textContent = `${totalLigneAncien.toFixed(2)}€`;
+                    ancienPrix.style.textDecoration = "line-through";
+                    ancienPrix.style.color = "rgba(255, 255, 255, 0.4)";
+                    ancienPrix.style.fontSize = "0.85rem";
+
+                    const nouveauPrix = document.createElement("span");
+                    nouveauPrix.textContent = `${totalLigneNouveau.toFixed(2)}€`;
+                    nouveauPrix.style.fontWeight = "bold";
+                    priceLine.appendChild(ancienPrix);
+                    priceLine.appendChild(nouveauPrix);
+                    totalPrice += totalLigneNouveau;
+                } else {
+                    totalLigneNouveau = totalLigneAncien;
+                    priceLine.style.fontWeight = "bold";
+                    priceLine.textContent = `${totalLigneNouveau.toFixed(2)}€`;
+                    totalPrice += totalLigneNouveau;
+                }
+            } else {
+                productLine.textContent = "Produit introuvable";
+                priceLine.textContent = "0.00€";
+            }
+            topRow.appendChild(productLine);
+            topRow.appendChild(priceLine);
+            summaryRowContainer.appendChild(topRow);
+        }
+
+        globalCard.append(summaryRowContainer);
     }
 
     const deliveryRowLine = document.createElement("div");
