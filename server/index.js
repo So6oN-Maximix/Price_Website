@@ -91,7 +91,7 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end();
             });
             return;
-        } else if (req.url === "/api/add-to-cart") {
+        } else if (req.url === "/api/add-product-to-cart") {
             const cookieHeader = req.headers.cookie;
             if (!cookieHeader) {
                 res.writeHead(401);
@@ -120,12 +120,46 @@ const serverLunching = http.createServer(async (req, res) => {
                         const nbtItem = isProductInCartQuery.rows[0].nbr_item;
                         await database.query("UPDATE carts SET nbr_item = $1 WHERE product_id = $2 AND user_id = $3", [nbtItem + 1, productId, userId]);
                     } else {
-                        await database.query("INSERT INTO carts(product_id, nbr_item, user_id) VALUES ($1, 1, $2);", [productId, userId]);
+                        await database.query("INSERT INTO carts(product_id, nbr_item, user_id, is_custom) VALUES ($1, 1, $2, FALSE);", [productId, userId]);
                         console.log(`Produit ${productId} ajouté dans la BDD`);
                     }
                     res.writeHead(200, {"Location": "/shop"});
                 } catch (error) {
-                    console.error("Erreur API - Panier: ", error);
+                    console.error("Erreur API - Panier Product: ", error);
+                    res.writeHead(500);
+                }
+                res.end();
+            });
+            return;
+        } else if (req.url === "/api/add-custom-to-cart") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Non connecté" }));
+                return;
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Session expirée" }));
+                return;
+            }
+            const userId = sessionData.user_id;
+
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const customData = data.data_pack;
+                try {
+                    const getCustomQuery = await database.query("SELECT custom_id FROM customisation WHERE user_id = $1", [userId]);
+                    const customId = getCustomQuery.rows[0].custom_id;
+                    await database.query("INSERT INTO carts(nbr_item, user_id, is_custom, custom_name, custom_price, custom_data) VALUES (1, $1, $2, $3, $4, $5);", [userId, customData.is_custom, customData.custom_name, customData.custom_price, customData.custom_data]);
+                    console.log(`Custom ${customId} ajouté dans la BDD`);
+                    res.writeHead(200, {"Location": "/custom"});
+                } catch (error) {
+                    console.error("Erreur API - Panier Custom: ", error);
                     res.writeHead(500);
                 }
                 res.end();
@@ -587,14 +621,28 @@ const serverLunching = http.createServer(async (req, res) => {
             if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
             try {
-                const cartProductsQuery = await database.query("SELECT product_id, nbr_item FROM carts WHERE user_id = $1;", [userId]);
+                const cartProductsQuery = await database.query("SELECT * FROM carts WHERE user_id = $1;", [userId]);
                 const cartProducts = cartProductsQuery.rows;
                 let productList = [];
                 for (const product of cartProducts) {
-                    const productQuery = await database.query("SELECT * FROM products WHERE product_id = $1", [product.product_id]);
-                    const productObject = productQuery.rows[0]
-                    productObject.nbr_item = product.nbr_item;
-                    productList.push(productObject);
+                    if (product.is_custom) {
+                        const dataPack = {
+                            "cart_item_id": product.cart_item_id,
+                            "is_custom": true,
+                            "custom_name": product.custom_name,
+                            "custom_price": product.custom_price,
+                            "custom_data": product.custom_data,
+                            "nbr_item": product.nbr_item
+                        };
+                        productList.push(dataPack);
+                    } else {
+                        const productQuery = await database.query("SELECT * FROM products WHERE product_id = $1;", [product.product_id]);
+                        const productObject = productQuery.rows[0]
+                        productObject.cart_item_id = product.cart_item_id;
+                        productObject.is_custom = false;
+                        productObject.nbr_item = product.nbr_item;
+                        productList.push(productObject);
+                    }
                 }
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(productList));

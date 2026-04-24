@@ -249,45 +249,106 @@ document.addEventListener('click', (event) => {
 });
 
 const finishButton = document.getElementById("finish-button");
-finishButton.addEventListener("click", async () => {
+finishButton.addEventListener("click", () => {
     if (finishButton.disabled) return;
-    finishButton.disabled = true;
-    const originalText = finishButton.textContent;
-    finishButton.textContent = "Ajout...";
-    finishButton.classList.add("loading");
-    try {
-        for (const type in selectedProducts) {
-            if (selectedProducts[type] !== null) {
-                const productInfoRequest = await fetch(`/api/get-product-info?id=${selectedProducts[type]}`);
-                if (productInfoRequest.ok) {
-                    const productObj = await productInfoRequest.json();
-                    const productName = productObj.name;
+    document.querySelector('.custom-summary').classList.remove('active');
+    const finishCustomContainer = document.getElementById("finish-custom-modal");
+    finishCustomContainer.classList.add("show");
+    document.body.style.overflow = "hidden";
+    const closeCustomButton = document.getElementById("close-finish-modal-btn");
+    closeCustomButton.addEventListener("click", () => {
+        finishCustomContainer.classList.remove("show");
+        document.body.style.overflow = "auto";
+    });
+    window.addEventListener("click", (event) => {
+        if (event.target === finishCustomContainer) {
+            finishCustomContainer.classList.remove("show");
+            document.body.style.overflow = "auto";
+        }
+    });
 
-                    const response = await fetch("/api/add-to-cart", {
-                        method: "POST",
-                        headers: {"Content-Type": "application/json"},
-                        body: JSON.stringify({product_name: productName})
-                    });
-                    if (!response.ok) {
-                        finishButton.textContent = "Erreur (Non connecté ?)";
-                        finishButton.classList.remove("loading");
+    for (const type in selectedProducts) {
+        const productLineNameFinish = document.getElementById(`choix-${type}`);
+        const productLinePriceFinish = document.getElementById(`recap-${type}`);
+        const summaryProductName = document.getElementById(`summary-${type}-name`).textContent;
+        const summaryProductPrice = document.getElementById(`summary-${type}-price`).textContent;
+        productLineNameFinish.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} : ${summaryProductName}`;
+        productLinePriceFinish.textContent = summaryProductPrice;
+    }
+    document.getElementById("recap-prix").textContent = document.getElementById("custom-total-price").textContent;
+
+    document.getElementById("save-custom-btn").onclick = async () => {
+        const customName = document.getElementById("custom-design-name").value;
+        console.log(`${customName} enregistré !`);
+        finishCustomContainer.classList.remove("show");
+        finishButton.disabled = true;
+        const originalText = finishButton.textContent;
+        finishButton.textContent = "Ajout...";
+        finishButton.classList.add("loading");
+        try {
+            const dataPack = {
+                "is_custom": "true",
+                "custom_name": customName,
+                "custom_price": Number(document.getElementById("recap-prix").textContent.slice(0, -1)).toFixed(2),
+                "custom_data": {
+                    "bouchon": {
+                        "id": 0,
+                        "name": ""
+                    },
+                    "corps": {
+                        "id": 0,
+                        "name": ""
+                    },
+                    "habillage": {
+                        "id": 0,
+                        "name": ""
+                    },
+                    "socle": {
+                        "id": 0,
+                        "name": ""
                     }
                 }
             }
+
+            const saveBtn = document.getElementById('save-custom-btn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = "Ajout en cours...";
+
+            for (const type in selectedProducts) {
+                dataPack.custom_data[type].id = selectedProducts[type];
+                if (selectedProducts[type] !== null) {
+                    const productInfoRequest = await fetch(`/api/get-product-info?id=${selectedProducts[type]}`);
+                    if (productInfoRequest.ok) {
+                        const productObj = await productInfoRequest.json();
+                        const productName = productObj.name;
+                        dataPack.custom_data[type].name = productName;
+                    }
+                }
+            }
+            const response = await fetch("/api/add-custom-to-cart", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({"data_pack": dataPack})
+            });
+            if (!response.ok) {
+                finishButton.textContent = "Erreur (Non connecté ?)";
+                finishButton.classList.remove("loading");
+            }
+
+            finishButton.textContent = "Ajouté ! ✓";
+            finishButton.classList.remove("loading");
+            finishButton.classList.add("success");
+            showToast();
+            await fetch("/api/clear-custom");
+        } catch (error) {
+            console.log(error);
+            finishButton.textContent = "Erreur";
+            finishButton.classList.remove("loading");
         }
-        finishButton.textContent = "Ajouté ! ✓";
-        finishButton.classList.remove("loading");
-        finishButton.classList.add("success");
-        showToast();
-        await fetch("/api/clear-custom");
-    } catch (error) {
-        console.log(error);
-        finishButton.textContent = "Erreur";
-        finishButton.classList.remove("loading");
-    }
-    setTimeout(() => {
-        finishButton.textContent = originalText;
-        finishButton.classList.remove("success");
-        finishButton.disabled = false;
-    }, 2500);
+        setTimeout(() => {
+            finishButton.textContent = originalText;
+            finishButton.classList.remove("success");
+            finishButton.disabled = false;
+        }, 2500);
+    };
 });

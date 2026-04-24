@@ -157,7 +157,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             btn.classList.add("loading");
             const productName = btn.id.replace("btn-add-", ""); 
             try {
-                const response = await fetch("/api/add-to-cart", {
+                const response = await fetch("/api/add-product-to-cart", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify({product_name: productName})

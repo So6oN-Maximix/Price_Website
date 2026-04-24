@@ -78,17 +78,25 @@ const createTablesQuery = `
 
     CREATE TABLE IF NOT EXISTS carts(
         cart_item_id SERIAL PRIMARY KEY,
-        product_id INT NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
+        product_id INT REFERENCES products(product_id) ON DELETE CASCADE,
         nbr_item INT NOT NULL,
-        user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
+        user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+        is_custom BOOLEAN DEFAULT FALSE,
+        custom_name TEXT DEFAULT NULL,
+        custom_price NUMERIC(6, 2) DEFAULT NULL,
+        custom_data JSONB DEFAULT NULL
     );
 
     CREATE TABLE IF NOT EXISTS passed_carts(
         cart_item_id SERIAL PRIMARY KEY,
         cart_id INT NOT NULL,
-        product_id INT NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
+        product_id INT REFERENCES products(product_id) ON DELETE CASCADE,
         nbr_item INT NOT NULL,
         user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+        is_custom BOOLEAN DEFAULT FALSE,
+        custom_name TEXT DEFAULT NULL,
+        custom_price NUMERIC(6, 2) DEFAULT NULL,
+        custom_data JSONB DEFAULT NULL,
         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
     );
 
