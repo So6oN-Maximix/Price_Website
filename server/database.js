@@ -97,7 +97,8 @@ const createTablesQuery = `
         custom_name TEXT DEFAULT NULL,
         custom_price NUMERIC(6, 2) DEFAULT NULL,
         custom_data JSONB DEFAULT NULL,
-        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        status TEXT DEFAULT NULL
     );
 
     CREATE TABLE IF NOT EXISTS inspi_posts(

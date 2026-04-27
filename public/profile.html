@@ -78,15 +78,15 @@
                         <div class="stats-grid">
                             <div class="stat-card glass-card">
                                 <span>Commandes</span>
-                                <p>12</p>
+                                <p id="command-number">0</p>
                             </div>
                             <div class="stat-card glass-card">
                                 <span>Designs sauvegardés</span>
-                                <p>5</p>
+                                <p id="design-number">0</p>
                             </div>
                             <div class="stat-card glass-card">
                                 <span>Points Fidélité</span>
-                                <p>1240</p>
+                                <p id="loyalty-pts">0</p>
                             </div>
                         </div>
                     </div>
@@ -94,29 +94,18 @@
                     <div class="profile-section">
                         <div class="section-header">
                             <h2>Mes Créations Récentes</h2>
-                            <a href="#" class="view-all">Voir tout</a>
+                            <a href="#" class="view-all" onclick="document.getElementById('tab-creations').click(); document.getElementById('tab-creations-tel').click(); return false;">Voir tout</a>
                         </div>
-                        <div class="designs-mini-grid">
-                            <div class="design-card glass-card">
-                                <div class="design-preview"></div>
-                                <div class="design-info">
-                                    <h4>Modèle "Nebula"</h4>
-                                    <p>Corps: Titane | Socle: LED</p>
-                                </div>
-                            </div>
-                            <div class="design-card glass-card">
-                                <div class="design-preview"></div>
-                                <div class="design-info">
-                                    <h4>Modèle "Supernova"</h4>
-                                    <p>Corps: Carbone | Socle: Bois</p>
-                                </div>
-                            </div>
+                        <div class="designs-mini-grid" id="designs-mini-grid">
                         </div>
                     </div>
 
                     <div class="profile-section">
-                        <h2>Dernière Commande</h2>
-                        <div class="order-summary glass-card">
+                        <div class="section-header">
+                            <h2>Dernière Commande</h2>
+                            <a href="#" class="view-all" onclick="document.getElementById('tab-orders').click(); document.getElementById('tab-orders-tel').click(); return false;">Voir tout</a>
+                        </div>
+                        <div class="order-summary glass-card" id="order-summary">
                             <div class="order-header">
                                 <span>N° 458962</span>
                                 <span class="status-badge">En cours de livraison</span>

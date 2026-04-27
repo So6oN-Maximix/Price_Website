@@ -267,12 +267,12 @@ const serverLunching = http.createServer(async (req, res) => {
                 for (const product of userCart) {
                     if (product.is_custom) {
                         await database.query(
-                            "INSERT INTO passed_carts(cart_id, nbr_item, user_id, is_custom, custom_name, custom_price, custom_data) VALUES ($1, $2, $3, true, $4, $5, $6);", 
+                            "INSERT INTO passed_carts(cart_id, nbr_item, user_id, is_custom, custom_name, custom_price, custom_data, status) VALUES ($1, $2, $3, true, $4, $5, $6, 'En cours de livraison');", 
                             [newCartId, product.nbr_item, userId, product.custom_name, product.custom_price, product.custom_data]
                         );
                     } else {
                         await database.query(
-                            "INSERT INTO passed_carts(cart_id, product_id, nbr_item, user_id) VALUES ($1, $2, $3, $4);", 
+                            "INSERT INTO passed_carts(cart_id, product_id, nbr_item, user_id, status) VALUES ($1, $2, $3, $4, 'En cours de livraison');", 
                             [newCartId, product.product_id, product.nbr_item, userId]
                         );
                     }
@@ -750,13 +750,88 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end();
             }
             return;
-        } else if (req.url === "/api/loadOrders") {
+        } else if (req.url === "/api/load-dashboard") {
             const cookieHeader = req.headers.cookie;
             if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
             if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
+
+            try {
+                const commandNbrQuery = await database.query("SELECT MAX(cart_id) AS max FROM passed_carts WHERE user_id = $1;", [userId]);
+                const designNbrQuery = await database.query("SELECT * FROM saved_customs WHERE user_id = $1;", [userId]);
+                const allOrdersQuery = await database.query("SELECT * FROM passed_carts WHERE user_id = $1;", [userId]);
+                let totalPrice = 0;
+                for (const order of allOrdersQuery.rows) {
+                    if (!order.is_custom) {
+                        const productInfoQuery = await database.query("SELECT price, promo FROM products WHERE product_id = $1;", [order.product_id]);
+                        if (productInfoQuery.rows[0].promo) {
+                            totalPrice += Number(productInfoQuery.rows[0].price) * (1 - Number(productInfoQuery.rows[0].promo) / 100) * Number(order.nbr_item);
+                        } else {
+                            totalPrice += Number(productInfoQuery.rows[0].price) * Number(order.nbr_item); 
+                        }
+                    } else {
+                        totalPrice += Number(order.custom_price);
+                    }
+                }
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify({
+                    command_nbr: commandNbrQuery.rows[0].max,
+                    design_nbr: designNbrQuery.rows.length,
+                    loyalty_pts: Number((totalPrice * 1.15).toFixed(0))
+                }));
+            } catch (error) {
+                console.error("Erreur API - Loading Orders: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url === "/api/get-lasts-customs") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+
+            try {
+                const getLastsCustomsQuery = await database.query("SELECT * FROM saved_customs WHERE user_id = $1 ORDER BY date DESC LIMIT 2;", [userId]);
+                res.writeHead(200);
+                res.end(JSON.stringify(getLastsCustomsQuery.rows));
+            } catch (error) {
+                console.error("Erreur API - Get Lasts Customs: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url === "/api/get-last-order") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+
+            try {
+                const maxIdQuery = await database.query("SELECT COALESCE(MAX(cart_id), 0) AS max_id FROM passed_carts WHERE user_id = $1;", [userId]);
+                const getLastOrderQuery = await database.query("SELECT * FROM passed_carts WHERE user_id = $1 AND cart_id = $2;", [userId, maxIdQuery.rows[0].max_id]);
+                res.writeHead(200);
+                res.end(JSON.stringify(getLastOrderQuery.rows));
+            } catch (error) {
+                console.error("Erreur API - Get Last Order: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url === "/api/load-orders") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+
             try {
                 const maxIdQuery = await database.query("SELECT COALESCE(MAX(cart_id), 0) AS max_id FROM passed_carts WHERE user_id = $1;", [userId]);
                 let cartsList = [];

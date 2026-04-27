@@ -59,9 +59,10 @@ async function addToPassedOrders(cartList) {
     cardHeaderDiv.classList.add("order-header");
     const orderNumber = document.createElement("span");
     orderNumber.textContent = "Commande n°CMD-84920";
-    const orderStatus = document.createElement("span");
-    orderStatus.classList.add("status-badge", "status-pending");
-    orderStatus.textContent = "Livrée";
+    const orderStatusBadge = document.createElement("span");
+    orderStatusBadge.classList.add("status-badge", "status-pending");
+    const orderStatus = cartList[0].status === null ? "En cours de livraison" : cartList[0].status;
+    orderStatusBadge.textContent = orderStatus;
 
     const orderDate = document.createElement("p");
     const dateObj = new Date(cartList[0].date);
@@ -80,7 +81,7 @@ async function addToPassedOrders(cartList) {
     divider.classList.add("summary-divider");
 
     cardHeaderDiv.appendChild(orderNumber);
-    cardHeaderDiv.appendChild(orderStatus);
+    cardHeaderDiv.appendChild(orderStatusBadge);
 
     globalCard.appendChild(cardHeaderDiv);
     globalCard.appendChild(orderDate);
@@ -296,9 +297,129 @@ function addToPassedCustom(dataPack) {
     document.getElementById("designs-container").appendChild(globalCustomCard);
 }
 
+function loadCustomDashboard(dataPack) {
+    const globalCustomCard = document.createElement("div");
+    globalCustomCard.classList.add("design-card", "glass-card");
+
+    /* PREVIEW */
+    const previewDiv = document.createElement("div");
+    previewDiv.classList.add("design-preview");
+    globalCustomCard.appendChild(previewDiv);
+
+    /* INFOS */
+    const customInfo = document.createElement("div");
+    customInfo.classList.add("design-info");
+    const customTitle = document.createElement("h4");
+    customTitle.textContent = dataPack.custom_name;
+    customInfo.appendChild(customTitle);
+    for (const type in dataPack.custom_data) {
+        const typeElem = document.createElement("p");
+        typeElem.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)}: ${dataPack.custom_data[type].name}`;
+        customInfo.appendChild(typeElem);
+    }
+    globalCustomCard.appendChild(customInfo);
+    document.getElementById("designs-mini-grid").appendChild(globalCustomCard);
+}
+
+async function loadLastOrder(orderInfo) {
+    /* HEADER */
+    const orderHeader = document.createElement("div");
+    orderHeader.classList.add("order-header");
+
+    const orderNumber = document.createElement("span");
+    const randomStart = 458962;
+    orderNumber.textContent = `N° ${randomStart + Number(orderInfo[0].cart_id)}`;
+    const statusBadge = document.createElement("span");
+    statusBadge.classList.add("status-badge");
+    const currentStatus = orderInfo[0].status === null ? "En cours de livraison" : orderInfo[0].status
+    statusBadge.textContent = currentStatus;
+
+    orderHeader.appendChild(orderNumber);
+    orderHeader.appendChild(statusBadge);
+
+    /* DATE */
+    const dateLine = document.createElement("p");
+    const postDate = new Date(orderInfo[0].date);
+    const datePart = postDate.toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+    });
+    const timePart = postDate
+        .toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        })
+        .replace(":", "h");
+    dateLine.textContent = `Commandé le ${datePart} à ${timePart}`;
+
+    /* PRICE */
+    let totalPrice = 0;
+    for (const product of orderInfo) {
+        if (product.is_custom) {
+            totalPrice += Number(product.custom_price);
+        } else {
+            const productInfoQuery = await fetch(`/api/get-product-info?id=${product.product_id}`);
+            if (productInfoQuery.ok) {
+                const productInfo = await productInfoQuery.json();
+                const promoMultiplier = productInfo.promo ? 1 - Number(productInfo.promo) / 100 : 1;
+                totalPrice += Number(productInfo.price) * promoMultiplier;
+            }
+        }
+    }
+    const priceLine = document.createElement("div");
+    priceLine.classList.add("order-total");
+    priceLine.textContent = `Total: ${(totalPrice * 1.15).toFixed(2)}€`;
+
+    const lastOrderContainer = document.getElementById("order-summary");
+    lastOrderContainer.appendChild(orderHeader);
+    lastOrderContainer.appendChild(dateLine);
+    lastOrderContainer.appendChild(priceLine);
+}
+
+async function loadDashboard() {
+    const commandNumberContainer = document.getElementById("command-number");
+    const designNumberContainer = document.getElementById("design-number");
+    const loyaltyPointsContainer = document.getElementById("loyalty-pts");
+    const serverResponse = await fetch("/api/load-dashboard");
+    if (serverResponse.ok) {
+        const response = await serverResponse.json();
+        const commandNumber = response.command_nbr;
+        const designNumber = response.design_nbr;
+        const loyaltyPts = response.loyalty_pts;
+        commandNumberContainer.textContent = commandNumber;
+        designNumberContainer.textContent = designNumber;
+        loyaltyPointsContainer.textContent = loyaltyPts;
+    }
+
+    const getLastsCustoms = await fetch("/api/get-lasts-customs");
+    if (getLastsCustoms.ok) {
+        document.getElementById("designs-mini-grid").innerHTML = "";
+        const response = await getLastsCustoms.json();
+        if (response.length === 0) {
+            document.getElementById("designs-mini-grid").innerHTML = "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune personnalisation.</p>";
+        } else {
+            for (const customPack of response) {
+                loadCustomDashboard(customPack);
+            }
+        }
+    }
+
+    const getLastOrder = await fetch("/api/get-last-order");
+    if (getLastOrder.ok) {
+        document.getElementById("order-summary").innerHTML = "";
+        const response = await getLastOrder.json();
+        if (response.length === 0) {
+            document.getElementById("order-summary").innerHTML = "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune commande.</p>";
+        } else {
+            loadLastOrder(response);
+        }
+    }
+}
+
 async function loadPassedOrders() {
     const orderContainerDiv = document.getElementById("orders-container");
-    const serverResponse = await fetch("/api/loadOrders");
+    const serverResponse = await fetch("/api/load-orders");
     if (serverResponse.ok) {
         const ordersList = await serverResponse.json();
         orderContainerDiv.innerHTML = "";
@@ -367,7 +488,9 @@ async function loadPosts() {
 }
 
 async function loadDatas(viewerID) {
-    if (viewerID === "view-orders") {
+    if (viewerID === "dashboard-viewer") {
+        await loadDashboard();
+    } else if (viewerID === "view-orders") {
         await loadPassedOrders();
     } else if (viewerID === "view-settings") {
         await loadSettingsInfos();
@@ -403,7 +526,10 @@ function showToast(customName) {
     }, 3000);
 }
 
-window.addEventListener("DOMContentLoaded", checkAuthentification);
+window.addEventListener("DOMContentLoaded", () => {
+    checkAuthentification();
+    if (dashboardViewer) loadDashboard();
+});
 document.getElementById("logout-btn")?.addEventListener("click", async () => {
     await fetch("/api/logout");
     window.location.href = "/";
