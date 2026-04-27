@@ -494,16 +494,21 @@ input:-webkit-autofill:active {
 
 .glass-check span::before {
     content: '';
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 18px;
     height: 18px;
-    vertical-align: middle;
+    flex-shrink: 0;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 4px;
     margin-right: 12px;
     transition: all 0.3s ease;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    font-weight: bold;
+    color: transparent;
 }
 
 .glass-check:hover span::before {
@@ -519,16 +524,12 @@ input:-webkit-autofill:active {
     background: white;
     border-color: white;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    content: '✓';
+    color: black;
 }
 
 .glass-check input:checked + span::after {
-    content: '✓';
-    position: absolute;
-    left: 4px;
-    top: 1px;
-    font-size: 14px;
-    color: black;
-    font-weight: bold;
+    display: none;
 }
 
 .glass-check span {
@@ -3042,6 +3043,37 @@ input:-webkit-autofill:active {
     
     .custom-pack-item.expanded .pack-details-collapse {
         max-height: 250px;
+    }
+
+    /* --- SETTING MENU --- */
+
+    /* On annule le minmax de 350px et on force 1 seule colonne */
+    .settings-grid {
+        grid-template-columns: 1fr; 
+        gap: 20px; 
+    }
+
+    /* On réduit un peu les marges internes de la carte pour laisser respirer le texte */
+    .settings-card {
+        padding: 20px; 
+    }
+
+    .settings-card h3 {
+        font-size: 1.05rem;
+        margin-bottom: 20px;
+    }
+
+    /* Le texte de la zone de danger est un peu gros sur mobile, on l'ajuste */
+    .danger-zone p {
+        font-size: 0.8rem;
+        margin-bottom: 20px;
+    }
+    
+    /* On s'assure que le bouton de suppression ne dépasse pas */
+    .delete-account-btn {
+        font-size: 0.85rem;
+        padding: 10px;
+        white-space: normal;
     }
 }
 
