@@ -156,6 +156,7 @@ const serverLunching = http.createServer(async (req, res) => {
                     const getCustomQuery = await database.query("SELECT custom_id FROM customisation WHERE user_id = $1", [userId]);
                     const customId = getCustomQuery.rows[0].custom_id;
                     await database.query("INSERT INTO carts(nbr_item, user_id, is_custom, custom_name, custom_price, custom_data) VALUES (1, $1, $2, $3, $4, $5);", [userId, customData.is_custom, customData.custom_name, customData.custom_price, customData.custom_data]);
+                    await database.query("INSERT INTO saved_customs(custom_name, custom_price, custom_data, user_id) VALUES ($1, $2, $3, $4);", [customData.custom_name, customData.custom_price, customData.custom_data, userId]);
                     console.log(`Custom ${customId} ajouté dans la BDD`);
                     res.writeHead(200, {"Location": "/custom"});
                 } catch (error) {
@@ -609,6 +610,61 @@ const serverLunching = http.createServer(async (req, res) => {
                     res.end(JSON.stringify({message: "BDD customisation mise à jour"}));
                 } catch (error) {
                     console.error("Erreur API - Load Custom: ", error);
+                    res.writeHead(500);
+                    res.end();
+                }
+            });
+            return;
+        } else if (req.url === "/api/clear-custom") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const userId = sessionData.user_id;
+
+            try {
+                await database.query("UPDATE customisation SET bouchon_id = null, corps_id = null, habillage_id = null, socle_id = null WHERE user_id = $1", [userId]);
+                res.writeHead(200);
+                res.end();
+            } catch (error) {
+                console.error("Erreur API - Reset Custom: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url === "/api/delete-creation") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                return res.end();
+            }
+            const userId = sessionData.user_id;
+
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const customName = data.custom_name;
+                try {
+                    await database.query("DELETE FROM saved_customs WHERE user_id = $1 AND custom_name = $2;", [userId, customName]);
+                    console.log(`Custom ${customName} supprimé !`);
+                    res.writeHead(200);
+                    res.end();
+                } catch (error) {
+                    console.error("Erreur API - Delete Custom: ", error);
                     res.writeHead(500);
                     res.end();
                 }
@@ -1134,6 +1190,23 @@ const serverLunching = http.createServer(async (req, res) => {
                 }
             } catch (error) {
                 console.error("Erreur API - Getting All Selected Product: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url === "/api/load-creations") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+            try {
+                const allCustomsQuery = await database.query("SELECT * FROM saved_customs WHERE user_id = $1;", [userId]);
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(allCustomsQuery.rows));
+            } catch (error) {
+                console.error("Erreur API - Loading Customs: ", error);
                 res.writeHead(500);
                 res.end();
             }

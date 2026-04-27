@@ -150,6 +150,15 @@ const createTablesQuery = `
         socle_id INT REFERENCES products(product_id) ON DELETE RESTRICT,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE
     );
+
+    CREATE TABLE IF NOT EXISTS saved_customs (
+        custom_id SERIAL PRIMARY KEY,
+        custom_name TEXT DEFAULT NULL,
+        custom_price NUMERIC(6, 2) DEFAULT NULL,
+        custom_data JSONB DEFAULT NULL,
+        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    );
 `;
 
 client.query(createTablesQuery)

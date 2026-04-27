@@ -164,6 +164,32 @@ function showToast() {
     }, 3000);
 }
 
+async function resetCustom() {
+    await fetch("/api/clear-custom", {method: "POST"});
+    for (const type in selectedProducts) {
+        selectedProducts[type] = null;
+        addToSummary({
+            name: "∅",
+            type: type,
+            price: 0.00,
+            promo: null
+        });
+        if (typeof window.update3DModel === "function") {
+            window.update3DModel(type, null);
+        }
+        const optionZone = document.getElementById(`options-${type}`);
+        if (optionZone) {
+            const currentlySelected = optionZone.querySelectorAll(".selected");
+            currentlySelected.forEach(elem => elem.classList.remove("selected"));
+            
+            const nullCard = document.getElementById(`${type}-null-card`);
+            if (nullCard) nullCard.classList.add("selected");
+        }
+    }
+    updateTotal();
+    checkValidity();
+}
+
 checkValidity();
 tabButtons.forEach(btn => {
     btn.addEventListener("click", async () => {
@@ -277,7 +303,8 @@ finishButton.addEventListener("click", () => {
     }
     document.getElementById("recap-prix").textContent = document.getElementById("custom-total-price").textContent;
 
-    document.getElementById("save-custom-btn").onclick = async () => {
+    const saveBtn = document.getElementById('save-custom-btn');
+    saveBtn.onclick = async () => {
         const customName = document.getElementById("custom-design-name").value;
         console.log(`${customName} enregistré !`);
         finishCustomContainer.classList.remove("show");
@@ -310,7 +337,6 @@ finishButton.addEventListener("click", () => {
                 }
             }
 
-            const saveBtn = document.getElementById('save-custom-btn');
             saveBtn.disabled = true;
             saveBtn.textContent = "Ajout en cours...";
 
@@ -339,7 +365,7 @@ finishButton.addEventListener("click", () => {
             finishButton.classList.remove("loading");
             finishButton.classList.add("success");
             showToast();
-            await fetch("/api/clear-custom");
+            await resetCustom();
         } catch (error) {
             console.log(error);
             finishButton.textContent = "Erreur";

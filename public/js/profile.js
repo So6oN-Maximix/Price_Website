@@ -1,21 +1,24 @@
 const dashboardViewer = document.getElementById("dashboard-viewer");
 const ordersViewer = document.getElementById("view-orders");
+const creationsViewer = document.getElementById("view-creations");
 const postsViewer = document.getElementById("view-posts");
 const settingsViewer = document.getElementById("view-settings");
-const viewers = [dashboardViewer, ordersViewer, postsViewer, settingsViewer];
+const viewers = [dashboardViewer, ordersViewer, creationsViewer, postsViewer, settingsViewer];
 
 const dashboardTabBtn = document.getElementById("tab-dashboard");
 const ordersTabBtn = document.getElementById("tab-orders");
+const creationsTabBtn = document.getElementById("tab-creations");
 const postsTabBtn = document.getElementById("tab-posts");
 const settingsTabBtn = document.getElementById("tab-settings");
-const menuButtons = [dashboardTabBtn, ordersTabBtn, postsTabBtn, settingsTabBtn];
+const menuButtons = [dashboardTabBtn, ordersTabBtn, creationsTabBtn, postsTabBtn, settingsTabBtn];
 
 const dashboardTabBtnTel = document.getElementById("tab-dashboard-tel");
 const ordersTabBtnTel = document.getElementById("tab-orders-tel");
+const creationsTabBtnTel = document.getElementById("tab-creations-tel");
 const postsTabBtnTel = document.getElementById("tab-posts-tel");
 const settingsTabBtnTel = document.getElementById("tab-settings-tel");
 const plusBtn = document.getElementById("plus-btn");
-const menuButtonsTel = [dashboardTabBtnTel, ordersTabBtnTel, postsTabBtnTel, settingsTabBtnTel, plusBtn];
+const menuButtonsTel = [dashboardTabBtnTel, ordersTabBtnTel, creationsTabBtnTel, postsTabBtnTel, settingsTabBtnTel, plusBtn];
 
 let currentUserId = null;
 
@@ -193,6 +196,106 @@ async function addToPassedOrders(cartList) {
     ordersContainer.appendChild(globalCard);
 }
 
+function addToPassedCustom(dataPack) {
+    const globalCustomCard = document.createElement("div");
+    globalCustomCard.classList.add("design-card", "glass-card");
+
+    /* IMAGE */
+    const imgDiv = document.createElement("div");
+    imgDiv.classList.add("design-preview");
+    const imgElem = document.createElement("img");
+    imgElem.src = "https://placehold.co/80x80/transparent/white?text=🔥";   // A CHANGER
+
+    imgDiv.appendChild(imgElem);
+
+    /* INFORMATIONS */
+    const customDiv = document.createElement("div");
+    customDiv.classList.add("design-info");
+
+    /* Header */
+    const headerDiv = document.createElement("div");
+    headerDiv.classList.add("design-header-row");
+    const titleElem = document.createElement("h4");
+    titleElem.textContent = dataPack.custom_name;
+    const priceElem = document.createElement("span");
+    priceElem.classList.add("design-price-tag");
+    priceElem.textContent = `${dataPack.custom_price}€`;
+
+    headerDiv.appendChild(titleElem);
+    headerDiv.appendChild(priceElem);
+
+    /* Summary */
+    const summaryList = document.createElement("ul");
+    summaryList.classList.add("design-parts-summary");
+    for (const type in dataPack.custom_data) {
+        const typeElem = document.createElement("li");
+        typeElem.innerHTML = `<span>${type.charAt(0).toUpperCase() + type.slice(1)}:</span> ${dataPack.custom_data[type].name}`;
+        summaryList.appendChild(typeElem);
+    }
+
+    /* Action buttons */
+    const actionsDiv = document.createElement("div");
+    actionsDiv.classList.add("design-actions");
+    const cartBtn = document.createElement("button");
+    cartBtn.classList.add("reorder-btn");
+    cartBtn.textContent = "Ajouter au panier";
+    const customBtn = document.createElement("button");
+    customBtn.classList.add("import-custom-btn");
+    customBtn.textContent = "Importer le Custom";
+
+    actionsDiv.appendChild(cartBtn);
+    actionsDiv.appendChild(customBtn);
+
+    /* Assembly */
+    customDiv.appendChild(headerDiv);
+    customDiv.appendChild(summaryList);
+    customDiv.appendChild(actionsDiv);
+
+    /* Bouton Corbeille (Suppression) */
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("delete-creation-btn");
+    deleteBtn.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+    `;
+
+    deleteBtn.addEventListener("click", async () => {
+        if(confirm(`Es-tu sûr de vouloir supprimer la création "${dataPack.custom_name}" ?`)) {
+            try {
+                const response = await fetch("/api/delete-creation", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({custom_name: dataPack.custom_name})
+                });
+
+                if (response.ok) {
+                    globalCustomCard.style.transform = "scale(0.8)";
+                    globalCustomCard.style.opacity = "0";
+                    setTimeout(() => {
+                        globalCustomCard.remove();
+                        const container = document.getElementById("designs-container");
+                        if (container.children.length === 0) {
+                            container.innerHTML = "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune personnalisation.</p>";
+                        }
+                    }, 300);
+                    showToast(dataPack.custom_name);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la suppression:", error);
+            }
+        }
+    });
+
+    globalCustomCard.appendChild(deleteBtn);
+
+    /* ASSEMBLY */
+    globalCustomCard.appendChild(imgDiv);
+    globalCustomCard.appendChild(customDiv);
+    document.getElementById("designs-container").appendChild(globalCustomCard);
+}
+
 async function loadPassedOrders() {
     const orderContainerDiv = document.getElementById("orders-container");
     const serverResponse = await fetch("/api/loadOrders");
@@ -218,6 +321,22 @@ async function loadSettingsInfos() {
         const email = await getEmailResponse.json();
         const emailReplace = document.getElementById("setting-email");
         emailReplace.value = email;
+    }
+}
+
+async function loadCreation() {
+    const customContainer = document.getElementById("designs-container");
+    const serverResponse = await fetch("/api/load-creations");
+    if (serverResponse.ok) {
+        const customList = await serverResponse.json();
+        customContainer.innerHTML = "";
+        if (customList.length === 0) {
+            customContainer.innerHTML = "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune personnalisation.</p>";
+            return;
+        }
+        for (const customPack of customList) {
+            addToPassedCustom(customPack);
+        }
     }
 }
 
@@ -252,9 +371,36 @@ async function loadDatas(viewerID) {
         await loadPassedOrders();
     } else if (viewerID === "view-settings") {
         await loadSettingsInfos();
+    } else if (viewerID === "view-creations") {
+        await loadCreation();
     } else if (viewerID === "view-posts") {
         await loadPosts();
     }
+}
+
+function showToast(customName) {
+    let toastContainer = document.querySelector(".toast-container");
+    if (!toastContainer) {
+        toastContainer = document.createElement("div");
+        toastContainer.classList.add("toast-container");
+        document.body.appendChild(toastContainer);
+    }
+    const toast = document.createElement("div");
+    toast.classList.add("toast", "remove");
+    toast.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Custom ${customName} supprimé !
+    `;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add("hide");
+        toast.addEventListener("animationend", () => toast.remove());
+    }, 3000);
 }
 
 window.addEventListener("DOMContentLoaded", checkAuthentification);
@@ -297,11 +443,13 @@ if (dashboardTabBtn) menuButtons.forEach((btn, index) => {
         menuButtons.forEach((button) => button.classList.remove("active"));
         btn.classList.add("active");
         viewers.forEach((viewer, idx) => {
-            if (idx === index) {
-                viewer.style.display = "flex";
-                loadDatas(viewer.id);
-            } else {
-                viewer.style.display = "none";
+            if (viewer) {
+                if (idx === index) {
+                    viewer.style.display = "flex";
+                    loadDatas(viewer.id);
+                } else {
+                    viewer.style.display = "none";
+                }
             }
         });
     });
@@ -319,11 +467,13 @@ if (dashboardTabBtnTel) menuButtonsTel.forEach((btn, index) => {
                 btn.classList.add("active");
             }
             viewers.forEach((viewer, idx) => {
-                if (idx === index) {
-                    viewer.style.display = "flex";
-                    loadDatas(viewer.id);
-                } else {
-                    viewer.style.display = "none";
+                if (viewer) {
+                    if (idx === index) {
+                        viewer.style.display = "flex";
+                        loadDatas(viewer.id);
+                    } else {
+                        viewer.style.display = "none";
+                    }
                 }
             });
         }
