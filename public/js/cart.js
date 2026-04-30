@@ -37,7 +37,7 @@ function loadDatas() {
 }
 
 async function loadCart() {
-    const serverResponse = await fetch("/api/loadCart");
+    const serverResponse = await fetch("/api/load-cart");
     if (serverResponse.ok) {
         const response = await serverResponse.json();
         cartProductsList = response;

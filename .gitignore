@@ -3,3 +3,4 @@ public/assets/*.jpg
 public/assets/*.png
 public/assets/Video_test.mp4
 .env
+*.txt

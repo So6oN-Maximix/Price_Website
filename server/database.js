@@ -1,10 +1,14 @@
 import {Pool} from "pg";
 
-const client = new Pool({
+/*const client = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
+});*/
+
+const client = new Pool({
+    connectionString: "postgresql://postgres:LaraCsuge!*@localhost:5432/PRICE_db"
 });
 
 const products = [{
@@ -154,7 +158,7 @@ const createTablesQuery = `
 
     CREATE TABLE IF NOT EXISTS saved_customs (
         custom_id SERIAL PRIMARY KEY,
-        custom_name TEXT DEFAULT NULL,
+        custom_name TEXT UNIQUE DEFAULT NULL,
         custom_price NUMERIC(6, 2) DEFAULT NULL,
         custom_data JSONB DEFAULT NULL,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,

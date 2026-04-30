@@ -155,12 +155,44 @@ const serverLunching = http.createServer(async (req, res) => {
                 try {
                     const getCustomQuery = await database.query("SELECT custom_id FROM customisation WHERE user_id = $1", [userId]);
                     const customId = getCustomQuery.rows[0].custom_id;
-                    await database.query("INSERT INTO carts(nbr_item, user_id, is_custom, custom_name, custom_price, custom_data) VALUES (1, $1, $2, $3, $4, $5);", [userId, customData.is_custom, customData.custom_name, customData.custom_price, customData.custom_data]);
+                    await database.query("INSERT INTO carts(nbr_item, user_id, is_custom, custom_name, custom_price, custom_data) VALUES (1, $1, TRUE, $2, $3, $4);", [userId, customData.custom_name, customData.custom_price, customData.custom_data]);
                     await database.query("INSERT INTO saved_customs(custom_name, custom_price, custom_data, user_id) VALUES ($1, $2, $3, $4);", [customData.custom_name, customData.custom_price, customData.custom_data, userId]);
                     console.log(`Custom ${customId} ajouté dans la BDD`);
                     res.writeHead(200, {"Location": "/custom"});
                 } catch (error) {
                     console.error("Erreur API - Panier Custom: ", error);
+                    res.writeHead(500);
+                }
+                res.end();
+            });
+            return;
+        } else if (req.url === "/api/add-custom-to-cart-from-profile") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Non connecté" }));
+                return;
+            }
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) {
+                res.writeHead(401);
+                res.end(JSON.stringify({ message: "Session expirée" }));
+                return;
+            }
+            const userId = sessionData.user_id;
+
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const customData = data.data_pack;
+                try {
+                    await database.query("INSERT INTO carts(nbr_item, user_id, is_custom, custom_name, custom_price, custom_data) VALUES (1, $1, TRUE, $2, $3, $4)", [userId, customData.custom_name, customData.custom_price, customData.custom_data]);
+                    console.log(`Custom ${customData.custom_name} ajouté au panier`);
+                    res.writeHead(200);
+                } catch (error) {
+                    console.error("Erreur API - Panier Custom, From Profile: ", error);
                     res.writeHead(500);
                 }
                 res.end();
@@ -683,7 +715,7 @@ const serverLunching = http.createServer(async (req, res) => {
                 res.end();
             }
             return;
-        } else if (req.url === "/api/loadCart") {
+        } else if (req.url === "/api/load-cart") {
             const cookieHeader = req.headers.cookie;
             if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));

@@ -240,6 +240,27 @@ function addToPassedCustom(dataPack) {
     const cartBtn = document.createElement("button");
     cartBtn.classList.add("reorder-btn");
     cartBtn.textContent = "Ajouter au panier";
+    cartBtn.onclick = async () => {
+        const response = await fetch("/api/add-custom-to-cart-from-profile", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({"data_pack": dataPack})
+        });
+        if (!response.ok) {
+            cartBtn.textContent = "Erreur (Non connecté ?)";
+            cartBtn.classList.remove("loading");
+        } else {
+            cartBtn.textContent = "Ajouté ! ✓";
+            cartBtn.classList.remove("loading");
+            cartBtn.classList.add("success");
+            showToast(`Custom ${dataPack.custom_name} ajouté au panier !`);
+        }
+        setTimeout(() => {
+            cartBtn.textContent = "Ajouter au panier";
+            cartBtn.classList.remove("success");
+            cartBtn.disabled = false;
+        }, 2500);
+    }
     const customBtn = document.createElement("button");
     customBtn.classList.add("import-custom-btn");
     customBtn.textContent = "Importer le Custom";
@@ -281,7 +302,7 @@ function addToPassedCustom(dataPack) {
                             container.innerHTML = "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune personnalisation.</p>";
                         }
                     }, 300);
-                    showToast(dataPack.custom_name);
+                    showToast(`Custom  ${dataPack.custom_name} supprimé !`, true);
                 }
             } catch (error) {
                 console.error("Erreur lors de la suppression:", error);
@@ -501,7 +522,7 @@ async function loadDatas(viewerID) {
     }
 }
 
-function showToast(customName) {
+function showToast(message, remove = false) {
     let toastContainer = document.querySelector(".toast-container");
     if (!toastContainer) {
         toastContainer = document.createElement("div");
@@ -509,13 +530,14 @@ function showToast(customName) {
         document.body.appendChild(toastContainer);
     }
     const toast = document.createElement("div");
-    toast.classList.add("toast", "remove");
+    toast.classList.add("toast");
+    if (remove) toast.classList.add("remove");
     toast.innerHTML = `
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
         </svg>
-        Custom ${customName} supprimé !
+        ${message}
     `;
 
     toastContainer.appendChild(toast);
