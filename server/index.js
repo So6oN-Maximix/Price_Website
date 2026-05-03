@@ -93,18 +93,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/add-product-to-cart") {
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Non connecté" }));
-                return;
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Session expirée" }));
-                return;
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
             let body = "";
@@ -133,18 +125,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/add-custom-to-cart") {
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Non connecté" }));
-                return;
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Session expirée" }));
-                return;
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
             let body = "";
@@ -168,18 +152,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/add-custom-to-cart-from-profile") {
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Non connecté" }));
-                return;
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Session expirée" }));
-                return;
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
             let body = "";
@@ -200,18 +176,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/delete-from-cart") {
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Non connecté" }));
-                return;
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Session expirée" }));
-                return;
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
             let body = "";
@@ -239,18 +207,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/update-product-quantity") {
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Non connecté" }));
-                return;
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Session expirée" }));
-                return;
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
             let body = "";
@@ -272,18 +232,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/procede-paiement"){
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Non connecté" }));
-                return;
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Session expirée" }));
-                return;
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
             try {
@@ -322,18 +274,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/create-post") {
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Non connecté" }));
-                return;
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                res.end(JSON.stringify({ message: "Session expirée" }));
-                return;
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
             
             let body = "";
@@ -357,16 +301,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/delete-post") {
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
             let body = "";
@@ -485,16 +423,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/update-profile-pic") {
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
             let body = "";
@@ -516,16 +448,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/create-comment") {
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
             let body = "";
@@ -568,16 +494,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/delete-comment") {
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
             let body = "";
@@ -607,16 +527,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/update-custom") {
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
             let body = "";
@@ -649,16 +563,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/clear-custom") {
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
             try {
@@ -673,16 +581,10 @@ const serverLunching = http.createServer(async (req, res) => {
             return;
         } else if (req.url === "/api/delete-creation") {
             const cookieHeader = req.headers.cookie;
-            if (!cookieHeader) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!cookieHeader) return res.end(JSON.stringify([]));
             const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
             const sessionData = sessions[cookies.session_id];
-            if (!sessionData) {
-                res.writeHead(401);
-                return res.end();
-            }
+            if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
 
             let body = "";
@@ -699,6 +601,158 @@ const serverLunching = http.createServer(async (req, res) => {
                     console.error("Erreur API - Delete Custom: ", error);
                     res.writeHead(500);
                     res.end();
+                }
+            });
+            return;
+        } else if (req.url === "/api/delete-account") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+
+            try {
+                await database.query("DELETE FROM carts WHERE user_id = $1;", [userId]);
+                await database.query("DELETE FROM passed_carts WHERE user_id = $1;", [userId]);
+                await database.query("DELETE FROM saved_customs WHERE user_id = $1;", [userId]);
+                await database.query("DELETE FROM customisation WHERE user_id = $1;", [userId]);
+                await database.query("DELETE FROM post_likes WHERE user_id = $1;", [userId]);
+                await database.query("DELETE FROM post_comments WHERE user_id = $1;", [userId]);
+                await database.query("DELETE FROM comment_likes WHERE user_id = $1;", [userId]);
+                await database.query("DELETE FROM inspi_posts WHERE user_id = $1;", [userId]);
+
+                await database.query("DELETE FROM users WHERE user_id = $1;", [userId]);
+                delete sessions[cookies.session_id];
+                console.log(`Le compte de l'utilisateur ${userId} a été totalement effacé.`);
+                res.writeHead(200, {
+                    "Set-Cookie": [
+                        "session_id=; Path=/; HttpOnly; Secure; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+                        "username=; Path=/; Secure; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+                    ],
+                    "Content-Type": "application/json"
+                });
+                res.end(JSON.stringify({message: "Compte supprimé avec succès"}));
+            } catch (error) {
+                console.error("Erreur API - Delete Account: ", error);
+                res.writeHead(500);
+                res.end();
+            }
+            return;
+        } else if (req.url === "/api/update-security") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const oldPassword = data.old_password;
+                const newPassword = data.new_password;
+
+                try {
+                    const userQuery = await database.query("SELECT password, email, username FROM users WHERE user_id = $1;", [userId]);
+                    if (userQuery.rows.length === 0) {
+                        res.writeHead(404, {"Content-Type": "application/json"});
+                        return res.end(JSON.stringify({message: "Utilisateur introuvable."}));
+                    }
+                    const userData = userQuery.rows[0];
+                    const isPasswordCorrect = await bcrypt.compare(oldPassword, userData.password);
+                    if (!isPasswordCorrect) {
+                        res.writeHead(400, {"Content-Type": "application/json"});
+                        return res.end(JSON.stringify({message: "L'ancien mot de passe est incorrect."}));
+                    }
+
+                    const salt = await bcrypt.genSalt(15);
+                    const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+                    await database.query("UPDATE users SET password = $1 WHERE user_id = $2;", [hashedNewPassword, userId]);
+                    const brevoData = {
+                        sender: { 
+                            name: "PRICE Support", 
+                            email: "maxime.leost@gmail.com"
+                        },
+                        to: [{email: userData.email}],
+                        subject: "Alerte Sécurité : Modification de votre mot de passe 🔒",
+                        htmlContent: `
+                            <div style="font-family: Arial, sans-serif; text-align: center; color: #333; padding: 20px;">
+                                <h2>Bonjour ${userData.username},</h2>
+                                <p>Nous vous confirmons que le mot de passe de votre compte a été modifié avec succès.</p>
+                                <p style="margin: 30px 0; padding: 15px; background-color: #f1f5f9; border-left: 4px solid #3b82f6; text-align: left;">
+                                    <strong>Vous n'êtes pas à l'origine de cette action ?</strong><br>
+                                    Si vous n'avez pas modifié votre mot de passe, votre compte a peut-être été compromis. Veuillez nous contacter immédiatement.
+                                </p>
+                                <p style="font-size: 0.9rem; color: #777;">À très vite sur la boutique !</p>
+                            </div>
+                        `
+                    };
+
+                    await fetch("https://api.brevo.com/v3/smtp/email", {
+                        method: "POST",
+                        headers: {
+                            "accept": "application/json",
+                            "api-key": process.env.BREVO_API_KEY,
+                            "content-type": "application/json"
+                        },
+                        body: JSON.stringify(brevoData)
+                    });
+
+                    console.log(`Mot de passe mis à jour et email de sécurité envoyé à ${userData.email}`);
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify({message: "Mot de passe mis à jour."}));
+                } catch (error) {
+                    console.error("Erreur API - Password changement: ", error);
+                    res.writeHead(500);
+                    res.end();
+                }
+            });
+            return;
+        } else if (req.url === "/api/update-personal-info") {
+            const cookieHeader = req.headers.cookie;
+            if (!cookieHeader) return res.end(JSON.stringify([]));
+            const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
+            const sessionData = sessions[cookies.session_id];
+            if (!sessionData) return res.end(JSON.stringify([]));
+            const userId = sessionData.user_id;
+
+            let body = "";
+            req.on("data", chunk => body += chunk.toString());
+            req.on("end", async () => {
+                const data = JSON.parse(body);
+                const newUsername = data.username;
+                const newEmail = data.email;
+
+                try {
+                    const checkDuplicate = await database.query("SELECT user_id FROM users WHERE (email = $1 OR username = $2) AND user_id != $3;", [newEmail, newUsername, userId]);
+                    if (checkDuplicate.rows.length > 0) {
+                        res.writeHead(400, {"Content-Type": "application/json"});
+                        return res.end(JSON.stringify({message: "Cet email ou ce nom d'utilisateur est déjà utilisé par un autre compte."}));
+                    }
+                    const getPicQuery = await database.query("SELECT profil_pic FROM users WHERE user_id = $1;", [userId]);
+                    let currentPic = getPicQuery.rows[0].profil_pic;
+                    let newPic = currentPic;
+                    if (currentPic && currentPic.startsWith("https://ui-avatars.com/api/")) {
+                        newPic = `https://ui-avatars.com/api/?name=${newUsername}&background=012911&color=ffffff&bold=true&length=1`;
+                    }
+
+                    await database.query("UPDATE users SET username = $1, email = $2, profil_pic = $3 WHERE user_id = $4;", [newUsername, newEmail, newPic, userId]);
+                    sessions[cookies.session_id].username = newUsername;
+                    console.log(`Profil mis à jour pour l'utilisateur ID: ${userId}`);
+                    res.writeHead(200, {
+                        "Content-Type": "application/json",
+                        "Set-Cookie": `username=${newUsername}; Path=/; Secure; SameSite=Strict`
+                    });
+                    res.end(JSON.stringify({
+                        message: "Informations mises à jour.",
+                        new_profil_pic: newPic !== currentPic ? newPic : null
+                    }));
+                } catch (error) {
+                    console.error("Erreur API - Update Personal Info: ", error);
+                    res.writeHead(500, {"Content-Type": "application/json"});
+                    res.end({message: "Erreur interne du serveur."});
                 }
             });
             return;
@@ -722,6 +776,7 @@ const serverLunching = http.createServer(async (req, res) => {
             const sessionData = sessions[cookies.session_id];
             if (!sessionData) return res.end(JSON.stringify([]));
             const userId = sessionData.user_id;
+
             try {
                 const cartProductsQuery = await database.query("SELECT * FROM carts WHERE user_id = $1;", [userId]);
                 const cartProducts = cartProductsQuery.rows;
@@ -807,9 +862,10 @@ const serverLunching = http.createServer(async (req, res) => {
                         totalPrice += Number(order.custom_price);
                     }
                 }
+                const commandNumber = commandNbrQuery.rows[0].max === null ? 0 : commandNbrQuery.rows[0].max;
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify({
-                    command_nbr: commandNbrQuery.rows[0].max,
+                    command_nbr: commandNumber,
                     design_nbr: designNbrQuery.rows.length,
                     loyalty_pts: Number((totalPrice * 1.15).toFixed(0))
                 }));

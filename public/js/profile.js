@@ -22,6 +22,13 @@ const menuButtonsTel = [dashboardTabBtnTel, ordersTabBtnTel, creationsTabBtnTel,
 
 let currentUserId = null;
 
+const personalInfoForm = document.getElementById("form-personal-info");
+
+const deleteButton = document.querySelector(".delete-account-btn");
+const deleteModal = document.getElementById("delete-account-modal");
+const cancelButton = document.getElementById("cancel-delete-btn");
+const confirmButton = document.getElementById("confirm-delete-btn");
+
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -628,7 +635,138 @@ if (dashboardTabBtnTel) menuButtonsTel.forEach((btn, index) => {
     });
 });
 
-/* MENUS DÉROULANTS DE NAVIGATION ET PROFIL */
+if (deleteButton && deleteModal) deleteButton.addEventListener("click", async (event) => {
+    event.preventDefault();
+    deleteModal.classList.add("show");
+    document.body.style.overflow = "hidden";
+
+    cancelButton.addEventListener("click", () => {
+        deleteModal.classList.remove("show");
+        document.body.style.overflow = "auto";
+    });
+
+    window.addEventListener("click", (e) => {
+        if (e.target === deleteModal) {
+            deleteModal.classList.remove("show");
+            document.body.style.overflow = "auto";
+        }
+    });
+
+    confirmButton.addEventListener("click", async () => {
+        const originalText = confirmButton.textContent;
+        confirmButton.textContent = "Adieu...";
+        confirmButton.disabled = true;
+
+        try {
+            const response = await fetch("/api/delete-account", {
+                method: "POST"
+            });
+
+            if (response.ok) {
+                window.location.href = "/"; 
+            } else {
+                alert("Erreur lors de la suppression du compte.");
+                confirmButton.textContent = originalText;
+                confirmButton.disabled = false;
+            }
+        } catch (error) {
+            console.error("Erreur:", error);
+            confirmButton.textContent = originalText;
+            confirmButton.disabled = false;
+        }
+    });
+});
+
+const securityForm = document.getElementById("form-security");
+
+if (securityForm) securityForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const oldPwd = document.getElementById("setting-old-pwd").value;
+    const newPwd = document.getElementById("setting-new-pwd").value;
+    const confirmPwd = document.getElementById("setting-confirm-pwd").value;
+    const submitBtn = securityForm.querySelector("button");
+
+    if (newPwd !== confirmPwd) {
+        alert("Erreur : Le nouveau mot de passe et la confirmation ne correspondent pas !");
+        return;
+    }
+    if (oldPwd === newPwd) {
+        alert("Le nouveau mot de passe doit être différent de l'ancien.");
+        return;
+    }
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = "Mise à jour en cours...";
+    submitBtn.disabled = true;
+
+    try {
+        const response = await fetch("/api/update-security", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                old_password: oldPwd,
+                new_password: newPwd
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            securityForm.reset();
+            showToast("Mot de passe mis à jour avec succès !");
+        } else {
+            alert(data.message || "Erreur lors de la mise à jour.");
+        }
+    } catch (error) {
+        console.error("Erreur de connexion:", error);
+        alert("Erreur réseau, veuillez réessayer.");
+    } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
+});
+
+if (personalInfoForm) personalInfoForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const newUsername = document.getElementById("setting-username").value;
+    const newEmail = document.getElementById("setting-email").value;
+    const submitBtn = personalInfoForm.querySelector("button");
+
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = "Sauvegarde en cours...";
+    submitBtn.disabled = true;
+
+    try {
+        const response = await fetch("/api/update-personal-info", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                username: newUsername,
+                email: newEmail
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showToast("Informations mises à jour avec succès !");
+            const usernameDisplay = document.getElementById("username");
+            if (usernameDisplay) usernameDisplay.textContent = newUsername;
+            if (data.new_profil_pic) {
+                const profilPicElement = document.getElementById("current-pic");
+                if (profilPicElement) profilPicElement.src = data.new_profil_pic;
+            }
+            
+        } else {
+            alert(data.message || "Erreur lors de la mise à jour.");
+        }
+    } catch (error) {
+        console.error("Erreur réseau:", error);
+        alert("Erreur réseau, veuillez réessayer.");
+    } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
+});
 
 function toggleNavMenu(event, dropdownId, classSelected) {
     event.preventDefault();

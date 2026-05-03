@@ -198,6 +198,10 @@
                                         <input type="password" id="setting-new-pwd" required>
                                         <label for="setting-new-pwd">Nouveau mot de passe</label>
                                     </div>
+                                    <div class="input-group">
+                                        <input type="password" id="setting-confirm-pwd" required>
+                                        <label for="setting-confirm-pwd">Confirmer le nouveau mot de passe</label>
+                                    </div>
                                     <button type="submit" class="apply-filters-btn" style="margin-top: 15px;">Mettre à jour le mot de passe</button>
                                 </form>
                             </div>
@@ -224,6 +228,18 @@
                                 <h3 style="color: #f87171;">Zone de danger</h3>
                                 <p>La suppression de votre compte est définitive. Toutes vos commandes, données et designs personnalisés seront perdus à jamais.</p>
                                 <button class="delete-account-btn">Supprimer mon compte définitivement</button>
+                            </div>
+
+                            <div class="modal-overlay" id="delete-account-modal">
+                                <div class="modal-content" style="text-align: center;">
+                                    <h2 style="color: #f87171; margin-bottom: 15px;">Supprimer le compte ?</h2>
+                                    <p>Cette action est <strong>définitive et irréversible</strong>. Toutes vos commandes, vos créations personnalisées et vos informations seront perdues à jamais.</p>
+                                    
+                                    <div style="display: flex; gap: 15px; margin-top: 30px; justify-content: center;">
+                                        <button id="cancel-delete-btn" class="glass-btn" style="flex: 1; margin: 0;">Annuler</button>
+                                        <button id="confirm-delete-btn" class="delete-account-btn" style="flex: 1; margin: 0; background: #f87171; color: white;">Oui, me supprimer</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
