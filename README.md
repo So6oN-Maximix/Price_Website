@@ -1,91 +1,101 @@
-# 💧 PRICE - Your Custom Water Bottle Experience
+# 💧 PRICE - E-commerce & Personnalisation de Gourdes
 
-**PRICE** est une plateforme web complète d'e-commerce et de création de gourdes 100% personnalisables. Bien plus qu'une simple boutique, le site intègre un véritable aspect communautaire où les utilisateurs peuvent partager leurs créations, s'inspirer, liker et commenter les setups des autres.
+**PRICE** est une plateforme web e-commerce développée de zéro (sans framework frontend ni framework de routage backend comme Express). Elle permet aux utilisateurs d'acheter des gourdes, de créer leurs propres configurations sur-mesure, et de partager leurs créations avec la communauté.
+
+---
 
 ## ✨ Fonctionnalités Principales
 
-🛍️ **E-Commerce & Personnalisation**
-* Outil de customisation interactif (choix du corps, bouchon, socle, et habillage).
-* Système de panier dynamique (ajout, modification des quantités, suppression).
-* Simulation de validation de commande.
+### 🛒 E-commerce & Panier
+- Catalogue de produits standards.
+- Système de panier dynamique (ajout, modification des quantités, suppression).
+- Validation de commande et historique d'achats.
 
-🌐 **Réseau Social Intégré (La Communauté)**
-* Fil d'actualité listant les créations des utilisateurs.
-* Système de "Posts" avec image, badges des composants utilisés, et description.
-* Interactions en temps réel : Likes optimistes (+1 immédiat) et système de commentaires imbriqués (avec likes sur les commentaires).
-* Profil utilisateur listant l'historique des commandes et les posts publiés.
+### 🎨 Outil de Personnalisation
+- Configurateur 3D/Interactif (Bouchon, Corps, Habillage, Socle).
+- Sauvegarde des créations dans le profil utilisateur ("Mes Créations").
+- Ajout direct des gourdes personnalisées au panier.
 
-🔒 **Authentification & Sécurité**
-* Inscription et Connexion sécurisées (hashage des mots de passe avec `bcrypt`).
-* Gestion de sessions par cookies HTTP-Only.
-* Récupération de mot de passe par email avec tokens sécurisés (via l'API Brevo).
-* Génération automatique d'avatars personnalisés pour les nouveaux inscrits (via UI Avatars).
+### 👤 Système Utilisateur Complet
+- Inscription et Connexion avec hachage des mots de passe (`bcrypt`).
+- Gestion des sessions via cookies HTTPOnly et Secure.
+- Tableau de bord personnalisé (statistiques, dernières commandes, dernières créations).
+- Modification du profil (Pseudo, Email, Photo de profil avec avatars générés automatiquement ou upload).
+- Sécurité : Changement de mot de passe avec envoi d'e-mail d'alerte.
+- Oubli de mot de passe (génération d'un lien sécurisé et limité dans le temps).
+- Suppression de compte complète (avec nettoyage en cascade de la base de données).
 
-## 🛠️ Stack Technique
+### 🌐 Espace Communauté
+- Publication de posts inspirants (setups de gourdes).
+- Système de "J'aime" sur les posts et les commentaires.
+- Espace commentaires en direct.
 
-Le projet a été développé de manière native pour bien maîtriser les fondamentaux du web :
-* **Frontend :** HTML5, CSS3, JavaScript (Vanilla).
-* **Backend :** Node.js (Utilisation native du module `http`, sans framework comme Express).
-* **Base de données :** PostgreSQL (module `pg`).
-* **Déploiement :** Compatible avec les hébergeurs modernes comme Railway.
+---
 
-## 📂 Architecture du Projet
+## 🛠️ Technologies Utilisées
 
-Le projet respecte une séparation stricte entre le client et le serveur :
+- **Frontend :** HTML5, CSS3 (Vanilla), JavaScript (Vanilla)
+- **Backend :** Node.js (Module HTTP natif)
+- **Base de données :** PostgreSQL (via le module `pg`)
+- **Sécurité & Auth :** `bcrypt` (hachage), `crypto` (tokens)
+- **Mailing :** API Brevo (SMTP) pour les mails transactionnels et de sécurité.
+- **Images par défaut :** API `ui-avatars.com`
 
-```text
-PRICE/
-├── public/                 # 🖥️ Frontend (Fichiers statiques envoyés au navigateur)
-│   ├── assets/             # Images, polices...
-│   ├── css/                # Feuilles de style
-│   ├── js/                 # Scripts côté client (DOM, Fetch API)
-│   └── *.html              # Pages web
-├── server/                 # ⚙️ Backend (Logique serveur)
-│   ├── index.js            # Point d'entrée, serveur HTTP et routeur API
-│   └── database.js         # Configuration PostgreSQL et création des tables
-├── package.json            # Dépendances du projet
-└── .env                    # Variables d'environnement (ignoré par Git)
+---
+
+## 🚀 Installation et Lancement
+
+### 1. Prérequis
+- [Node.js](https://nodejs.org/) installé sur votre machine.
+- [PostgreSQL](https://www.postgresql.org/) installé et configuré.
+
+### 2. Cloner le projet
+```bash
+git clone https://github.com/So6oN-Maximix/Price_Website.git
+cd Price_Website
 ```
 
-## 🚀 Installation et Lancement en local
+### 3. Installer les dépendances
+```bash
+npm install
+```
 
-1. **Cloner le dépôt :**
-    ```bash
-    git clone [https://github.com/So6oN-Maximix/Price_Website.git](https://github.com/So6oN-Maximix/Price_Website.git)
-    cd Price_Website
-    ```
-2. **Installation des dépendances :**
-    ```bash
-    npm install
-    ```
+### 4. Configuration de l'environnement (.env)
+Créez un fichier `.env` à la racine du projet et ajoutez-y vos variables de configuration :
+```env
+DATABASE_URL=lien_vers_la_base_de_donnée
+BREVO_API_KEY=votre_cle_api_brevo
+```
 
-3. **Configuration de l'environnement :**
+### 5. Lancer le serveur
+```bash
+node .\server\index.js
+```
+Le site sera accessible sur `http://localhost:8080`.
 
-    Crée un fichier `.env` à la racine du projet et ajoutes-y ces variables :
-    ```bash
-    PORT=8080
-    # Lien de connexion à ta base de données PostgreSQL
-    DATABASE_URL=postgresql://postgres:ton_mot_de_passe@localhost:5432/PRICE_db
-    # Clé API Brevo pour l'envoi d'emails (Mot de passe oublié)
-    BREVO_API_KEY=ta_cle_api_brevo
-    ```
+---
 
-4. **Base de données :**
+## 📂 Structure du Projet
 
-    *Assure-toi que PostgreSQL tourne sur ta machine.*
+```text
+📦 PRICE
+ ┣ 📂 public               # Fichiers statiques (Frontend)
+ ┃ ┣ 📂 css                # Feuilles de style
+ ┃ ┣ 📂 js                 # Scripts frontend
+ ┃ ┣ 📂 assets             # Images, icônes, favicon
+ ┃ ┣ 📂 3DModels           # Modeles 3D
+ ┃ ┣ 📜 index.html         # Page d'accueil
+ ┃ ┣ 📜 profile.html       # Page profil & dashboard
+ ┃ ┗ ...                   # Autres pages HTML
+ ┣ 📂 server
+ ┃ ┣ 📜 index.js           # Serveur Node.js (Backend & API)
+ ┣ ┣ 📜 database.js        # Configuration de la connexion PostgreSQL
+ ┣ 📜 package.json         # Dépendances du projet
+ ┗ 📜 README.md            # Ce fichier
+```
 
-    Au premier lancement, le fichier `/server/database.js` se chargera automatiquement de créer toutes les tables SQL nécessaires (users, products, carts, inspi_comments, etc.) et d'insérer les produits de base !
+---
 
-5. **Lancer le server**
+## 👨‍💻 Auteur
 
-    ```bash
-    node ./server/index.js
-    ```
-    *Le site sera accessible à l'adresse : `http://localhost:8080`*
-
-## ✍️ Auteur
-**Maxime LEOST**
-
-*GitHub* : [@So6oN-Maximix](https://github.com/So6oN-Maximix)
-
-*LinkedIn* : [Mon Profil](https://www.linkedin.com/in/maxime-leost-ba6083328/)
+Développé par **Maxime LEOST** - 2026
