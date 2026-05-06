@@ -4,7 +4,8 @@
     "start": "node ./server/index.js",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "compress": "node compress.js"
   },
   "engines": {
     "node": "20.x"

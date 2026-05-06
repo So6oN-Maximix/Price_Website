@@ -1,5 +1,5 @@
 let scene, camera, renderer, loader;
-const repoModels = "./3DModels/";
+const repoModels = "./3DModels/Compressed_files/";
 
 const loadedMeshes = {
     bouchon: null,
@@ -24,7 +24,11 @@ window.loadAnimation = async function (selectedProducts) {
     renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(renderer.domElement);
 
+    const dracoLoader = new THREE.DRACOLoader();
+    dracoLoader.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.6/");
+
     loader = new THREE.GLTFLoader();
+    loader.setDRACOLoader(dracoLoader);
 
     for (const type in selectedProducts) {
         if (selectedProducts[type] !== null) {
