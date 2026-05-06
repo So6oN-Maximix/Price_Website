@@ -1673,10 +1673,21 @@ const serverLunching = http.createServer(async (req, res) => {
     const extTypes = {
         ".html": "text/html",
         ".css": "text/css",
-        ".js": "text/javascript"
+        ".js": "text/javascript",
+        ".glb": "model/gltf-binary",
+        ".mp4": "video/mp4",
+        ".ico": "image/x-icon",
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".svg": "image/svg+xml"
     };
 
     const contentType = extTypes[extName];
+
+    let cacheControl = "no-cache";
+    if ([".css", ".js", ".glb", ".mp4", ".ico", ".png", ".jpg", ".svg"].includes(extName)) {
+        cacheControl = "public, max-age=2592000, immutable";
+    }
 
     fs.readFile(filePath, (err, content) => {
         if (err) {
@@ -1688,7 +1699,8 @@ const serverLunching = http.createServer(async (req, res) => {
             res.writeHead(200, {
                 "Content-Type": `${contentType}; charset=utf-8`,
                 "X-Content-Type-Options": "nosniff",
-                "X-Frame-Options": "DENY"
+                "X-Frame-Options": "DENY",
+                "Cache-Control": cacheControl
             });
             res.end(content, "utf-8");
         }
