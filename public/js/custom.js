@@ -1,7 +1,7 @@
 const tabButtons = document.querySelectorAll(".custom-tab-btn");
 const optionContainers = document.querySelectorAll(".options-grid");
 
-let selectedProducts = {"bouchon": "", "corps": "", "habillage": "", "socle": ""};
+let selectedProducts = { bouchon: "", corps: "", habillage: "", socle: "" };
 
 function addToOptionMenu(productObj) {
     const optionItemDiv = document.createElement("div");
@@ -11,7 +11,7 @@ function addToOptionMenu(productObj) {
 
     if (productObj.name === "∅") {
         const emptyIcon = document.createElement("div");
-        emptyIcon.classList.add("product-thumbnail", "empty-icon"); 
+        emptyIcon.classList.add("product-thumbnail", "empty-icon");
         emptyIcon.textContent = "∅";
         optionItemDiv.appendChild(emptyIcon);
     } else {
@@ -63,14 +63,14 @@ function addToOptionMenu(productObj) {
 
         const parentGrid = optionItemDiv.parentElement;
         const currentlySelected = parentGrid.querySelectorAll(".selected");
-        currentlySelected.forEach(element => element.classList.remove("selected"));
+        currentlySelected.forEach((element) => element.classList.remove("selected"));
         optionItemDiv.classList.add("selected");
 
         addToSummary(productObj);
         await fetch("/api/update-custom", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({product_list: selectedProducts})
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ product_list: selectedProducts })
         });
         updateTotal();
         checkValidity();
@@ -119,7 +119,7 @@ function addToSummary(productObj) {
 function updateTotal() {
     let total = 0;
     const allPriceSpans = document.querySelectorAll(".item-price");
-    allPriceSpans.forEach(span => total += Number(span.dataset.price));
+    allPriceSpans.forEach((span) => (total += Number(span.dataset.price)));
     document.getElementById("custom-total-price").textContent = `${total.toFixed(2)}€`;
 }
 
@@ -165,13 +165,13 @@ function showToast() {
 }
 
 async function resetCustom() {
-    await fetch("/api/clear-custom", {method: "POST"});
+    await fetch("/api/clear-custom", { method: "POST" });
     for (const type in selectedProducts) {
         selectedProducts[type] = null;
         addToSummary({
             name: "∅",
             type: type,
-            price: 0.00,
+            price: 0.0,
             promo: null
         });
         if (typeof window.update3DModel === "function") {
@@ -180,8 +180,8 @@ async function resetCustom() {
         const optionZone = document.getElementById(`options-${type}`);
         if (optionZone) {
             const currentlySelected = optionZone.querySelectorAll(".selected");
-            currentlySelected.forEach(elem => elem.classList.remove("selected"));
-            
+            currentlySelected.forEach((elem) => elem.classList.remove("selected"));
+
             const nullCard = document.getElementById(`${type}-null-card`);
             if (nullCard) nullCard.classList.add("selected");
         }
@@ -191,11 +191,11 @@ async function resetCustom() {
 }
 
 checkValidity();
-tabButtons.forEach(btn => {
+tabButtons.forEach((btn) => {
     btn.addEventListener("click", async () => {
-        tabButtons.forEach(button => button.classList.remove("active"));
+        tabButtons.forEach((button) => button.classList.remove("active"));
         btn.classList.add("active");
-        optionContainers.forEach(container => container.style.display = "none");
+        optionContainers.forEach((container) => (container.style.display = "none"));
         const cible = btn.getAttribute("data-target");
         const zoneToLoad = document.getElementById(`options-${cible}`);
         if (zoneToLoad) {
@@ -207,7 +207,7 @@ tabButtons.forEach(btn => {
                     addToOptionMenu({
                         name: "∅",
                         type: cible,
-                        price: 0.00,
+                        price: 0.0,
                         promo: null
                     });
                     const productTypeList = await serverResponse.json();
@@ -218,7 +218,7 @@ tabButtons.forEach(btn => {
             }
             const selectedProductId = selectedProducts[cible];
             const currentlySelected = zoneToLoad.querySelectorAll(".selected");
-            currentlySelected.forEach(elem => elem.classList.remove("selected"));
+            currentlySelected.forEach((elem) => elem.classList.remove("selected"));
 
             let cardIdToSelect = `${cible}-${selectedProductId}-card`;
             if (selectedProductId === null || selectedProductId === undefined) cardIdToSelect = `${cible}-null-card`;
@@ -242,7 +242,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                 addToSummary({
                     name: "∅",
                     type: type,
-                    price: 0.00,
+                    price: 0.0,
                     promo: null
                 });
             } else {
@@ -262,14 +262,14 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-document.addEventListener('click', (event) => {
-    const sidebar = document.querySelector('.custom-sidebar');
-    const summary = document.querySelector('.custom-summary');
-    const triggerBar = document.querySelector('.mobile-trigger-bar');
+document.addEventListener("click", (event) => {
+    const sidebar = document.querySelector(".custom-sidebar");
+    const summary = document.querySelector(".custom-summary");
+    const triggerBar = document.querySelector(".mobile-trigger-bar");
     if (window.innerWidth <= 768) {
         if (!sidebar.contains(event.target) && !summary.contains(event.target) && !triggerBar.contains(event.target)) {
-            sidebar.classList.remove('active');
-            summary.classList.remove('active');
+            sidebar.classList.remove("active");
+            summary.classList.remove("active");
         }
     }
 });
@@ -277,7 +277,7 @@ document.addEventListener('click', (event) => {
 const finishButton = document.getElementById("finish-button");
 finishButton.addEventListener("click", () => {
     if (finishButton.disabled) return;
-    document.querySelector('.custom-summary').classList.remove('active');
+    document.querySelector(".custom-summary").classList.remove("active");
     const finishCustomContainer = document.getElementById("finish-custom-modal");
     finishCustomContainer.classList.add("show");
     document.body.style.overflow = "hidden";
@@ -303,7 +303,7 @@ finishButton.addEventListener("click", () => {
     }
     document.getElementById("recap-prix").textContent = document.getElementById("custom-total-price").textContent;
 
-    const saveBtn = document.getElementById('save-custom-btn');
+    const saveBtn = document.getElementById("save-custom-btn");
     saveBtn.onclick = async () => {
         const customName = document.getElementById("custom-design-name").value;
         console.log(`${customName} enregistré !`);
@@ -314,28 +314,28 @@ finishButton.addEventListener("click", () => {
         finishButton.classList.add("loading");
         try {
             const dataPack = {
-                "is_custom": "true",
-                "custom_name": customName,
-                "custom_price": Number(document.getElementById("recap-prix").textContent.slice(0, -1)).toFixed(2),
-                "custom_data": {
-                    "bouchon": {
-                        "id": 0,
-                        "name": ""
+                is_custom: "true",
+                custom_name: customName,
+                custom_price: Number(document.getElementById("recap-prix").textContent.slice(0, -1)).toFixed(2),
+                custom_data: {
+                    bouchon: {
+                        id: 0,
+                        name: ""
                     },
-                    "corps": {
-                        "id": 0,
-                        "name": ""
+                    corps: {
+                        id: 0,
+                        name: ""
                     },
-                    "habillage": {
-                        "id": 0,
-                        "name": ""
+                    habillage: {
+                        id: 0,
+                        name: ""
                     },
-                    "socle": {
-                        "id": 0,
-                        "name": ""
+                    socle: {
+                        id: 0,
+                        name: ""
                     }
                 }
-            }
+            };
 
             saveBtn.disabled = true;
             saveBtn.textContent = "Ajout en cours...";
@@ -353,8 +353,8 @@ finishButton.addEventListener("click", () => {
             }
             const response = await fetch("/api/add-custom-to-cart", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({"data_pack": dataPack})
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ data_pack: dataPack })
             });
             if (!response.ok) {
                 finishButton.textContent = "Erreur (Non connecté ?)";

@@ -1,0 +1,30 @@
+name: CI Pipeline
+
+on:
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
+
+jobs:
+    lint-and-format:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout du code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20.x"
+                  cache: "npm"
+
+            - name: Installation des dépendances
+              run: npm ci
+
+            - name: Vérification du formatage (Prettier)
+              run: npm run format:check
+
+            - name: Analyse du code (ESLint)
+              run: npm run lint

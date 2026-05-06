@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Communauté - PRICE</title>
-        <link rel="stylesheet" href="/css/style.css">
-        <link rel="icon" type="image/x-icon" href="/assets/Icone.ico">
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="icon" type="image/x-icon" href="/assets/Icone.ico" />
         <script src="/js/post-builder.js" defer></script>
         <script src="/js/profile.js" defer></script>
         <script src="/js/community.js" defer></script>
@@ -17,28 +17,36 @@
                 <a href="/custom" class="on-pc">Personnalisation</a>
                 <a href="/" class="logo-link">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+                        />
                     </svg>
                 </a>
                 <a href="/community" class="active">Communauté</a>
                 <a href="/about-us">A propos</a>
                 <a href="/cart" class="logo-link on-pc" id="nav-cart-link">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                        <path
+                            d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"
+                        />
                     </svg>
                 </a>
                 <a href="/login" class="logo-link on-pc" id="nav-profile-link">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                        />
                     </svg>
                 </a>
                 <div class="nav-item-dropdown">
                     <a href="#" class="nav-main-link" onclick="toggleNavMenu(event, 'gear-dropdown')">
                         <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="white">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            <path
+                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                            />
                         </svg>
                     </a>
-                    
+
                     <div id="gear-dropdown" class="nav-dropdown-menu">
                         <a href="/custom">Personnaliser</a>
                         <a href="/cart">Mon Panier</a>
@@ -53,7 +61,16 @@
                 <h1>Inspis de la Commu</h1>
                 <p>Découvrez les assemblages de la communauté et proposez vos idées.</p>
                 <button class="create-post-btn" id="create-post-btn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
@@ -61,16 +78,24 @@
                 </button>
             </div>
             <div class="community-feed" id="community-feed">
-                <p style="text-align: center; color: rgba(255, 255, 255, 0.6);">Pas de commentaires postés pour le moment, soyez le premier !!</p>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.6)">
+                    Pas de commentaires postés pour le moment, soyez le premier !!
+                </p>
             </div>
         </main>
         <div class="community-bottom-toggle glass-card">
             <button class="toggle-mode-btn active" id="btn-compositions">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 21H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v7"></path><path d="M14.5 18a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path><path d="M22 22l-1.5-1.5"></path></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 21H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v7"></path>
+                    <path d="M14.5 18a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path>
+                    <path d="M22 22l-1.5-1.5"></path>
+                </svg>
                 Compositions
             </button>
             <button class="toggle-mode-btn" id="btn-creations">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
                 Créations (Idées)
             </button>
         </div>
@@ -83,19 +108,38 @@
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                 </button>
-                
+
                 <h2>Partager mon setup</h2>
                 <p>Montre à la communauté ta création unique !</p>
 
                 <form id="new-post-form" class="new-post-form">
                     <div class="input-group">
                         <div class="add-element-wrapper">
-                            <input type="text" id="post-image" required placeholder="URL de ton image (ou choisis un fichier)">
-                            
-                            <input type="file" id="post-image-file" accept="image/*" style="display: none;">
-                            
-                            <button type="button" class="add-element-btn" id="upload-img-btn" title="Importer une image depuis l'ordinateur">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <input
+                                type="text"
+                                id="post-image"
+                                required
+                                placeholder="URL de ton image (ou choisis un fichier)"
+                            />
+
+                            <input type="file" id="post-image-file" accept="image/*" style="display: none" />
+
+                            <button
+                                type="button"
+                                class="add-element-btn"
+                                id="upload-img-btn"
+                                title="Importer une image depuis l'ordinateur"
+                            >
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                     <polyline points="17 8 12 3 7 8"></polyline>
                                     <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -103,14 +147,39 @@
                             </button>
                         </div>
                     </div>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <span style="color: rgba(255, 255, 255, 0.6); font-size: 0.95rem;">Composition de la gourde</span>
+
+                    <div style="display: flex; flex-direction: column; gap: 8px">
+                        <span style="color: rgba(255, 255, 255, 0.6); font-size: 0.95rem"
+                            >Composition de la gourde</span
+                        >
                         <div id="elements-container" class="elements-container"></div>
                         <div class="add-element-wrapper">
-                            <input type="text" id="element-input" placeholder="Ex: Corps Noir Mat" style="width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 15px; color: white; font-size: 1rem; outline: none;">
+                            <input
+                                type="text"
+                                id="element-input"
+                                placeholder="Ex: Corps Noir Mat"
+                                style="
+                                    width: 100%;
+                                    background: rgba(255, 255, 255, 0.05);
+                                    border: 1px solid rgba(255, 255, 255, 0.1);
+                                    border-radius: 12px;
+                                    padding: 15px;
+                                    color: white;
+                                    font-size: 1rem;
+                                    outline: none;
+                                "
+                            />
                             <button type="button" id="add-element-btn" class="add-element-btn">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg
+                                    width="22"
+                                    height="22"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
                                     <line x1="12" y1="5" x2="12" y2="19"></line>
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                 </svg>
@@ -119,7 +188,12 @@
                     </div>
 
                     <div class="input-group">
-                        <textarea id="post-description" rows="4" required placeholder="Raconte-nous pourquoi tu aimes ce setup..."></textarea>
+                        <textarea
+                            id="post-description"
+                            rows="4"
+                            required
+                            placeholder="Raconte-nous pourquoi tu aimes ce setup..."
+                        ></textarea>
                     </div>
 
                     <button type="submit" class="submit-post-btn">Publier mon setup</button>
@@ -128,7 +202,10 @@
         </div>
 
         <div id="comments-modal" class="modal-overlay">
-            <div class="modal-content glass-card" style="max-width: 500px; padding: 30px; display: flex; flex-direction: column; max-height: 80vh;">
+            <div
+                class="modal-content glass-card"
+                style="max-width: 500px; padding: 30px; display: flex; flex-direction: column; max-height: 80vh"
+            >
                 <button class="close-modal-btn" id="close-comments-btn">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -136,16 +213,72 @@
                     </svg>
                 </button>
 
-                <h2 style="margin-bottom: 20px;">Commentaires</h2>
+                <h2 style="margin-bottom: 20px">Commentaires</h2>
 
-                <div id="comments-list" style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; padding-right: 10px;">
-                    <p style="color: rgba(255,255,255,0.5); text-align: center; font-size: 0.9rem; margin: auto;">Chargement...</p>
+                <div
+                    id="comments-list"
+                    style="
+                        flex-grow: 1;
+                        overflow-y: auto;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 15px;
+                        margin-bottom: 20px;
+                        padding-right: 10px;
+                    "
+                >
+                    <p style="color: rgba(255, 255, 255, 0.5); text-align: center; font-size: 0.9rem; margin: auto">
+                        Chargement...
+                    </p>
                 </div>
 
-                <form id="new-comment-form" style="display: flex; gap: 10px; margin-top: auto;">
-                    <input type="text" id="comment-input" placeholder="Ajouter un commentaire..." required style="flex-grow: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 10px 15px; color: white; outline: none; transition: border-color 0.3s;">
-                    <button type="submit" id="send-comment-btn" style="background: #4ade80; color: #0a0a0b; border: none; border-radius: 50%; width: 42px; height: 42px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; aspect-ratio: 1 / 1; cursor: pointer; transition: transform 0.2s;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 2px; margin-top: 2px;">
+                <form id="new-comment-form" style="display: flex; gap: 10px; margin-top: auto">
+                    <input
+                        type="text"
+                        id="comment-input"
+                        placeholder="Ajouter un commentaire..."
+                        required
+                        style="
+                            flex-grow: 1;
+                            background: rgba(255, 255, 255, 0.05);
+                            border: 1px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 20px;
+                            padding: 10px 15px;
+                            color: white;
+                            outline: none;
+                            transition: border-color 0.3s;
+                        "
+                    />
+                    <button
+                        type="submit"
+                        id="send-comment-btn"
+                        style="
+                            background: #4ade80;
+                            color: #0a0a0b;
+                            border: none;
+                            border-radius: 50%;
+                            width: 42px;
+                            height: 42px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            flex-shrink: 0;
+                            aspect-ratio: 1 / 1;
+                            cursor: pointer;
+                            transition: transform 0.2s;
+                        "
+                    >
+                        <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            style="margin-right: 2px; margin-top: 2px"
+                        >
                             <line x1="22" y1="2" x2="11" y2="13"></line>
                             <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                         </svg>

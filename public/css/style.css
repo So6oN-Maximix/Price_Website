@@ -8,7 +8,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family:
+        "Inter",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
 }
 
 body {
@@ -43,7 +49,7 @@ header {
     align-items: center;
     justify-content: center;
     gap: 30px;
-    
+
     padding: 10px 25px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(15px);
@@ -71,7 +77,7 @@ header {
 }
 
 .glass-nav a.active::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -5px;
     left: 50%;
@@ -96,7 +102,8 @@ header {
     transform: scale(1.1);
 }
 
-.glass-nav .nav-icon, .glass-nav .nav-item-dropdown {
+.glass-nav .nav-icon,
+.glass-nav .nav-item-dropdown {
     display: none;
 }
 
@@ -128,7 +135,7 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
     z-index: -1;
 }
 
@@ -171,7 +178,9 @@ footer {
     text-align: center;
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
     max-width: 600px;
 }
 
@@ -207,8 +216,14 @@ footer {
 }
 
 @keyframes fadeInError {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .back-btn {
@@ -222,7 +237,9 @@ footer {
     text-decoration: none;
     font-size: 0.9rem;
     opacity: 0.7;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
     z-index: 100;
 }
 
@@ -320,8 +337,8 @@ footer {
 /* --- CORRECTION DE L'AUTOFILL DU NAVIGATEUR --- */
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
     -webkit-text-fill-color: white !important;
     transition: background-color 5000s ease-in-out 0s !important;
@@ -493,7 +510,7 @@ input:-webkit-autofill:active {
 }
 
 .glass-check span::before {
-    content: '';
+    content: "";
     display: flex;
     justify-content: center;
     align-items: center;
@@ -524,7 +541,7 @@ input:-webkit-autofill:active {
     background: white;
     border-color: white;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    content: '✓';
+    content: "✓";
     color: black;
 }
 
@@ -635,7 +652,9 @@ input:-webkit-autofill:active {
 .product-card {
     padding: 20px;
     position: relative;
-    transition: transform 0.4s ease, border 0.4s ease;
+    transition:
+        transform 0.4s ease,
+        border 0.4s ease;
     overflow: hidden;
 }
 
@@ -747,7 +766,7 @@ input:-webkit-autofill:active {
 .product-info-header {
     display: flex;
     justify-content: space-between;
-    align-items: center; 
+    align-items: center;
     margin-top: 15px;
 }
 
@@ -762,7 +781,7 @@ input:-webkit-autofill:active {
     height: 18px;
     border-radius: 50%;
     border: 2px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     transition: all 0.2s ease;
     cursor: pointer;
 }
@@ -814,11 +833,17 @@ input:-webkit-autofill:active {
 }
 
 @keyframes slideInToast {
-    to { transform: translateX(0); opacity: 1; }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 @keyframes slideOutToast {
-    to { transform: translateX(120%); opacity: 0; }
+    to {
+        transform: translateX(120%);
+        opacity: 0;
+    }
 }
 
 /* --- ETATS DU BOUTON AJOUTER --- */
@@ -920,7 +945,8 @@ input:-webkit-autofill:active {
     transition: all 0.3s ease;
 }
 
-.profile-menu a:hover, .profile-menu a.active {
+.profile-menu a:hover,
+.profile-menu a.active {
     background: rgba(255, 255, 255, 0.05);
     color: white;
     transform: translateX(5px);
@@ -1395,8 +1421,8 @@ input:-webkit-autofill:active {
     gap: 5px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 10px;
-    
-    overflow-x: auto; 
+
+    overflow-x: auto;
     scrollbar-width: none;
 }
 
@@ -1413,8 +1439,8 @@ input:-webkit-autofill:active {
     cursor: pointer;
     padding: 5px 8px;
     transition: all 0.3s;
-    
-    white-space: nowrap; 
+
+    white-space: nowrap;
     flex: 1;
     text-align: center;
 }
@@ -1476,7 +1502,7 @@ input:-webkit-autofill:active {
     height: 80px;
     object-fit: contain;
     margin-bottom: 8px;
-    background: rgba(255, 255, 255, 0.05); 
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
     padding: 5px;
     transition: transform 0.2s ease;
@@ -1533,11 +1559,18 @@ input:-webkit-autofill:active {
 }
 
 /* Ordre des calques (z-index) */
-.layer-bouchon { z-index: 4; }
-.layer-corps { z-index: 3; }
-.layer-habillage { z-index: 2; }
-.layer-socle { z-index: 1; }
-
+.layer-bouchon {
+    z-index: 4;
+}
+.layer-corps {
+    z-index: 3;
+}
+.layer-habillage {
+    z-index: 2;
+}
+.layer-socle {
+    z-index: 1;
+}
 
 /* --- RÉSUMÉ BAS DROITE --- */
 .custom-summary {
@@ -1599,7 +1632,9 @@ input:-webkit-autofill:active {
     text-decoration: none;
     margin-bottom: 25px;
     font-size: 0.95rem;
-    transition: color 0.3s ease, transform 0.3s ease;
+    transition:
+        color 0.3s ease,
+        transform 0.3s ease;
 }
 
 .back-link:hover {
@@ -1659,7 +1694,8 @@ input:-webkit-autofill:active {
     transition: all 0.2s ease;
 }
 
-.thumbnail-item:hover, .thumbnail-item.active {
+.thumbnail-item:hover,
+.thumbnail-item.active {
     border-color: #4ade80;
     transform: translateY(-3px);
 }
@@ -1698,7 +1734,8 @@ input:-webkit-autofill:active {
 }
 
 /* Groupe Couleurs */
-.product-selection-group h3, .product-description-group h3 {
+.product-selection-group h3,
+.product-description-group h3 {
     font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.5);
     margin-bottom: 15px;
@@ -1913,7 +1950,7 @@ input:-webkit-autofill:active {
     width: 100%;
     border-radius: 12px;
     overflow: hidden;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .post-image {
@@ -1987,7 +2024,7 @@ input:-webkit-autofill:active {
 }
 
 .action-btn.like-btn.liked svg {
-    fill: #f43f5e; 
+    fill: #f43f5e;
     stroke: #f43f5e;
 }
 
@@ -1996,15 +2033,26 @@ input:-webkit-autofill:active {
 }
 
 @keyframes heartBeat {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.3); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
-.action-btn.like-btn:hover { color: #f43f5e; } /* Rouge/Rose au survol */
-.action-btn.comment-btn:hover { color: #3b82f6; } /* Bleu au survol */
-.action-btn.save-btn:hover { color: #eab308; } /* Jaune au survol */
-
+.action-btn.like-btn:hover {
+    color: #f43f5e;
+} /* Rouge/Rose au survol */
+.action-btn.comment-btn:hover {
+    color: #3b82f6;
+} /* Bleu au survol */
+.action-btn.save-btn:hover {
+    color: #eab308;
+} /* Jaune au survol */
 
 /* --- LA BARRE DE NAVIGATION EN BAS --- */
 .community-bottom-toggle {
@@ -2153,7 +2201,8 @@ input:-webkit-autofill:active {
     gap: 20px;
 }
 
-.new-post-form input, .new-post-form textarea {
+.new-post-form input,
+.new-post-form textarea {
     width: 100%;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -2165,7 +2214,8 @@ input:-webkit-autofill:active {
     transition: border-color 0.3s ease;
 }
 
-.new-post-form input:focus, .new-post-form textarea:focus {
+.new-post-form input:focus,
+.new-post-form textarea:focus {
     border-color: #4ade80;
     background: rgba(255, 255, 255, 0.08);
 }
@@ -2250,8 +2300,14 @@ input:-webkit-autofill:active {
 }
 
 @keyframes fadeInTag {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* La petite croix pour supprimer un tag */
@@ -2296,7 +2352,7 @@ input:-webkit-autofill:active {
     display: flex;
     flex-direction: column;
     gap: 30px;
-    max-width: 650px; 
+    max-width: 650px;
     margin: 0 auto;
     width: 100%;
 }
@@ -2521,7 +2577,7 @@ input:-webkit-autofill:active {
     flex: 1;
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .about-image img {
@@ -2617,7 +2673,9 @@ input:-webkit-autofill:active {
     background: rgba(74, 222, 128, 0.03); /* Vert très léger */
     border: 1px solid rgba(74, 222, 128, 0.2);
     gap: 0; /* L'espacement sera géré par le déroulant */
-    transition: 0.3s ease, background 0.3s ease;
+    transition:
+        0.3s ease,
+        background 0.3s ease;
 }
 
 /* La ligne principale visible */
@@ -2677,7 +2735,7 @@ input:-webkit-autofill:active {
     border-radius: 50%;
     width: 35px;
     height: 35px;
-    flex-shrink: 0; 
+    flex-shrink: 0;
     aspect-ratio: 1 / 1;
     cursor: pointer;
     display: flex;
@@ -2695,7 +2753,10 @@ input:-webkit-autofill:active {
     max-height: 0; /* Caché par défaut */
     overflow: hidden;
     opacity: 0;
-    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.4s ease, opacity 0.3s ease;
+    transition:
+        max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        margin-top 0.4s ease,
+        opacity 0.3s ease;
 }
 
 .pack-parts-list {
@@ -2705,7 +2766,7 @@ input:-webkit-autofill:active {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    
+
     display: flex;
     justify-content: space-between; /* Étale les pièces sur la ligne */
     flex-wrap: wrap;
@@ -2749,7 +2810,9 @@ input:-webkit-autofill:active {
     align-items: flex-start;
     padding: 20px;
     gap: 15px;
-    transition: transform 0.3s ease, border-color 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease;
 }
 
 .design-card:hover {
@@ -2876,7 +2939,7 @@ input:-webkit-autofill:active {
 
 /* On s'assure que la carte sert de repère pour le positionnement absolu */
 .design-card {
-    position: relative; 
+    position: relative;
 }
 
 /* Le style du bouton corbeille */
@@ -2907,7 +2970,8 @@ input:-webkit-autofill:active {
 
 /* Adaptation pour les téléphones */
 @media (max-width: 768px) {
-    .about-section, .flex-row-reverse {
+    .about-section,
+    .flex-row-reverse {
         flex-direction: column;
     }
     .about-grid {
@@ -2931,7 +2995,7 @@ input:-webkit-autofill:active {
     }
 
     .glass-nav {
-        width: 95%; 
+        width: 95%;
         left: 50%;
         transform: translateX(-50%);
         top: 15px;
@@ -2952,17 +3016,20 @@ input:-webkit-autofill:active {
         height: 18px;
     }
 
-    .glass-nav .nav-text, .glass-nav .on-pc {
+    .glass-nav .nav-text,
+    .glass-nav .on-pc {
         display: none;
     }
-    
-    .glass-nav .nav-icon, .glass-nav .nav-item-dropdown {
+
+    .glass-nav .nav-icon,
+    .glass-nav .nav-item-dropdown {
         display: block;
     }
 
     /* LIMIATION DU NOMBRE DE PRODUIT DE LA BOUTIQUE A 1 PAR LIGNE*/
 
-    .shop-grid, .products-grid {
+    .shop-grid,
+    .products-grid {
         grid-template-columns: 1fr !important;
         gap: 20px;
     }
@@ -2978,7 +3045,7 @@ input:-webkit-autofill:active {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 20px 0; 
+        padding: 20px 0;
     }
 
     .glass-login {
@@ -2996,7 +3063,7 @@ input:-webkit-autofill:active {
     /* --- MENU DÉROULANT --- */
 
     .nav-item-dropdown {
-        position: relative; 
+        position: relative;
     }
 
     .nav-dropdown-menu {
@@ -3006,7 +3073,7 @@ input:-webkit-autofill:active {
         right: 0;
         left: auto;
         transform: none;
-        
+
         background: rgba(20, 20, 20, 0.95);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
@@ -3015,10 +3082,10 @@ input:-webkit-autofill:active {
         padding: 8px;
         min-width: 160px;
         z-index: 1000;
-        
+
         flex-direction: column;
         gap: 5px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         transform-origin: top right;
     }
 
@@ -3048,7 +3115,7 @@ input:-webkit-autofill:active {
         border-radius: 10px;
         text-align: left;
         width: 100%;
-        white-space: nowrap; 
+        white-space: nowrap;
         transition: background 0.2s;
     }
 
@@ -3076,7 +3143,7 @@ input:-webkit-autofill:active {
     .product-info-glass {
         display: flex !important;
         flex-direction: column !important;
-        padding: 20px !important; 
+        padding: 20px !important;
         position: static !important;
     }
 
@@ -3101,7 +3168,7 @@ input:-webkit-autofill:active {
     /* ============================================================== */
 
     .stats-grid {
-        grid-template-columns: 1fr; 
+        grid-template-columns: 1fr;
         gap: 15px;
     }
 
@@ -3182,7 +3249,7 @@ input:-webkit-autofill:active {
 
     /* On autorise la ligne principale à passer à la ligne (wrap) */
     .pack-main-row {
-        flex-wrap: wrap; 
+        flex-wrap: wrap;
         gap: 15px;
     }
 
@@ -3214,7 +3281,7 @@ input:-webkit-autofill:active {
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .custom-pack-item.expanded .pack-details-collapse {
         max-height: 250px;
     }
@@ -3223,13 +3290,13 @@ input:-webkit-autofill:active {
 
     /* On annule le minmax de 350px et on force 1 seule colonne */
     .settings-grid {
-        grid-template-columns: 1fr; 
-        gap: 20px; 
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
     /* On réduit un peu les marges internes de la carte pour laisser respirer le texte */
     .settings-card {
-        padding: 20px; 
+        padding: 20px;
     }
 
     .settings-card h3 {
@@ -3242,7 +3309,7 @@ input:-webkit-autofill:active {
         font-size: 0.8rem;
         margin-bottom: 20px;
     }
-    
+
     /* On s'assure que le bouton de suppression ne dépasse pas */
     .delete-account-btn {
         font-size: 0.85rem;
@@ -3252,19 +3319,22 @@ input:-webkit-autofill:active {
 }
 
 @media screen and (max-width: 768px) {
-
     /* --- RÉGLAGES GLOBAUX --- */
-    html, body {
+    html,
+    body {
         overflow-x: hidden;
         font-size: 14px;
     }
 
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.5rem; }
-
+    h1 {
+        font-size: 2rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
 
     /* --- BOUTIQUE (Grille et Filtres) --- */
-    
+
     .shop-container {
         grid-template-columns: 1fr;
         padding: 120px 20px 50px;
@@ -3290,9 +3360,9 @@ input:-webkit-autofill:active {
         align-items: center;
         font-size: 1rem;
     }
-    
+
     .shop-sidebar h3::after {
-        content: '▼';
+        content: "▼";
         font-size: 0.8rem;
         transition: transform 0.3s ease;
     }
@@ -3323,7 +3393,7 @@ input:-webkit-autofill:active {
     .product-img {
         height: 150px;
     }
-    
+
     .product-info h4 {
         font-size: 0.9rem;
         white-space: nowrap;
@@ -3334,9 +3404,9 @@ input:-webkit-autofill:active {
     /* REDUCTION TAILLE BARRE DE RECHERCHE - SHOP */
 
     .search-container {
-        padding: 5px 15px; 
-        margin-top: 70px; 
-        margin-bottom: -120px; 
+        padding: 5px 15px;
+        margin-top: 70px;
+        margin-bottom: -120px;
     }
 
     .search-group {
@@ -3368,7 +3438,7 @@ input:-webkit-autofill:active {
     /* REDUCTION DE LA HAUTEUR DES CHAMPS DE LOGIN ET REGISTER */
 
     .login-container {
-        min-height: 80vh; 
+        min-height: 80vh;
         padding: 20px 0;
     }
 
@@ -3380,7 +3450,7 @@ input:-webkit-autofill:active {
     }
 
     .glass-login input {
-        padding: 10px 0px; 
+        padding: 10px 0px;
         font-size: 0.95rem;
     }
 
@@ -3398,7 +3468,7 @@ input:-webkit-autofill:active {
     }
 
     .custom-sidebar {
-        position: fixed ;
+        position: fixed;
         bottom: -100%;
         left: 0;
         width: 100%;
@@ -3430,7 +3500,7 @@ input:-webkit-autofill:active {
         padding: 25px;
     }
 
-    .custom-sidebar.active, 
+    .custom-sidebar.active,
     .custom-summary.active {
         bottom: 0;
     }
@@ -3502,7 +3572,7 @@ input:-webkit-autofill:active {
     .cart-summary-section {
         position: relative;
         top: auto;
-        margin-top: 30px; 
+        margin-top: 30px;
     }
 
     /* On cible la boîte qui contient l'input et le bouton */
@@ -3548,7 +3618,7 @@ input:-webkit-autofill:active {
     /* Le bloc contenant le nom du produit prend l'espace restant sur la 1ère ligne */
     .cart-item-info {
         flex: 1;
-        min-width: 150px; 
+        min-width: 150px;
     }
 
     /* On force la section avec le prix, la quantité et la poubelle à passer sur une nouvelle ligne en bas */
@@ -3579,7 +3649,7 @@ input:-webkit-autofill:active {
     .profile-sidebar {
         display: none;
     }
-    
+
     /* BAR */
 
     .profile-bar-menus {
@@ -3591,7 +3661,7 @@ input:-webkit-autofill:active {
         transform: translateX(-50%);
         width: 95%;
         z-index: 10000;
-        
+
         justify-content: space-around;
         padding: 10px 15px;
         height: auto;
@@ -3603,11 +3673,11 @@ input:-webkit-autofill:active {
         align-items: center;
         justify-content: center;
         gap: 4px;
-        
+
         font-size: 0.65rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        
+
         color: white;
         text-decoration: none;
         opacity: 0.5;
@@ -3627,13 +3697,13 @@ input:-webkit-autofill:active {
     }
 
     .profile-bar-menus a.active svg {
-        transform: translateY(-3px); 
+        transform: translateY(-3px);
     }
 
     /* Menu déroulant */
 
     .profile-item-dropup {
-        position: relative; 
+        position: relative;
     }
 
     .profile-dropup-menu {
@@ -3644,7 +3714,7 @@ input:-webkit-autofill:active {
         right: 0;
         left: auto;
         transform: none;
-        
+
         background: rgba(20, 20, 20, 0.95);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
@@ -3653,10 +3723,10 @@ input:-webkit-autofill:active {
         padding: 8px;
         min-width: 160px;
         z-index: 1000;
-        
+
         flex-direction: column;
         gap: 5px;
-        box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
         transform-origin: bottom right;
     }
 
@@ -3686,7 +3756,7 @@ input:-webkit-autofill:active {
         border-radius: 10px;
         text-align: left;
         width: 100%;
-        white-space: nowrap; 
+        white-space: nowrap;
         transition: background 0.2s;
     }
 
@@ -3701,7 +3771,7 @@ input:-webkit-autofill:active {
         opacity: 0.8;
     }
 
-    #logout-btn-2, 
+    #logout-btn-2,
     #logout-btn-2 span {
         color: #fb2727;
     }
@@ -3710,7 +3780,7 @@ input:-webkit-autofill:active {
     #logout-btn-2 svg path {
         fill: #fb2727;
     }
-    
+
     .profile-bar-menus a.logout-btn-2:active,
     .profile-bar-menus a.logout-btn-2:hover {
         opacity: 1;
@@ -3723,7 +3793,7 @@ input:-webkit-autofill:active {
         flex-direction: column;
         align-items: center;
         gap: 30px;
-        max-width: 650px; 
+        max-width: 650px;
         margin: 0 auto;
         width: 100%;
     }

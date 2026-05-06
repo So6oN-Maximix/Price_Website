@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Mon Profil - PRICE</title>
-        <link rel="stylesheet" href="/css/style.css">
-        <link rel="icon" type="image/x-icon" href="/assets/Icone.ico">
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="icon" type="image/x-icon" href="/assets/Icone.ico" />
         <script src="/js/post-builder.js" defer></script>
         <script src="/js/profile.js" defer></script>
     </head>
@@ -16,28 +16,40 @@
                 <a href="/custom" class="on-pc">Personnalisation</a>
                 <a href="/" class="logo-link">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+                        />
                     </svg>
                 </a>
                 <a href="/community">Communauté</a>
                 <a href="/about-us">A propos</a>
                 <a href="/cart" class="logo-link on-pc" id="nav-cart-link">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                        <path
+                            d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"
+                        />
                     </svg>
                 </a>
                 <a href="/login" class="logo-link on-pc active" id="nav-profile-link">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                        />
                     </svg>
                 </a>
                 <div class="nav-item-dropdown">
-                    <a href="#" class="nav-main-link active" onclick="toggleNavMenu(event, 'gear-dropdown', '.nav-dropdown-menu')">
+                    <a
+                        href="#"
+                        class="nav-main-link active"
+                        onclick="toggleNavMenu(event, 'gear-dropdown', '.nav-dropdown-menu')"
+                    >
                         <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="white">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            <path
+                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                            />
                         </svg>
                     </a>
-                    
+
                     <div id="gear-dropdown" class="nav-dropdown-menu">
                         <a href="/custom">Personnaliser</a>
                         <a href="/cart">Mon Panier</a>
@@ -50,13 +62,13 @@
         <main class="profile-container">
             <aside class="profile-sidebar glass-card">
                 <div class="user-info">
-                    <div class="profile-pic-container" onclick="document.getElementById('profile-pic-input').click();">
-                        <img src="" id="current-pic" alt="Photo de profil">
+                    <div class="profile-pic-container" onclick="document.getElementById('profile-pic-input').click()">
+                        <img src="" id="current-pic" alt="Photo de profil" />
                         <div class="profile-pic-overlay">
                             <i class="fa-solid fa-pencil"></i>
                         </div>
                     </div>
-                    <input type="file" id="profile-pic-input" accept="image/*" style="display: none;">
+                    <input type="file" id="profile-pic-input" accept="image/*" style="display: none" />
                     <h3 id="username">Chargement ...</h3>
                     <p>Membre depuis <span class="creation-date">2026</span></p>
                 </div>
@@ -73,7 +85,7 @@
             <section class="profile-content">
                 <!-- DASHBOARD -->
 
-                <div id="dashboard-viewer" style="display: flex; flex-direction: column; gap: 40px;">
+                <div id="dashboard-viewer" style="display: flex; flex-direction: column; gap: 40px">
                     <div class="profile-section" id="dashboard-viewer">
                         <h2>Tableau de bord</h2>
                         <div class="stats-grid">
@@ -95,16 +107,33 @@
                     <div class="profile-section">
                         <div class="section-header">
                             <h2>Mes Créations Récentes</h2>
-                            <a href="#" class="view-all" onclick="document.getElementById('tab-creations').click(); document.getElementById('tab-creations-tel').click(); return false;">Voir tout</a>
+                            <a
+                                href="#"
+                                class="view-all"
+                                onclick="
+                                    document.getElementById('tab-creations').click();
+                                    document.getElementById('tab-creations-tel').click();
+                                    return false;
+                                "
+                                >Voir tout</a
+                            >
                         </div>
-                        <div class="designs-mini-grid" id="designs-mini-grid">
-                        </div>
+                        <div class="designs-mini-grid" id="designs-mini-grid"></div>
                     </div>
 
                     <div class="profile-section">
                         <div class="section-header">
                             <h2>Dernière Commande</h2>
-                            <a href="#" class="view-all" onclick="document.getElementById('tab-orders').click(); document.getElementById('tab-orders-tel').click(); return false;">Voir tout</a>
+                            <a
+                                href="#"
+                                class="view-all"
+                                onclick="
+                                    document.getElementById('tab-orders').click();
+                                    document.getElementById('tab-orders-tel').click();
+                                    return false;
+                                "
+                                >Voir tout</a
+                            >
                         </div>
                         <div class="order-summary glass-card" id="order-summary">
                             <div class="order-header">
@@ -119,44 +148,59 @@
 
                 <!-- ORDERS RECAP -->
 
-                <div id="view-orders" style="display: none; flex-direction: column; gap: 40px;">
+                <div id="view-orders" style="display: none; flex-direction: column; gap: 40px">
                     <div class="profile-section">
                         <div class="section-header">
                             <h2>Historique de mes commandes</h2>
                         </div>
                         <div id="orders-container">
-                            <p style='color: rgba(255,255,255,0.5);'>Chargement des commandes ...</p>
+                            <p style="color: rgba(255, 255, 255, 0.5)">Chargement des commandes ...</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- CREATIONS -->
 
-                <div id="view-creations" style="display: none; flex-direction: column; gap: 40px;">
+                <div id="view-creations" style="display: none; flex-direction: column; gap: 40px">
                     <div class="profile-section">
                         <div class="section-header">
                             <h2>Ma Galerie de Designs</h2>
                         </div>
-                        
-                        <div id="designs-container">
-                            Chargement des Designs...
-                        </div>
+
+                        <div id="designs-container">Chargement des Designs...</div>
                     </div>
                 </div>
 
                 <!-- POSTS -->
 
-                <div id="view-posts" style="display: none; flex-direction: column; gap: 40px;">
+                <div id="view-posts" style="display: none; flex-direction: column; gap: 40px">
                     <div class="profile-section">
-                        <div class="section-header" style="flex-direction: column; align-items: center; text-align: center; justify-content: center; margin-bottom: 30px;">
+                        <div
+                            class="section-header"
+                            style="
+                                flex-direction: column;
+                                align-items: center;
+                                text-align: center;
+                                justify-content: center;
+                                margin-bottom: 30px;
+                            "
+                        >
                             <h2>Mes posts publiés</h2>
-                            <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; margin-top: 5px;">
+                            <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; margin-top: 5px">
                                 Gérez les configurations que vous avez partagées avec la communauté.
                             </p>
                         </div>
-                        
+
                         <div id="my-posts-container" class="my-posts-grid">
-                            <p id="empty-posts-msg" style="color: rgba(255,255,255,0.5); text-align: center; width: 100%; padding: 40px 0;">
+                            <p
+                                id="empty-posts-msg"
+                                style="
+                                    color: rgba(255, 255, 255, 0.5);
+                                    text-align: center;
+                                    width: 100%;
+                                    padding: 40px 0;
+                                "
+                            >
                                 Chargement de vos posts...
                             </p>
                         </div>
@@ -165,25 +209,27 @@
 
                 <!-- SETTINGS -->
 
-                <div id="view-settings" style="display: none; flex-direction: column; gap: 40px;">
+                <div id="view-settings" style="display: none; flex-direction: column; gap: 40px">
                     <div class="profile-section">
                         <div class="section-header">
                             <h2>Paramètres du compte</h2>
                         </div>
-                        
+
                         <div class="settings-grid">
                             <div class="glass-card settings-card">
                                 <h3>Informations personnelles</h3>
                                 <form id="form-personal-info" class="settings-form">
                                     <div class="input-group">
-                                        <input type="text" id="setting-username" value="" required>
+                                        <input type="text" id="setting-username" value="" required />
                                         <label for="setting-username">Nom d'utilisateur</label>
                                     </div>
                                     <div class="input-group">
-                                        <input type="email" id="setting-email" value="" required>
+                                        <input type="email" id="setting-email" value="" required />
                                         <label for="setting-email">Adresse e-mail</label>
                                     </div>
-                                    <button type="submit" class="apply-filters-btn" style="margin-top: 15px;">Sauvegarder les modifications</button>
+                                    <button type="submit" class="apply-filters-btn" style="margin-top: 15px">
+                                        Sauvegarder les modifications
+                                    </button>
                                 </form>
                             </div>
 
@@ -191,18 +237,20 @@
                                 <h3>Sécurité</h3>
                                 <form id="form-security" class="settings-form">
                                     <div class="input-group">
-                                        <input type="password" id="setting-old-pwd" required>
+                                        <input type="password" id="setting-old-pwd" required />
                                         <label for="setting-old-pwd">Mot de passe actuel</label>
                                     </div>
                                     <div class="input-group">
-                                        <input type="password" id="setting-new-pwd" required>
+                                        <input type="password" id="setting-new-pwd" required />
                                         <label for="setting-new-pwd">Nouveau mot de passe</label>
                                     </div>
                                     <div class="input-group">
-                                        <input type="password" id="setting-confirm-pwd" required>
+                                        <input type="password" id="setting-confirm-pwd" required />
                                         <label for="setting-confirm-pwd">Confirmer le nouveau mot de passe</label>
                                     </div>
-                                    <button type="submit" class="apply-filters-btn" style="margin-top: 15px;">Mettre à jour le mot de passe</button>
+                                    <button type="submit" class="apply-filters-btn" style="margin-top: 15px">
+                                        Mettre à jour le mot de passe
+                                    </button>
                                 </form>
                             </div>
 
@@ -210,34 +258,49 @@
                                 <h3>Préférences - Not build</h3>
                                 <div class="preferences-list">
                                     <label class="glass-check">
-                                        <input type="checkbox" checked>
+                                        <input type="checkbox" checked />
                                         <span>Recevoir la newsletter PRICE</span>
                                     </label>
                                     <label class="glass-check">
-                                        <input type="checkbox" checked>
+                                        <input type="checkbox" checked />
                                         <span>Notifications de commande par e-mail</span>
                                     </label>
                                     <label class="glass-check">
-                                        <input type="checkbox">
+                                        <input type="checkbox" />
                                         <span>Activer l'authentification à 2 facteurs</span>
                                     </label>
                                 </div>
                             </div>
 
                             <div class="glass-card settings-card danger-zone">
-                                <h3 style="color: #f87171;">Zone de danger</h3>
-                                <p>La suppression de votre compte est définitive. Toutes vos commandes, données et designs personnalisés seront perdus à jamais.</p>
+                                <h3 style="color: #f87171">Zone de danger</h3>
+                                <p>
+                                    La suppression de votre compte est définitive. Toutes vos commandes, données et
+                                    designs personnalisés seront perdus à jamais.
+                                </p>
                                 <button class="delete-account-btn">Supprimer mon compte définitivement</button>
                             </div>
 
                             <div class="modal-overlay" id="delete-account-modal">
-                                <div class="modal-content" style="text-align: center;">
-                                    <h2 style="color: #f87171; margin-bottom: 15px;">Supprimer le compte ?</h2>
-                                    <p>Cette action est <strong>définitive et irréversible</strong>. Toutes vos commandes, vos créations personnalisées et vos informations seront perdues à jamais.</p>
-                                    
-                                    <div style="display: flex; gap: 15px; margin-top: 30px; justify-content: center;">
-                                        <button id="cancel-delete-btn" class="glass-btn" style="flex: 1; margin: 0;">Annuler</button>
-                                        <button id="confirm-delete-btn" class="delete-account-btn" style="flex: 1; margin: 0; background: #f87171; color: white;">Oui, me supprimer</button>
+                                <div class="modal-content" style="text-align: center">
+                                    <h2 style="color: #f87171; margin-bottom: 15px">Supprimer le compte ?</h2>
+                                    <p>
+                                        Cette action est <strong>définitive et irréversible</strong>. Toutes vos
+                                        commandes, vos créations personnalisées et vos informations seront perdues à
+                                        jamais.
+                                    </p>
+
+                                    <div style="display: flex; gap: 15px; margin-top: 30px; justify-content: center">
+                                        <button id="cancel-delete-btn" class="glass-btn" style="flex: 1; margin: 0">
+                                            Annuler
+                                        </button>
+                                        <button
+                                            id="confirm-delete-btn"
+                                            class="delete-account-btn"
+                                            style="flex: 1; margin: 0; background: #f87171; color: white"
+                                        >
+                                            Oui, me supprimer
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -250,46 +313,63 @@
                 <nav class="glass-nav profile-bar-menus">
                     <a href="#" class="active" id="tab-dashboard-tel">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            <path
+                                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"
+                            />
                         </svg>
                         <span>Dashboard</span>
                     </a>
                     <a href="#" id="tab-orders-tel">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                            <path d="M18 6h-2c0-2.21-1.79-4-4-4S8 3.79 8 6H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6-2c1.1 0 2 .9 2 2h-4c0-1.1.9-2 2-2zm6 16H6V8h2v2c0 .55.45 1 1 1s1-.45 1-1V8h4v2c0 .55.45 1 1 1s1-.45 1-1V8h2v12z"/>
+                            <path
+                                d="M18 6h-2c0-2.21-1.79-4-4-4S8 3.79 8 6H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6-2c1.1 0 2 .9 2 2h-4c0-1.1.9-2 2-2zm6 16H6V8h2v2c0 .55.45 1 1 1s1-.45 1-1V8h4v2c0 .55.45 1 1 1s1-.45 1-1V8h2v12z"
+                            />
                         </svg>
                         <span>Commandes</span>
                     </a>
                     <a href="#" id="tab-creations-tel">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                            <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                            <path
+                                d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
+                            />
                         </svg>
                         <span>Créations</span>
                     </a>
                     <div class="profile-item-dropup">
-                        <a href="#" class="nav-main-link" id="plus-btn" onclick="toggleNavMenu(event, 'profile-dropup', '.profile-dropup-menu')">
+                        <a
+                            href="#"
+                            class="nav-main-link"
+                            id="plus-btn"
+                            onclick="toggleNavMenu(event, 'profile-dropup', '.profile-dropup-menu')"
+                        >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
                             </svg>
                             <span>Plus</span>
                         </a>
-                        
+
                         <div id="profile-dropup" class="profile-dropup-menu">
                             <a href="#" id="tab-posts-tel">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                                    <path
+                                        d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
+                                    />
                                 </svg>
                                 <span>Posts</span>
                             </a>
                             <a href="#" id="tab-settings-tel">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                                    <path d="M19.43 12.98c.04-.32.07-.64.07-.98 0-.34-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49-.12.64l2.11 1.65c-.04.32-.07.65-.07.98 0 .33.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
+                                    <path
+                                        d="M19.43 12.98c.04-.32.07-.64.07-.98 0-.34-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49-.12.64l2.11 1.65c-.04.32-.07.65-.07.98 0 .33.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"
+                                    />
                                 </svg>
                                 <span>Paramètres</span>
                             </a>
                             <a id="logout-btn-2">
                                 <svg width="24" height="24" viewBox="0 0 24 24">
-                                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                                    <path
+                                        d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"
+                                    />
                                 </svg>
                                 <span>Deconnexion</span>
                             </a>

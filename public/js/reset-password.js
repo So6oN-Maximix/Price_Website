@@ -28,7 +28,7 @@ document.getElementById("resetPwdForm").addEventListener("submit", async (event)
         const response = await fetch("/api/change-password", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({token: token, password: newPwd}) 
+            body: JSON.stringify({ token: token, password: newPwd })
         });
         if (response.ok) {
             successMsg.style.display = "block";

@@ -2,14 +2,14 @@ let scene, camera, renderer, loader;
 const repoModels = "./3DModels/";
 
 const loadedMeshes = {
-    "bouchon": null,
-    "corps": null,
-    "habillage": null,
-    "socle": null
+    bouchon: null,
+    corps: null,
+    habillage: null,
+    socle: null
 };
 
-window.loadAnimation = async function(selectedProducts) {
-    const container = document.getElementById('3d-container');
+window.loadAnimation = async function (selectedProducts) {
+    const container = document.getElementById("3d-container");
     if (!container) return;
 
     scene = new THREE.Scene();
@@ -35,7 +35,7 @@ window.loadAnimation = async function(selectedProducts) {
     animate();
 };
 
-window.update3DModel = async function(type, productId) {
+window.update3DModel = async function (type, productId) {
     const typeLower = type.toLowerCase();
     if (loadedMeshes[typeLower]) {
         scene.remove(loadedMeshes[typeLower]);
@@ -53,14 +53,14 @@ window.update3DModel = async function(type, productId) {
                 loaderUI.textContent = "Chargement 3D : 0%";
             }
             loader.load(
-                repoModels + fileName, 
+                repoModels + fileName,
                 function (gltf) {
                     const newModel = gltf.scene;
                     newModel.rotation.y = -Math.PI / 2;
                     newModel.position.y = -30;
                     newModel.position.z = -50;
                     newModel.scale.set(0.2, 0.2, 0.2);
-                    
+
                     scene.add(newModel);
                     loadedMeshes[typeLower] = newModel;
                     if (loaderUI) loaderUI.style.display = "none";
@@ -77,7 +77,7 @@ window.update3DModel = async function(type, productId) {
                     console.error("Erreur lors du chargement du modèle 3D :", error);
                     if (loaderUI) {
                         loaderUI.textContent = "Erreur de chargement";
-                        setTimeout(() => loaderUI.style.display = "none", 2000);
+                        setTimeout(() => (loaderUI.style.display = "none"), 2000);
                     }
                 }
             );
@@ -91,10 +91,10 @@ function animate() {
     requestAnimationFrame(animate);
     for (const key in loadedMeshes) {
         if (loadedMeshes[key]) {
-            loadedMeshes[key].rotation.y += 0.02; 
+            loadedMeshes[key].rotation.y += 0.02;
         }
     }
-    
+
     if (renderer && scene && camera) {
         renderer.render(scene, camera);
     }

@@ -13,7 +13,7 @@ async function loadProducts() {
     const serverResponse = await fetch("/api/loadDatas");
     if (serverResponse.ok) {
         products = await serverResponse.json();
-        products.forEach(product => addProduct(product));
+        products.forEach((product) => addProduct(product));
     }
 }
 
@@ -29,8 +29,8 @@ function addProduct(productObj) {
     const imgDiv = document.createElement("div");
     imgDiv.classList.add("product-img");
     const image = document.createElement("img");
-    image.src = "https://via.placeholder.com/200";  // A CHANGER AVEC LA BONNE IMAGE
-    image.alt = "Produit";                          // A CHANGER AVEC LA BONNE IMAGE
+    image.src = "https://via.placeholder.com/200"; // A CHANGER AVEC LA BONNE IMAGE
+    image.alt = "Produit"; // A CHANGER AVEC LA BONNE IMAGE
     imgDiv.appendChild(image);
 
     const productCard = document.createElement("div");
@@ -87,8 +87,8 @@ function addProduct(productObj) {
         }
     }
     const infoHeader = document.createElement("div");
-    infoHeader.classList.add("product-info-header"); 
-    infoHeader.style.alignItems = "center"; 
+    infoHeader.classList.add("product-info-header");
+    infoHeader.style.alignItems = "center";
     infoHeader.style.marginTop = "10px";
     infoHeader.appendChild(priceElement);
     infoHeader.appendChild(colorDiv);
@@ -105,7 +105,7 @@ function addProduct(productObj) {
         const isButtonClick = event.target.tagName === "BUTTON";
         const isColorClick = event.target.classList.contains("color-dot");
         if (isButtonClick || isColorClick) {
-            return; 
+            return;
         }
         window.location.href = `/product?id=${productObj.product_id}`;
     });
@@ -117,7 +117,9 @@ function addProduct(productObj) {
 
 function getFilters() {
     let filters = [];
-    checkboxs.forEach(checkbox => {if(checkbox.checked) filters.push(checkbox.value);});
+    checkboxs.forEach((checkbox) => {
+        if (checkbox.checked) filters.push(checkbox.value);
+    });
     return filters;
 }
 
@@ -148,19 +150,19 @@ function showToast(productName) {
 
 window.addEventListener("DOMContentLoaded", async () => {
     await loadProducts();
-    addToCartBtnList.forEach(btn => {
+    addToCartBtnList.forEach((btn) => {
         btn.addEventListener("click", async () => {
             if (btn.disabled) return;
             btn.disabled = true;
             const originalText = btn.textContent;
             btn.textContent = "Ajout...";
             btn.classList.add("loading");
-            const productName = btn.id.replace("btn-add-", ""); 
+            const productName = btn.id.replace("btn-add-", "");
             try {
                 const response = await fetch("/api/add-product-to-cart", {
                     method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({product_name: productName})
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ product_name: productName })
                 });
                 if (response.ok) {
                     btn.textContent = "Ajouté ! ✓";
@@ -187,11 +189,14 @@ applyFilterBtn.addEventListener("click", () => {
     const filters = getFilters();
     productContainer.innerHTML = "";
     if (filters.length > 0) {
-        products.forEach(product => {
-            if (filters.includes(product.type.toLowerCase()) && product.price <= Number(priceRange.value)) addProduct(product);
+        products.forEach((product) => {
+            if (filters.includes(product.type.toLowerCase()) && product.price <= Number(priceRange.value))
+                addProduct(product);
         });
     } else {
-        products.forEach(product => {if (product.price <= Number(priceRange.value)) addProduct(product);});
+        products.forEach((product) => {
+            if (product.price <= Number(priceRange.value)) addProduct(product);
+        });
     }
 });
 priceRange.addEventListener("input", (event) => {
@@ -211,7 +216,7 @@ priceDisplay.addEventListener("input", () => {
 document.addEventListener("DOMContentLoaded", () => {
     const filterTitle = document.querySelector(".shop-sidebar h3");
     const sidebar = document.querySelector(".shop-sidebar");
-    
+
     if (filterTitle && sidebar) {
         filterTitle.addEventListener("click", () => {
             if (window.innerWidth <= 768) {

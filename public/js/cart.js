@@ -19,14 +19,13 @@ function loadDatas() {
         articleText.textContent = "article";
     }
     let totalProductsPrice = 0;
-    cartProductsList.forEach(product => {
+    cartProductsList.forEach((product) => {
         if (product.is_custom) {
             totalProductsPrice += Number(product.custom_price) * Number(product.nbr_item || 1);
-        } 
-        else {
+        } else {
             const nbrProductElement = document.getElementById(`quantity-${product.name}`);
             const qty = nbrProductElement ? Number(nbrProductElement.value) : Number(product.nbr_item);
-            const productPromo = product.promo ? 1 - Number(product.promo)/100 : 1;
+            const productPromo = product.promo ? 1 - Number(product.promo) / 100 : 1;
             totalProductsPrice += Number(product.price * productPromo) * qty;
         }
     });
@@ -42,7 +41,7 @@ async function loadCart() {
         const response = await serverResponse.json();
         cartProductsList = response;
         cartProducts.innerHTML = "";
-        cartProductsList.forEach(product => {
+        cartProductsList.forEach((product) => {
             if (product.is_custom) {
                 addCustomToCart(product);
             } else {
@@ -61,8 +60,8 @@ function addToCart(productObj) {
     const imgDiv = document.createElement("div");
     imgDiv.classList.add("item-img");
     const imageProduct = document.createElement("img");
-    imageProduct.src = "https://via.placeholder.com/100";   // A CHANGER
-    imageProduct.alt = "Produit";                           // A CHANGER
+    imageProduct.src = "https://via.placeholder.com/100"; // A CHANGER
+    imageProduct.alt = "Produit"; // A CHANGER
 
     const productDetails = document.createElement("div");
     productDetails.classList.add("item-details");
@@ -86,17 +85,17 @@ function addToCart(productObj) {
         try {
             const reponse = await fetch("/api/delete-from-cart", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     product_id: productObj.product_id,
                     is_custom: false
-                }) 
+                })
             });
 
             if (reponse.ok) {
                 showToast(`${productObj.name} retiré !`);
                 globalCard.remove();
-                cartProductsList = cartProductsList.filter(product => product.name !== productObj.name);
+                cartProductsList = cartProductsList.filter((product) => product.name !== productObj.name);
                 loadDatas();
             } else {
                 suppBtn.textContent = "Erreur";
@@ -137,26 +136,26 @@ function addToCart(productObj) {
             loadDatas();
             await fetch("/api/update-product-quantity", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     product_id: productObj.product_id,
                     quantity: Number(inputElement.value)
                 })
             });
         }
-    })
+    });
     plusBtn.addEventListener("click", async () => {
         inputElement.value = Number(inputElement.value) + 1;
         loadDatas();
         await fetch("/api/update-product-quantity", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 product_id: productObj.product_id,
                 quantity: Number(inputElement.value)
             })
         });
-    })
+    });
 
     const priceDiv = document.createElement("div");
     priceDiv.classList.add("item-price");
@@ -167,7 +166,7 @@ function addToCart(productObj) {
 
     let prixFinal = Number(productObj.price);
     if (productObj.promo) {
-        prixFinal = prixFinal - (prixFinal * (Number(productObj.promo) / 100));
+        prixFinal = prixFinal - prixFinal * (Number(productObj.promo) / 100);
 
         const ancienPrix = document.createElement("span");
         ancienPrix.textContent = `${productObj.price}€`;
@@ -215,8 +214,8 @@ function addCustomToCart(dataPack) {
     const imgCustomDiv = document.createElement("div");
     imgCustomDiv.classList.add("pack-img-mini");
     const imgCustomElement = document.createElement("img");
-    imgCustomElement.src = "https://placehold.co/80x80/transparent/white?text=Gourde";   // A CHANGER
-    imgCustomElement.alt = "Création";                                                   // A CHANGER
+    imgCustomElement.src = "https://placehold.co/80x80/transparent/white?text=Gourde"; // A CHANGER
+    imgCustomElement.alt = "Création"; // A CHANGER
 
     imgCustomDiv.appendChild(imgCustomElement);
 
@@ -277,17 +276,17 @@ function addCustomToCart(dataPack) {
         try {
             const reponse = await fetch("/api/delete-from-cart", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     custom_name: dataPack.custom_name,
                     is_custom: true
-                }) 
+                })
             });
 
             if (reponse.ok) {
                 showToast(`${dataPack.custom_name} retiré !`);
                 globalCustomCard.remove();
-                cartProductsList = cartProductsList.filter(product => product.custom_name !== dataPack.custom_name);
+                cartProductsList = cartProductsList.filter((product) => product.custom_name !== dataPack.custom_name);
                 loadDatas();
             } else {
                 removeBtn.textContent = "Erreur";
@@ -385,7 +384,7 @@ function showToast(message) {
 
 window.addEventListener("DOMContentLoaded", loadCart);
 paiementBtn.addEventListener("click", async () => {
-    await fetch("/api/procede-paiement", {method: "POST"});
+    await fetch("/api/procede-paiement", { method: "POST" });
     loadCart();
 });
 
@@ -393,25 +392,25 @@ paiementBtn.addEventListener("click", async () => {
 
 // Fonction pour activer les flèches des packs custom
 function initPackToggles() {
-    const toggleBtns = document.querySelectorAll('.toggle-details-btn');
-    
-    toggleBtns.forEach(btn => {
+    const toggleBtns = document.querySelectorAll(".toggle-details-btn");
+
+    toggleBtns.forEach((btn) => {
         // Pour éviter d'ajouter l'événement plusieurs fois si on recharge le panier
-        btn.removeEventListener('click', togglePack); 
-        btn.addEventListener('click', togglePack);
+        btn.removeEventListener("click", togglePack);
+        btn.addEventListener("click", togglePack);
     });
 }
 
 // Fonction qui fait l'action
 function togglePack(event) {
     // On cherche la carte parent (.custom-pack-item) et on ajoute ou enlève la classe "expanded"
-    const packItem = event.currentTarget.closest('.custom-pack-item');
+    const packItem = event.currentTarget.closest(".custom-pack-item");
     if (packItem) {
-        packItem.classList.toggle('expanded');
+        packItem.classList.toggle("expanded");
     }
 }
 
 // À appeler au chargement de ta page, ou après que ton JS ait généré le HTML du panier !
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     initPackToggles();
 });

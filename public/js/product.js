@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         selectedColorSpan.id = "selected-color-name";
         selectedColorSpan.classList.add("color-name-display");
         selectedColorSpan.innerHTML = `Sélectionné : <span id="selected-color">${productColors[0]}</span>`;
-        
+
         document.getElementById("product-selection-group").appendChild(productColorsDiv);
         document.getElementById("product-selection-group").appendChild(selectedColorSpan);
     } catch (error) {
@@ -114,8 +114,8 @@ addToCartBtn.addEventListener("click", async () => {
     try {
         const response = await fetch("/api/add-product-to-cart", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({product_name: productName})
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ product_name: productName })
         });
         if (response.ok) {
             addToCartBtn.textContent = "Ajouté ! ✓";

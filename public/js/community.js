@@ -35,7 +35,7 @@ function addBadgeElement() {
         `;
         tag.querySelector(".remove-tag-btn").addEventListener("click", () => {
             tag.remove();
-            compositionElements = compositionElements.filter(item => item !== valeur);
+            compositionElements = compositionElements.filter((item) => item !== valeur);
         });
 
         document.getElementById("elements-container").appendChild(tag);
@@ -53,9 +53,9 @@ postButton.addEventListener("click", async () => {
     try {
         const checkAuth = await fetch("/api/get-email");
         const authData = await checkAuth.json();
-        
+
         if (Array.isArray(authData) && authData.length === 0) {
-            document.cookie = "return_to=/community; Path=/"
+            document.cookie = "return_to=/community; Path=/";
             window.location.href = "/login";
             return;
         }
@@ -84,7 +84,7 @@ postButton.addEventListener("click", async () => {
     const uploadImgBtn = document.getElementById("upload-img-btn");
     const fileInput = document.getElementById("post-image-file");
     const imageUrlInput = document.getElementById("post-image");
-    
+
     uploadImgBtn.addEventListener("click", () => {
         fileInput.click();
     });
@@ -92,8 +92,8 @@ postButton.addEventListener("click", async () => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(event) {
-                imageUrlInput.value = event.target.result; 
+            reader.onload = function (event) {
+                imageUrlInput.value = event.target.result;
             };
             reader.readAsDataURL(file);
         }
@@ -121,7 +121,7 @@ postButton.addEventListener("click", async () => {
         try {
             const response = await fetch("/api/create-post", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(postData)
             });
             if (response.ok) {

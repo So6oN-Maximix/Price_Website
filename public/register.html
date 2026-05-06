@@ -1,50 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Créer un compte - PRICE</title>
-        <link rel="stylesheet" href="/css/style.css">
-        <link rel="icon" type="image/x-icon" href="/assets/Icone.ico">
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="icon" type="image/x-icon" href="/assets/Icone.ico" />
     </head>
     <body>
         <a href="/" class="back-btn">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
             </svg>
             Retour
         </a>
         <div class="login-container">
             <form class="glass-login" id="registerForm" action="/api/register" method="POST">
                 <svg class="login-logo" width="40" height="40" viewBox="0 0 24 24" fill="white">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    <path
+                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                    />
                 </svg>
                 <h2>Rejoignez-nous</h2>
                 <p>Créez votre profil pour commencer.</p>
                 <div class="input-group">
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="username" required />
                     <label for="username">Nom d'utilisateur</label>
                 </div>
 
                 <div class="input-group">
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" required />
                     <label for="email">Adresse Email</label>
                 </div>
-                
+
                 <div class="input-group">
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" required />
                     <label for="password">Mot de passe</label>
                 </div>
 
                 <div class="input-group">
-                    <input type="password" id="confirm-password" name="confirm-password" required>
+                    <input type="password" id="confirm-password" name="confirm-password" required />
                     <label for="confirm-password">Confirmer le mot de passe</label>
                 </div>
-                
+
                 <button type="submit" class="glass-btn">S'inscrire</button>
-                
+
                 <div class="login-links">
-                    <span></span> 
+                    <span></span>
                     <a href="/login">Déjà un compte ? Se connecter</a>
                 </div>
             </form>

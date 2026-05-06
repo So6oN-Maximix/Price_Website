@@ -18,7 +18,14 @@ const creationsTabBtnTel = document.getElementById("tab-creations-tel");
 const postsTabBtnTel = document.getElementById("tab-posts-tel");
 const settingsTabBtnTel = document.getElementById("tab-settings-tel");
 const plusBtn = document.getElementById("plus-btn");
-const menuButtonsTel = [dashboardTabBtnTel, ordersTabBtnTel, creationsTabBtnTel, postsTabBtnTel, settingsTabBtnTel, plusBtn];
+const menuButtonsTel = [
+    dashboardTabBtnTel,
+    ordersTabBtnTel,
+    creationsTabBtnTel,
+    postsTabBtnTel,
+    settingsTabBtnTel,
+    plusBtn
+];
 
 let currentUserId = null;
 
@@ -32,7 +39,7 @@ const confirmButton = document.getElementById("confirm-delete-btn");
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(";").shift());
     return null;
 }
 
@@ -78,10 +85,12 @@ async function addToPassedOrders(cartList) {
         month: "long",
         year: "numeric"
     });
-    const timePart = dateObj.toLocaleTimeString("fr-FR", {
-        hour: "2-digit",
-        minute: "2-digit"
-    }).replace(":", "h");
+    const timePart = dateObj
+        .toLocaleTimeString("fr-FR", {
+            hour: "2-digit",
+            minute: "2-digit"
+        })
+        .replace(":", "h");
     orderDate.textContent = `Commandé le ${datePart} à ${timePart}`;
 
     const divider = document.createElement("div");
@@ -110,7 +119,7 @@ async function addToPassedOrders(cartList) {
 
         if (productCartInfo.is_custom) {
             productLine.innerHTML = `<b>${productCartInfo.nbr_item}x</b> ✨ ${productCartInfo.custom_name}`;
-            
+
             const itemTotal = Number(productCartInfo.custom_price) * Number(productCartInfo.nbr_item);
             priceLine.style.fontWeight = "bold";
             priceLine.textContent = `${itemTotal.toFixed(2)}€`;
@@ -124,27 +133,27 @@ async function addToPassedOrders(cartList) {
             detailsLine.style.fontSize = "0.8rem";
             detailsLine.style.color = "rgba(255, 255, 255, 0.4)";
             detailsLine.style.marginTop = "4px";
-            
+
             let parts = productCartInfo.custom_data;
-            if (typeof parts === 'string') parts = JSON.parse(parts);
-            
+            if (typeof parts === "string") parts = JSON.parse(parts);
+
             if (parts && parts.bouchon) {
                 detailsLine.textContent = `Bouchon: ${parts.bouchon.name} | Corps: ${parts.corps.name} | Habillage: ${parts.habillage.name} | Socle: ${parts.socle.name}`;
                 summaryRowContainer.appendChild(detailsLine);
             }
         } else {
-            const productInfo = await fetch (`/api/get-product-info?id=${productCartInfo.product_id}`);
-            
+            const productInfo = await fetch(`/api/get-product-info?id=${productCartInfo.product_id}`);
+
             if (productInfo.ok) {
                 const productData = await productInfo.json();
                 productLine.innerHTML = `<b>${productCartInfo.nbr_item}x</b> ${productData.name} <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">(${productData.type})</span>`;
-                
+
                 let prixUnitaireFinal = Number(productData.price);
                 let totalLigneAncien = prixUnitaireFinal * Number(productCartInfo.nbr_item);
                 let totalLigneNouveau = 0;
-                
+
                 if (productData.promo) {
-                    prixUnitaireFinal = prixUnitaireFinal - (prixUnitaireFinal * (Number(productData.promo) / 100));
+                    prixUnitaireFinal = prixUnitaireFinal - prixUnitaireFinal * (Number(productData.promo) / 100);
                     totalLigneNouveau = prixUnitaireFinal * Number(productCartInfo.nbr_item);
 
                     priceLine.style.display = "flex";
@@ -212,7 +221,7 @@ function addToPassedCustom(dataPack) {
     const imgDiv = document.createElement("div");
     imgDiv.classList.add("design-preview");
     const imgElem = document.createElement("img");
-    imgElem.src = "https://placehold.co/80x80/transparent/white?text=🔥";   // A CHANGER
+    imgElem.src = "https://placehold.co/80x80/transparent/white?text=🔥"; // A CHANGER
 
     imgDiv.appendChild(imgElem);
 
@@ -250,8 +259,8 @@ function addToPassedCustom(dataPack) {
     cartBtn.onclick = async () => {
         const response = await fetch("/api/add-custom-to-cart-from-profile", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({"data_pack": dataPack})
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data_pack: dataPack })
         });
         if (!response.ok) {
             cartBtn.textContent = "Erreur (Non connecté ?)";
@@ -267,7 +276,7 @@ function addToPassedCustom(dataPack) {
             cartBtn.classList.remove("success");
             cartBtn.disabled = false;
         }, 2500);
-    }
+    };
     const customBtn = document.createElement("button");
     customBtn.classList.add("import-custom-btn");
     customBtn.textContent = "Importer le Custom";
@@ -291,12 +300,12 @@ function addToPassedCustom(dataPack) {
     `;
 
     deleteBtn.addEventListener("click", async () => {
-        if(confirm(`Es-tu sûr de vouloir supprimer la création "${dataPack.custom_name}" ?`)) {
+        if (confirm(`Es-tu sûr de vouloir supprimer la création "${dataPack.custom_name}" ?`)) {
             try {
                 const response = await fetch("/api/delete-creation", {
                     method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({custom_name: dataPack.custom_name})
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ custom_name: dataPack.custom_name })
                 });
 
                 if (response.ok) {
@@ -306,7 +315,8 @@ function addToPassedCustom(dataPack) {
                         globalCustomCard.remove();
                         const container = document.getElementById("designs-container");
                         if (container.children.length === 0) {
-                            container.innerHTML = "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune personnalisation.</p>";
+                            container.innerHTML =
+                                "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune personnalisation.</p>";
                         }
                     }, 300);
                     showToast(`Custom  ${dataPack.custom_name} supprimé !`, true);
@@ -359,7 +369,7 @@ async function loadLastOrder(orderInfo) {
     orderNumber.textContent = `N° ${randomStart + Number(orderInfo[0].cart_id)}`;
     const statusBadge = document.createElement("span");
     statusBadge.classList.add("status-badge");
-    const currentStatus = orderInfo[0].status === null ? "En cours de livraison" : orderInfo[0].status
+    const currentStatus = orderInfo[0].status === null ? "En cours de livraison" : orderInfo[0].status;
     statusBadge.textContent = currentStatus;
 
     orderHeader.appendChild(orderNumber);
@@ -371,12 +381,12 @@ async function loadLastOrder(orderInfo) {
     const datePart = postDate.toLocaleDateString("fr-FR", {
         day: "numeric",
         month: "long",
-        year: "numeric",
+        year: "numeric"
     });
     const timePart = postDate
         .toLocaleTimeString("fr-FR", {
-        hour: "2-digit",
-        minute: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
         })
         .replace(":", "h");
     dateLine.textContent = `Commandé le ${datePart} à ${timePart}`;
@@ -425,7 +435,8 @@ async function loadDashboard() {
         document.getElementById("designs-mini-grid").innerHTML = "";
         const response = await getLastsCustoms.json();
         if (response.length === 0) {
-            document.getElementById("designs-mini-grid").innerHTML = "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune personnalisation.</p>";
+            document.getElementById("designs-mini-grid").innerHTML =
+                "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune personnalisation.</p>";
         } else {
             for (const customPack of response) {
                 loadCustomDashboard(customPack);
@@ -438,7 +449,8 @@ async function loadDashboard() {
         document.getElementById("order-summary").innerHTML = "";
         const response = await getLastOrder.json();
         if (response.length === 0) {
-            document.getElementById("order-summary").innerHTML = "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune commande.</p>";
+            document.getElementById("order-summary").innerHTML =
+                "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune commande.</p>";
         } else {
             loadLastOrder(response);
         }
@@ -452,7 +464,8 @@ async function loadPassedOrders() {
         const ordersList = await serverResponse.json();
         orderContainerDiv.innerHTML = "";
         if (ordersList.length === 0) {
-            orderContainerDiv.innerHTML = "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune commande.</p>";
+            orderContainerDiv.innerHTML =
+                "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune commande.</p>";
             return;
         }
         for (const order of ordersList) {
@@ -480,7 +493,8 @@ async function loadCreation() {
         const customList = await serverResponse.json();
         customContainer.innerHTML = "";
         if (customList.length === 0) {
-            customContainer.innerHTML = "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune personnalisation.</p>";
+            customContainer.innerHTML =
+                "<p style='color: rgba(255,255,255,0.5);'>Vous n'avez passé aucune personnalisation.</p>";
             return;
         }
         for (const customPack of customList) {
@@ -509,8 +523,9 @@ async function loadPosts() {
             for (const post of postList) {
                 addToComment(post, "my-posts-container");
             }
-        }else {
-            document.getElementById("my-posts-container").innerHTML = "<p style='color: rgba(255,255,255,0.5); text-align: center; width: 100%; padding: 40px 0;'>Vous n'avez pas encore publié de setup.</p>";
+        } else {
+            document.getElementById("my-posts-container").innerHTML =
+                "<p style='color: rgba(255,255,255,0.5); text-align: center; width: 100%; padding: 40px 0;'>Vous n'avez pas encore publié de setup.</p>";
         }
     }
 }
@@ -568,20 +583,20 @@ document.getElementById("logout-btn-2")?.addEventListener("click", async () => {
     window.location.href = "/";
 });
 
-document.getElementById("profile-pic-input")?.addEventListener("change", async function(event) {
+document.getElementById("profile-pic-input")?.addEventListener("change", async function (event) {
     const file = event.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = async function(e) {
+    reader.onload = async function (e) {
         const base64Image = e.target.result;
         document.getElementById("current-pic").src = base64Image;
         try {
             const response = await fetch("/api/update-profile-pic", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({profil_pic: base64Image})
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ profil_pic: base64Image })
             });
-            if(response.ok) {
+            if (response.ok) {
                 console.log("Photo de profil sauvegardée en BDD !");
             } else {
                 alert("Erreur lors de la sauvegarde.");
@@ -593,34 +608,11 @@ document.getElementById("profile-pic-input")?.addEventListener("change", async f
     reader.readAsDataURL(file);
 });
 
-if (dashboardTabBtn) menuButtons.forEach((btn, index) => {
-    btn.addEventListener("click", () => {
-        menuButtons.forEach((button) => button.classList.remove("active"));
-        btn.classList.add("active");
-        viewers.forEach((viewer, idx) => {
-            if (viewer) {
-                if (idx === index) {
-                    viewer.style.display = "flex";
-                    loadDatas(viewer.id);
-                } else {
-                    viewer.style.display = "none";
-                }
-            }
-        });
-    });
-});
-
-if (dashboardTabBtnTel) menuButtonsTel.forEach((btn, index) => {
-    btn.addEventListener("click", () => {
-        menuButtonsTel.forEach((button) => button.classList.remove("active"));
-        const btnText = btn.querySelector("span").innerHTML;
-        if (btnText !== "Plus") {
-            if (btnText === "Posts" || btnText === "Paramètres") {
-                plusBtn.classList.add("active");
-                document.getElementById("profile-dropup").classList.remove("show");
-            } else {
-                btn.classList.add("active");
-            }
+if (dashboardTabBtn)
+    menuButtons.forEach((btn, index) => {
+        btn.addEventListener("click", () => {
+            menuButtons.forEach((button) => button.classList.remove("active"));
+            btn.classList.add("active");
             viewers.forEach((viewer, idx) => {
                 if (viewer) {
                     if (idx === index) {
@@ -631,162 +623,189 @@ if (dashboardTabBtnTel) menuButtonsTel.forEach((btn, index) => {
                     }
                 }
             });
-        }
-    });
-});
-
-if (deleteButton && deleteModal) deleteButton.addEventListener("click", async (event) => {
-    event.preventDefault();
-    deleteModal.classList.add("show");
-    document.body.style.overflow = "hidden";
-
-    cancelButton.addEventListener("click", () => {
-        deleteModal.classList.remove("show");
-        document.body.style.overflow = "auto";
+        });
     });
 
-    window.addEventListener("click", (e) => {
-        if (e.target === deleteModal) {
+if (dashboardTabBtnTel)
+    menuButtonsTel.forEach((btn, index) => {
+        btn.addEventListener("click", () => {
+            menuButtonsTel.forEach((button) => button.classList.remove("active"));
+            const btnText = btn.querySelector("span").innerHTML;
+            if (btnText !== "Plus") {
+                if (btnText === "Posts" || btnText === "Paramètres") {
+                    plusBtn.classList.add("active");
+                    document.getElementById("profile-dropup").classList.remove("show");
+                } else {
+                    btn.classList.add("active");
+                }
+                viewers.forEach((viewer, idx) => {
+                    if (viewer) {
+                        if (idx === index) {
+                            viewer.style.display = "flex";
+                            loadDatas(viewer.id);
+                        } else {
+                            viewer.style.display = "none";
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+if (deleteButton && deleteModal)
+    deleteButton.addEventListener("click", async (event) => {
+        event.preventDefault();
+        deleteModal.classList.add("show");
+        document.body.style.overflow = "hidden";
+
+        cancelButton.addEventListener("click", () => {
             deleteModal.classList.remove("show");
             document.body.style.overflow = "auto";
-        }
-    });
+        });
 
-    confirmButton.addEventListener("click", async () => {
-        const originalText = confirmButton.textContent;
-        confirmButton.textContent = "Adieu...";
-        confirmButton.disabled = true;
+        window.addEventListener("click", (e) => {
+            if (e.target === deleteModal) {
+                deleteModal.classList.remove("show");
+                document.body.style.overflow = "auto";
+            }
+        });
 
-        try {
-            const response = await fetch("/api/delete-account", {
-                method: "POST"
-            });
+        confirmButton.addEventListener("click", async () => {
+            const originalText = confirmButton.textContent;
+            confirmButton.textContent = "Adieu...";
+            confirmButton.disabled = true;
 
-            if (response.ok) {
-                window.location.href = "/"; 
-            } else {
-                alert("Erreur lors de la suppression du compte.");
+            try {
+                const response = await fetch("/api/delete-account", {
+                    method: "POST"
+                });
+
+                if (response.ok) {
+                    window.location.href = "/";
+                } else {
+                    alert("Erreur lors de la suppression du compte.");
+                    confirmButton.textContent = originalText;
+                    confirmButton.disabled = false;
+                }
+            } catch (error) {
+                console.error("Erreur:", error);
                 confirmButton.textContent = originalText;
                 confirmButton.disabled = false;
             }
-        } catch (error) {
-            console.error("Erreur:", error);
-            confirmButton.textContent = originalText;
-            confirmButton.disabled = false;
-        }
+        });
     });
-});
 
 const securityForm = document.getElementById("form-security");
 
-if (securityForm) securityForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const oldPwd = document.getElementById("setting-old-pwd").value;
-    const newPwd = document.getElementById("setting-new-pwd").value;
-    const confirmPwd = document.getElementById("setting-confirm-pwd").value;
-    const submitBtn = securityForm.querySelector("button");
+if (securityForm)
+    securityForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const oldPwd = document.getElementById("setting-old-pwd").value;
+        const newPwd = document.getElementById("setting-new-pwd").value;
+        const confirmPwd = document.getElementById("setting-confirm-pwd").value;
+        const submitBtn = securityForm.querySelector("button");
 
-    if (newPwd !== confirmPwd) {
-        alert("Erreur : Le nouveau mot de passe et la confirmation ne correspondent pas !");
-        return;
-    }
-    if (oldPwd === newPwd) {
-        alert("Le nouveau mot de passe doit être différent de l'ancien.");
-        return;
-    }
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = "Mise à jour en cours...";
-    submitBtn.disabled = true;
-
-    try {
-        const response = await fetch("/api/update-security", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                old_password: oldPwd,
-                new_password: newPwd
-            })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            securityForm.reset();
-            showToast("Mot de passe mis à jour avec succès !");
-        } else {
-            alert(data.message || "Erreur lors de la mise à jour.");
+        if (newPwd !== confirmPwd) {
+            alert("Erreur : Le nouveau mot de passe et la confirmation ne correspondent pas !");
+            return;
         }
-    } catch (error) {
-        console.error("Erreur de connexion:", error);
-        alert("Erreur réseau, veuillez réessayer.");
-    } finally {
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-    }
-});
+        if (oldPwd === newPwd) {
+            alert("Le nouveau mot de passe doit être différent de l'ancien.");
+            return;
+        }
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = "Mise à jour en cours...";
+        submitBtn.disabled = true;
 
-if (personalInfoForm) personalInfoForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const newUsername = document.getElementById("setting-username").value;
-    const newEmail = document.getElementById("setting-email").value;
-    const submitBtn = personalInfoForm.querySelector("button");
+        try {
+            const response = await fetch("/api/update-security", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    old_password: oldPwd,
+                    new_password: newPwd
+                })
+            });
 
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = "Sauvegarde en cours...";
-    submitBtn.disabled = true;
+            const data = await response.json();
 
-    try {
-        const response = await fetch("/api/update-personal-info", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                username: newUsername,
-                email: newEmail
-            })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            showToast("Informations mises à jour avec succès !");
-            const usernameDisplay = document.getElementById("username");
-            if (usernameDisplay) usernameDisplay.textContent = newUsername;
-            if (data.new_profil_pic) {
-                const profilPicElement = document.getElementById("current-pic");
-                if (profilPicElement) profilPicElement.src = data.new_profil_pic;
+            if (response.ok) {
+                securityForm.reset();
+                showToast("Mot de passe mis à jour avec succès !");
+            } else {
+                alert(data.message || "Erreur lors de la mise à jour.");
             }
-            
-        } else {
-            alert(data.message || "Erreur lors de la mise à jour.");
+        } catch (error) {
+            console.error("Erreur de connexion:", error);
+            alert("Erreur réseau, veuillez réessayer.");
+        } finally {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
         }
-    } catch (error) {
-        console.error("Erreur réseau:", error);
-        alert("Erreur réseau, veuillez réessayer.");
-    } finally {
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-    }
-});
+    });
+
+if (personalInfoForm)
+    personalInfoForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const newUsername = document.getElementById("setting-username").value;
+        const newEmail = document.getElementById("setting-email").value;
+        const submitBtn = personalInfoForm.querySelector("button");
+
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = "Sauvegarde en cours...";
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch("/api/update-personal-info", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username: newUsername,
+                    email: newEmail
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showToast("Informations mises à jour avec succès !");
+                const usernameDisplay = document.getElementById("username");
+                if (usernameDisplay) usernameDisplay.textContent = newUsername;
+                if (data.new_profil_pic) {
+                    const profilPicElement = document.getElementById("current-pic");
+                    if (profilPicElement) profilPicElement.src = data.new_profil_pic;
+                }
+            } else {
+                alert(data.message || "Erreur lors de la mise à jour.");
+            }
+        } catch (error) {
+            console.error("Erreur réseau:", error);
+            alert("Erreur réseau, veuillez réessayer.");
+        } finally {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    });
 
 function toggleNavMenu(event, dropdownId, classSelected) {
     event.preventDefault();
-    document.querySelectorAll(classSelected).forEach(menu => {
-        if(menu.id !== dropdownId) menu.classList.remove('show');
+    document.querySelectorAll(classSelected).forEach((menu) => {
+        if (menu.id !== dropdownId) menu.classList.remove("show");
     });
     const dropdown = document.getElementById(dropdownId);
     if (dropdown) {
-        dropdown.classList.toggle('show');
+        dropdown.classList.toggle("show");
     }
 }
-document.addEventListener('click', (event) => {
-    if (!event.target.closest('.nav-item-dropdown')) {
-        document.querySelectorAll('.nav-dropdown-menu').forEach(menu => {
-            menu.classList.remove('show');
+document.addEventListener("click", (event) => {
+    if (!event.target.closest(".nav-item-dropdown")) {
+        document.querySelectorAll(".nav-dropdown-menu").forEach((menu) => {
+            menu.classList.remove("show");
         });
     }
-    if (!event.target.closest('.profile-item-dropup')) {
-        document.querySelectorAll('.profile-dropup-menu').forEach(menu => {
-            menu.classList.remove('show');
+    if (!event.target.closest(".profile-item-dropup")) {
+        document.querySelectorAll(".profile-dropup-menu").forEach((menu) => {
+            menu.classList.remove("show");
         });
     }
 });
