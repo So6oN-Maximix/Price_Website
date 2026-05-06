@@ -1,4 +1,4 @@
-async function addToComment(postInfo, containerId) {
+window.addToComment = async function (postInfo, containerId) {
     const articleElement = document.createElement("article");
     articleElement.classList.add("post-card", "glass-card");
 
@@ -257,7 +257,7 @@ async function addToComment(postInfo, containerId) {
     articleElement.appendChild(actionDiv);
 
     document.getElementById(containerId).append(articleElement);
-}
+};
 
 async function addComment(commentObj, containerId) {
     /* GLOBAL CARD */

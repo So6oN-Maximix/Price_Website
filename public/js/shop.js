@@ -1,6 +1,4 @@
 const productContainer = document.getElementById("products-grid");
-const testBtn = document.getElementById("test");
-const filtersContainer = document.querySelector(".filter-group");
 const checkboxs = document.querySelectorAll(".filter-group input[type='checkbox']");
 const priceRange = document.getElementById("price-range");
 const priceDisplay = document.getElementById("price-display");
@@ -173,7 +171,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                     btn.textContent = "Erreur (Non connecté ?)";
                     btn.classList.remove("loading");
                 }
-            } catch (error) {
+            } catch {
                 btn.textContent = "Erreur";
                 btn.classList.remove("loading");
             }
@@ -199,9 +197,7 @@ applyFilterBtn.addEventListener("click", () => {
         });
     }
 });
-priceRange.addEventListener("input", (event) => {
-    priceDisplay.value = priceRange.value;
-});
+priceRange.addEventListener("input", () => (priceDisplay.value = priceRange.value));
 priceDisplay.addEventListener("input", () => {
     let priceValue = Number(priceDisplay.value);
     if (priceValue > 100) {

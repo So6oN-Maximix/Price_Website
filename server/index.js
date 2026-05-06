@@ -943,7 +943,7 @@ const serverLunching = http.createServer(async (req, res) => {
                     res.end(
                         JSON.stringify({
                             name: "∅",
-                            type: cible,
+                            type: null,
                             price: 0.0,
                             promo: null
                         })

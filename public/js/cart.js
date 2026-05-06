@@ -1,4 +1,3 @@
-const testBtn = document.getElementById("test");
 const cartProducts = document.getElementById("cart-list");
 const nbrProductsSpan = document.getElementById("nbr-articles");
 const allProductPriceSpan = document.getElementById("all-product-price");
@@ -106,7 +105,7 @@ function addToCart(productObj) {
                     suppBtn.textContent = originalText;
                 }, 2000);
             }
-        } catch (error) {
+        } catch {
             suppBtn.textContent = "Erreur";
             suppBtn.style.opacity = "1";
             suppBtn.style.cursor = "pointer";
@@ -297,7 +296,7 @@ function addCustomToCart(dataPack) {
                     removeBtn.textContent = originalText;
                 }, 2000);
             }
-        } catch (error) {
+        } catch {
             removeBtn.textContent = "Erreur";
             removeBtn.style.opacity = "1";
             removeBtn.style.cursor = "pointer";

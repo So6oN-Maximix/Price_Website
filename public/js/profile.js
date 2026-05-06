@@ -511,7 +511,7 @@ async function loadPosts() {
                 currentUserId = await userRes.json();
             }
         } catch (error) {
-            console.error("Erreur lors de la récupération de l'ID utilisateur");
+            console.error(`Erreur lors de la récupération de l'ID utilisateur: ${error}`);
         }
     }
 
@@ -787,7 +787,7 @@ if (personalInfoForm)
         }
     });
 
-function toggleNavMenu(event, dropdownId, classSelected) {
+window.toggleNavMenu = function (event, dropdownId, classSelected) {
     event.preventDefault();
     document.querySelectorAll(classSelected).forEach((menu) => {
         if (menu.id !== dropdownId) menu.classList.remove("show");
@@ -796,7 +796,7 @@ function toggleNavMenu(event, dropdownId, classSelected) {
     if (dropdown) {
         dropdown.classList.toggle("show");
     }
-}
+};
 document.addEventListener("click", (event) => {
     if (!event.target.closest(".nav-item-dropdown")) {
         document.querySelectorAll(".nav-dropdown-menu").forEach((menu) => {

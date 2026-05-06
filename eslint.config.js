@@ -14,7 +14,20 @@ export default [
                 fetch: "readonly",
                 console: "readonly",
                 process: "readonly",
-                setTimeout: "readonly"
+                setTimeout: "readonly",
+                alert: "readonly",
+                confirm: "readonly",
+                requestAnimationFrame: "readonly",
+                FileReader: "readonly",
+                URLSearchParams: "readonly",
+                URL: "readonly",
+
+                THREE: "readonly",
+
+                currentUserId: "writable",
+                addToComment: "readonly",
+                toggleNavMenu: "readonly",
+                loadAnimation: "readonly"
             }
         },
         rules: {

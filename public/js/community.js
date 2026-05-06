@@ -2,7 +2,7 @@ async function loadComments() {
     try {
         const userRes = await fetch("/api/current-user-id");
         currentUserId = await userRes.json();
-    } catch (error) {
+    } catch {
         currentUserId = null;
     }
     const serverResponse = await fetch("/api/loadInspiComments");
@@ -35,7 +35,7 @@ function addBadgeElement() {
         `;
         tag.querySelector(".remove-tag-btn").addEventListener("click", () => {
             tag.remove();
-            compositionElements = compositionElements.filter((item) => item !== valeur);
+            compositionElements = compositionElements.filter((item) => item !== badgeName);
         });
 
         document.getElementById("elements-container").appendChild(tag);
@@ -45,7 +45,6 @@ function addBadgeElement() {
 }
 
 const postButton = document.getElementById("create-post-btn");
-const postCommentButton = document.getElementById("send-comment-btn");
 let compositionElements = [];
 
 document.addEventListener("DOMContentLoaded", loadComments);
