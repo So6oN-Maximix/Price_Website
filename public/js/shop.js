@@ -8,7 +8,7 @@ let products;
 let addToCartBtnList = [];
 
 async function loadProducts() {
-    const serverResponse = await fetch("/api/loadDatas");
+    const serverResponse = await fetch("/api/load-datas");
     if (serverResponse.ok) {
         products = await serverResponse.json();
         products.forEach((product) => addProduct(product));

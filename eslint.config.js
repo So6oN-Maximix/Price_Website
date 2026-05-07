@@ -27,7 +27,9 @@ export default [
                 currentUserId: "writable",
                 addToComment: "readonly",
                 toggleNavMenu: "readonly",
-                loadAnimation: "readonly"
+                loadAnimation: "readonly",
+                login: "readonly",
+                register: "readonly"
             }
         },
         rules: {

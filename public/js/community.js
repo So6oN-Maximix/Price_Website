@@ -5,7 +5,7 @@ async function loadComments() {
     } catch {
         currentUserId = null;
     }
-    const serverResponse = await fetch("/api/loadInspiComments");
+    const serverResponse = await fetch("/api/load-inspi-comments");
     if (serverResponse.ok) {
         const responseInfo = await serverResponse.json();
         if (responseInfo.length > 0) {
