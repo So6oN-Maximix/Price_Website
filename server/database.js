@@ -14,7 +14,7 @@ const products = [
         price: 29.56,
         promo: 10,
         colors: ["#8F9779", "#006A71", "#CC6A5A", "#383E42"],
-        image: "https://res.cloudinary.com/dim1yekbi/image/upload/v1778576860/produit_01_poxrwg.png"
+        image: "https://res.cloudinary.com/dim1yekbi/image/upload/v1778583866/produit_01_a3tqri.png"
     },
     {
         name: "Produit 02",
