@@ -31,14 +31,11 @@ body::-webkit-scrollbar {
     display: none;
 }
 
-.video-scroll-page {
-    height: 600vh;
-}
-
 header {
     display: flex;
     justify-content: center;
     padding-top: 30px;
+    overflow: hidden;
 }
 
 /* --- MENU --- */
@@ -111,32 +108,107 @@ header {
     display: block;
 }
 
-/* --- VIDEO --- */
-
-.video-background {
-    position: fixed;
+/* --- LE CONTENEUR PRINCIPAL --- */
+.hero-teaser {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    z-index: -2;
-    overflow: hidden;
-}
-
-#bg-video {
-    width: 100vw;
     height: 100vh;
-    object-fit: cover;
+    z-index: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: transparent;
+    text-align: center;
+
+    padding: 70px 20px 20px 20px;
+    box-sizing: border-box;
 }
 
-.background-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: -1;
+/* --- L'EFFET DE LÉVITATION INFINI --- */
+.floating-wrapper {
+    /* La boucle monte et descend doucement en 4 secondes, à l'infini */
+    animation: floatUpDown 4s ease-in-out infinite;
+}
+
+/* --- LE PETIT BADGE AU-DESSUS --- */
+.teaser-badge {
+    display: inline-block;
+    background: rgba(210, 160, 57, 0.1); /* Fond doré très transparent */
+    color: #d2a039;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    border: 1px solid rgba(210, 160, 57, 0.4);
+    animation: pulseBorder 2s infinite alternate;
+}
+
+/* --- LE TEXTE "REFLET LIQUIDE" --- */
+.shimmer-text {
+    font-size: clamp(3rem, 5vw, 5.5rem); /* Responsive : s'adapte aux mobiles et PC */
+    font-weight: 900;
+    margin: 0;
+    line-height: 1.1;
+
+    /* Le secret : un dégradé immense qui dépasse du texte */
+    background: linear-gradient(90deg, #1a2f4b, #006a71, #d2a039, #006a71, #1a2f4b);
+    background-size: 200% auto;
+
+    /* On découpe le dégradé pour qu'il ne s'affiche QUE dans les lettres */
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    /* On fait défiler le dégradé à l'infini */
+    animation: shimmerEffect 4s linear infinite;
+}
+
+/* --- LE TEXTE SECONDAIRE --- */
+.teaser-subtext {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    font-weight: 300;
+    letter-spacing: 1px;
+    color: #444; /* Mets un gris clair genre #ccc si ton fond d'accueil est très foncé */
+}
+
+/* ========================================= */
+/* 🎬 LES ANIMATIONS EN BOUCLE INFINIE       */
+/* ========================================= */
+
+/* La Lévitation */
+@keyframes floatUpDown {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-15px);
+    } /* Monte de 15 pixels au milieu de l'animation */
+}
+
+/* Le défilement du reflet liquide */
+@keyframes shimmerEffect {
+    to {
+        background-position: 200% center;
+    }
+}
+
+/* La pulsation du badge */
+@keyframes pulseBorder {
+    from {
+        box-shadow: 0 0 0 0 rgba(210, 160, 57, 0.3);
+    }
+    to {
+        box-shadow: 0 0 15px 5px rgba(210, 160, 57, 0);
+    }
 }
 
 /* --- FOOTER --- */
@@ -687,13 +759,21 @@ input:-webkit-autofill:active {
 
 .product-img {
     width: 100%;
-    height: 200px;
+    aspect-ratio: 1/1;
+    object-fit: cover;
     border-radius: 15px;
     background: rgba(255, 255, 255, 0.02);
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .product-info h4 {
@@ -3035,7 +3115,8 @@ input:-webkit-autofill:active {
     }
 
     .product-img {
-        height: 250px;
+        width: 250px;
+        aspect-ratio: 1 / 1;
         object-fit: cover;
     }
 
@@ -3391,7 +3472,9 @@ input:-webkit-autofill:active {
     }
 
     .product-img {
-        height: 150px;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
     }
 
     .product-info h4 {
@@ -3610,9 +3693,14 @@ input:-webkit-autofill:active {
 
     /* On réduit un peu l'image pour gagner de l'espace */
     .cart-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .item-img {
         width: 70px;
         height: 70px;
-        object-fit: contain;
     }
 
     /* Le bloc contenant le nom du produit prend l'espace restant sur la 1ère ligne */

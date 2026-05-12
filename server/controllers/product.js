@@ -4,7 +4,7 @@ import database from "../database.js";
 
 export const loadDatas = async (res) => {
     try {
-        const response = await database.query("SELECT * FROM products;");
+        const response = await database.query("SELECT * FROM products ORDER BY name;");
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(response.rows));
     } catch (error) {

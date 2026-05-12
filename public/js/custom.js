@@ -16,7 +16,7 @@ function addToOptionMenu(productObj) {
         optionItemDiv.appendChild(emptyIcon);
     } else {
         const imgElement = document.createElement("img");
-        imgElement.src = `https://placehold.co/100x100/transparent/white?text=${productObj.name.split(" ").join("-")}`;
+        imgElement.src = productObj.image;
         imgElement.alt = productObj.name;
         imgElement.classList.add("product-thumbnail");
         optionItemDiv.appendChild(imgElement);

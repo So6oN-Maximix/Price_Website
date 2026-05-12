@@ -34,8 +34,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch(`/api/get-product-info?id=${productId}`);
         if (!response.ok) throw new Error("Erreur lors de la récupération du produit");
         const productData = await response.json();
+
         document.getElementById("detail-name").textContent = productData.name;
         document.getElementById("detail-category").textContent = productData.type;
+        document.getElementById("detail-img").src = productData.image;
         const priceDiv = document.createElement("div");
         priceDiv.style.display = "flex";
         priceDiv.style.alignItems = "center";

@@ -59,8 +59,8 @@ function addToCart(productObj) {
     const imgDiv = document.createElement("div");
     imgDiv.classList.add("item-img");
     const imageProduct = document.createElement("img");
-    imageProduct.src = "https://via.placeholder.com/100"; // A CHANGER
-    imageProduct.alt = "Produit"; // A CHANGER
+    imageProduct.src = productObj.image;
+    imageProduct.alt = productObj.name;
 
     const productDetails = document.createElement("div");
     productDetails.classList.add("item-details");

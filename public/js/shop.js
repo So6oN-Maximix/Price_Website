@@ -27,8 +27,8 @@ function addProduct(productObj) {
     const imgDiv = document.createElement("div");
     imgDiv.classList.add("product-img");
     const image = document.createElement("img");
-    image.src = "https://via.placeholder.com/200"; // A CHANGER AVEC LA BONNE IMAGE
-    image.alt = "Produit"; // A CHANGER AVEC LA BONNE IMAGE
+    image.src = productObj.image;
+    image.alt = productObj.name;
     imgDiv.appendChild(image);
 
     const productCard = document.createElement("div");
