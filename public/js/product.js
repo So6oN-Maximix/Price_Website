@@ -139,3 +139,44 @@ addToCartBtn.addEventListener("click", async () => {
         addToCartBtn.disabled = false;
     }, 2500);
 });
+
+const addToCustomBtn = document.getElementById("detail-add-custom");
+addToCustomBtn.addEventListener("click", async () => {
+    if (addToCustomBtn.disabled) return;
+    addToCustomBtn.disabled = true;
+    const originalText = addToCustomBtn.textContent;
+    addToCustomBtn.textContent = "Ajout...";
+    addToCustomBtn.classList.add("loading");
+    const productName = document.getElementById("detail-name").textContent;
+    try {
+        const productObjFetch = await fetch(`/api/get-product-info?name=${productName}`);
+        let productObj;
+        if (productObjFetch.ok) {
+            productObj = await productObjFetch.json();
+        }
+        const response = await fetch("/api/add-to-custom", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(productObj)
+        });
+        if (response.ok) {
+            addToCustomBtn.textContent = "Ajouté ! ✓";
+            addToCustomBtn.classList.remove("loading");
+            addToCustomBtn.classList.add("success");
+            window.location.href = "/custom";
+            showToast(productName);
+        } else {
+            addToCustomBtn.textContent = "Erreur (Non connecté ?)";
+            addToCustomBtn.classList.remove("loading");
+        }
+    } catch (error) {
+        console.log(error);
+        addToCustomBtn.textContent = "Erreur";
+        addToCustomBtn.classList.remove("loading");
+    }
+    setTimeout(() => {
+        addToCustomBtn.textContent = originalText;
+        addToCustomBtn.classList.remove("success");
+        addToCustomBtn.disabled = false;
+    }, 2500);
+});

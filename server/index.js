@@ -47,7 +47,7 @@ import {
     removeCommentLike,
     checkCommentLike
 } from "./controllers/community.js";
-import { updateCustom, clearCustom, getSelected } from "./controllers/custom.js";
+import { updateCustom, clearCustom, addToCustom, getSelected } from "./controllers/custom.js";
 import { loadDatas, getProductInfo, getProductType } from "./controllers/product.js";
 
 dns.setDefaultResultOrder("ipv4first");
@@ -86,7 +86,8 @@ const postRoutes = {
 
     // Custom
     "/api/update-custom": (req, res) => updateCustom(req, res, sessions),
-    "/api/clear-custom": (req, res) => clearCustom(req, res, sessions)
+    "/api/clear-custom": (req, res) => clearCustom(req, res, sessions),
+    "/api/add-to-custom": (req, res) => addToCustom(req, res, sessions)
 };
 
 const getRoutes = {

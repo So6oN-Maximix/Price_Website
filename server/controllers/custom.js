@@ -69,6 +69,33 @@ export const clearCustom = async (req, res, sessions) => {
     }
 };
 
+export const addToCustom = async (req, res, sessions) => {
+    const cookieHeader = req.headers.cookie;
+    if (!cookieHeader) return res.end(JSON.stringify([]));
+    const cookies = Object.fromEntries(cookieHeader.split("; ").map((c) => c.split("=")));
+    const sessionData = sessions[cookies.session_id];
+    if (!sessionData) return res.end(JSON.stringify([]));
+    const userId = sessionData.user_id;
+
+    let body = "";
+    req.on("data", (chunk) => (body += chunk.toString()));
+    req.on("end", async () => {
+        const data = JSON.parse(body);
+        try {
+            await database.query(`UPDATE customisation SET ${data.type}_id = $1 WHERE user_id = $2;`, [
+                data.product_id,
+                userId
+            ]);
+            res.writeHead(200);
+            res.end();
+        } catch (error) {
+            console.error("Erreur API - Add To Custom: ", error);
+            res.writeHead(500);
+            res.end();
+        }
+    });
+};
+
 // GET
 
 export const getSelected = async (req, res, sessions) => {

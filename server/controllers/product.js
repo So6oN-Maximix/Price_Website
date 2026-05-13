@@ -18,30 +18,55 @@ export const getProductInfo = async (req, res) => {
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
     const productId = parsedUrl.searchParams.get("id");
     if (!productId) {
-        res.writeHead(400);
-        res.end(JSON.stringify({ message: "ID manquant" }));
-        return;
-    }
-    try {
-        const query = await database.query("SELECT * FROM products WHERE product_id = $1;", [productId]);
-        if (query.rows.length === 0) {
-            res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(
-                JSON.stringify({
-                    name: "∅",
-                    type: null,
-                    price: 0.0,
-                    promo: null
-                })
-            );
-        } else {
-            res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(JSON.stringify(query.rows[0]));
+        const productName = parsedUrl.searchParams.get("name");
+        if (!productName) {
+            res.writeHead(400);
+            res.end(JSON.stringify({ message: "ID ou Name manquant" }));
+            return;
         }
-    } catch (error) {
-        console.error("Erreur API - Get Product ID: ", error);
-        res.writeHead(500);
-        res.end();
+        try {
+            const query = await database.query("SELECT * FROM products WHERE name = $1;", [productName]);
+            if (query.rows.length === 0) {
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(
+                    JSON.stringify({
+                        name: "∅",
+                        type: null,
+                        price: 0.0,
+                        promo: null
+                    })
+                );
+            } else {
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(JSON.stringify(query.rows[0]));
+            }
+        } catch (error) {
+            console.error("Erreur API - Get Product Name: ", error);
+            res.writeHead(500);
+            res.end();
+        }
+    } else {
+        try {
+            const query = await database.query("SELECT * FROM products WHERE product_id = $1;", [productId]);
+            if (query.rows.length === 0) {
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(
+                    JSON.stringify({
+                        name: "∅",
+                        type: null,
+                        price: 0.0,
+                        promo: null
+                    })
+                );
+            } else {
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(JSON.stringify(query.rows[0]));
+            }
+        } catch (error) {
+            console.error("Erreur API - Get Product ID: ", error);
+            res.writeHead(500);
+            res.end();
+        }
     }
 };
 

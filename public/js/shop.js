@@ -70,6 +70,39 @@ function addProduct(productObj) {
     btnCustom.classList.add("btn-custom");
     btnCustom.id = "btn-custom-" + productObj.name;
     btnCustom.textContent = "Personnaliser";
+    btnCustom.addEventListener("click", async () => {
+        if (btnCustom.disabled) return;
+        btnCustom.disabled = true;
+        const originalText = btnCustom.textContent;
+        btnCustom.textContent = "Ajout...";
+        btnCustom.classList.add("loading");
+        const productName = btnCustom.id.replace("btn-custom-", "");
+        try {
+            const response = await fetch("/api/add-to-custom", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(productObj)
+            });
+            if (response.ok) {
+                btnCustom.textContent = "Ajouté ! ✓";
+                btnCustom.classList.remove("loading");
+                btnCustom.classList.add("success");
+                window.location.href = "/custom";
+                showToast(`${productName} ajouté au Custom !`);
+            } else {
+                btnCustom.textContent = "Erreur (Non connecté ?)";
+                btnCustom.classList.remove("loading");
+            }
+        } catch {
+            btnCustom.textContent = "Erreur";
+            btnCustom.classList.remove("loading");
+        }
+        setTimeout(() => {
+            btnCustom.textContent = originalText;
+            btnCustom.classList.remove("success");
+            btnCustom.disabled = false;
+        }, 2500);
+    });
     buttonsDiv.appendChild(btnAdd);
     buttonsDiv.appendChild(btnCustom);
 
@@ -121,7 +154,7 @@ function getFilters() {
     return filters;
 }
 
-function showToast(productName) {
+function showToast(message) {
     let toastContainer = document.querySelector(".toast-container");
     if (!toastContainer) {
         toastContainer = document.createElement("div");
@@ -135,7 +168,7 @@ function showToast(productName) {
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
         </svg>
-        ${productName} ajouté au panier !
+        ${message}
     `;
 
     toastContainer.appendChild(toast);
@@ -166,7 +199,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                     btn.textContent = "Ajouté ! ✓";
                     btn.classList.remove("loading");
                     btn.classList.add("success");
-                    showToast(productName);
+                    showToast(`${productName} ajouté au panier !`);
                 } else {
                     btn.textContent = "Erreur (Non connecté ?)";
                     btn.classList.remove("loading");
