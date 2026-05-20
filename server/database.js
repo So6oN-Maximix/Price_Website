@@ -1,10 +1,14 @@
 import { Pool } from "pg";
 
-const client = new Pool({
+/*const client = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
+});*/
+
+const client = new Pool({
+    connectionString: "postgresql://postgres:LaraCsuge!*@localhost:5432/PRICE_db"
 });
 
 const products = [
@@ -154,10 +158,10 @@ const createTablesQuery = `
 
     CREATE TABLE IF NOT EXISTS customisation (
         custom_id SERIAL PRIMARY KEY,
-        bouchon_id INT REFERENCES products(product_id) ON DELETE RESTRICT,
-        corps_id INT REFERENCES products(product_id) ON DELETE RESTRICT,
-        habillage_id INT REFERENCES products(product_id) ON DELETE RESTRICT,
-        socle_id INT REFERENCES products(product_id) ON DELETE RESTRICT,
+        bouchon_id VARCHAR(50) DEFAULT NULL,
+        corps_id VARCHAR(50) DEFAULT NULL,
+        habillage_id VARCHAR(50) DEFAULT NULL,
+        socle_id VARCHAR(50) DEFAULT NULL,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE
     );
 
@@ -168,6 +172,16 @@ const createTablesQuery = `
         custom_data JSONB DEFAULT NULL,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS created_parts (
+        creation_id SERIAL PRIMARY KEY,
+        type VARCHAR(30) NOT NULL,
+        name TEXT NOT NULL,
+        hex_color VARCHAR(10) NOT NULL,
+        images JSONB DEFAULT NULL,
+        image_creation TEXT DEFAULT NULL,
+        user_id INT REFERENCES users(user_id) ON DELETE CASCADE
     );
 `;
 

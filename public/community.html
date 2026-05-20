@@ -5,10 +5,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Communauté - PRICE</title>
         <link rel="stylesheet" href="/css/style.css" />
-        <link rel="icon" type="image/x-icon" href="/assets/Icone.ico" />
+        <link rel="stylesheet" href="/css/community-creation.css" />
+        <link rel="icon" type="image/x-icon" href="/assets/Icones/41.ico" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/DecalGeometry.js"></script>
         <script src="/js/post-builder.js" defer></script>
         <script src="/js/profile.js" defer></script>
         <script src="/js/community.js" defer></script>
+        <script src="/js/creation_part.js" defer></script>
     </head>
     <body class="community-body">
         <header>
@@ -16,11 +23,7 @@
                 <a href="/shop">Boutique</a>
                 <a href="/custom" class="on-pc">Personnalisation</a>
                 <a href="/" class="logo-link">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                        <path
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
-                        />
-                    </svg>
+                    <img src="/assets/Icones/41.png" alt="Logo 41" style="width: 24px; height: 24px; display: block" />
                 </a>
                 <a href="/community" class="active">Communauté</a>
                 <a href="/about-us">A propos</a>
@@ -57,32 +60,327 @@
         </header>
 
         <main class="community-main-container" id="community-main-container">
-            <div class="community-header">
-                <h1>Inspis de la Commu</h1>
-                <p>Découvrez les assemblages de la communauté et proposez vos idées.</p>
-                <button class="create-post-btn" id="create-post-btn">
-                    <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    Partager mon setup
-                </button>
+            <div id="view-composition">
+                <div class="community-header">
+                    <h1>Inspis de la Commu</h1>
+                    <p>Découvrez les assemblages de la communauté et proposez vos idées.</p>
+                    <button class="create-post-btn" id="create-post-btn">
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Partager mon setup
+                    </button>
+                </div>
+                <div class="community-feed" id="community-feed">
+                    <p style="text-align: center; color: rgba(255, 255, 255, 0.6)">
+                        Pas de commentaires postés pour le moment, soyez le premier !!
+                    </p>
+                </div>
             </div>
-            <div class="community-feed" id="community-feed">
-                <p style="text-align: center; color: rgba(255, 255, 255, 0.6)">
-                    Pas de commentaires postés pour le moment, soyez le premier !!
-                </p>
+
+            <div id="view-creation" style="display: none">
+                <div class="community-header">
+                    <h1>Créations</h1>
+                    <p>Montrez de quoi vous êtes capable</p>
+                </div>
+
+                <div class="creation-module glass-card">
+                    <div
+                        id="creation-3d-area"
+                        style="width: 100%; height: 650px; border-radius: 10px; overflow: hidden; position: relative"
+                    ></div>
+
+                    <div class="creation-controls">
+                        <h3 class="controls-title">Nouveau Design</h3>
+
+                        <div class="control-group">
+                            <label>1. Sélectionner une pièce</label>
+                            <div class="part-selector">
+                                <button class="part-btn">Habillage</button>
+                                <button class="part-btn active">Corps</button>
+                                <button class="part-btn">Bouchon</button>
+                                <button class="part-btn">Socle</button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label>2. Couleur de la pièce</label>
+                            <div class="color-panel-container">
+                                <input
+                                    type="color"
+                                    id="piece-color-picker"
+                                    class="color-picker-round"
+                                    value="#ffffff"
+                                />
+                                <div class="color-value-display">
+                                    <span>HEX :</span>
+                                    <span id="hex-value">#FFFFFF</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label>3. Ajouter un motif ou logo</label>
+                            <div class="upload-zone">
+                                <input type="file" id="sticker-upload" accept="image/png, image/jpeg" hidden />
+                                <label for="sticker-upload" class="upload-btn">
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                    Importer une image
+                                </label>
+                                <p class="upload-info">Format PNG transparent recommandé</p>
+                            </div>
+                        </div>
+
+                        <div
+                            id="sticker-list-container"
+                            style="
+                                display: none;
+                                width: 100%;
+                                margin-top: 15px;
+                                background: rgba(255, 255, 255, 0.05);
+                                padding: 15px;
+                                border-radius: 10px;
+                                border: 1px solid rgba(255, 255, 255, 0.1);
+                                box-sizing: border-box;
+                            "
+                        >
+                            <label
+                                style="
+                                    font-size: 0.85rem;
+                                    margin-bottom: 10px;
+                                    display: block;
+                                    color: rgba(255, 255, 255, 0.6);
+                                "
+                                >Motifs posés :</label
+                            >
+
+                            <div
+                                id="placed-stickers-list"
+                                style="display: flex; flex-direction: column; gap: 8px"
+                            ></div>
+                        </div>
+
+                        <div
+                            id="sticker-edit-panel"
+                            class="glass-card"
+                            style="
+                                display: none;
+                                width: 100%;
+                                padding: 20px;
+                                z-index: 100;
+                                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                                box-sizing: border-box;
+                            "
+                        >
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                    margin-bottom: 15px;
+                                "
+                            >
+                                <h3 style="font-size: 1rem; color: #4ade80; margin: 0">
+                                    Réglages : <br /><span
+                                        id="edit-sticker-name"
+                                        style="color: white; font-weight: normal; font-size: 0.85rem"
+                                        >Nom</span
+                                    >
+                                </h3>
+
+                                <button
+                                    id="close-edit-panel-btn"
+                                    style="background: none; border: none; color: white; cursor: pointer; padding: 5px"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <label
+                                style="
+                                    font-size: 0.8rem;
+                                    color: rgba(255, 255, 255, 0.8);
+                                    display: block;
+                                    margin-bottom: 5px;
+                                "
+                                >Taille</label
+                            >
+                            <div style="display: flex; gap: 10px; margin-bottom: 15px; align-items: center">
+                                <input
+                                    type="range"
+                                    id="edit-sticker-size"
+                                    min="0.5"
+                                    max="50"
+                                    step="0.1"
+                                    value="5"
+                                    style="flex-grow: 1; min-width: 0"
+                                />
+                                <input
+                                    type="number"
+                                    id="edit-sticker-size-input"
+                                    min="0.5"
+                                    max="50"
+                                    step="0.1"
+                                    value="5"
+                                    style="
+                                        width: 60px;
+                                        background: rgba(0, 0, 0, 0.5);
+                                        border: 1px solid rgba(255, 255, 255, 0.2);
+                                        color: white;
+                                        padding: 5px;
+                                        border-radius: 5px;
+                                        text-align: center;
+                                        font-family: inherit;
+                                    "
+                                />
+                            </div>
+
+                            <label
+                                style="
+                                    font-size: 0.8rem;
+                                    color: rgba(255, 255, 255, 0.8);
+                                    display: block;
+                                    margin-bottom: 5px;
+                                "
+                                >Rotation (°)</label
+                            >
+                            <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center">
+                                <input
+                                    type="range"
+                                    id="edit-sticker-rotation"
+                                    min="-180"
+                                    max="180"
+                                    step="1"
+                                    value="0"
+                                    style="flex-grow: 1; min-width: 0"
+                                />
+                                <input
+                                    type="number"
+                                    id="edit-sticker-rotation-input"
+                                    min="-180"
+                                    max="180"
+                                    step="1"
+                                    value="0"
+                                    style="
+                                        width: 60px;
+                                        background: rgba(0, 0, 0, 0.5);
+                                        border: 1px solid rgba(255, 255, 255, 0.2);
+                                        color: white;
+                                        padding: 5px;
+                                        border-radius: 5px;
+                                        text-align: center;
+                                        font-family: inherit;
+                                    "
+                                />
+                            </div>
+
+                            <label
+                                style="
+                                    font-size: 0.8rem;
+                                    color: rgba(255, 255, 255, 0.8);
+                                    display: block;
+                                    margin-bottom: 5px;
+                                "
+                                >Position Y (Haut / Bas)</label
+                            >
+                            <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center">
+                                <input
+                                    type="range"
+                                    id="edit-sticker-y"
+                                    min="-15"
+                                    max="15"
+                                    step="0.5"
+                                    value="0"
+                                    style="flex-grow: 1; min-width: 0"
+                                />
+                                <input
+                                    type="number"
+                                    id="edit-sticker-y-input"
+                                    min="-15"
+                                    max="15"
+                                    step="0.5"
+                                    value="0"
+                                    style="
+                                        width: 60px;
+                                        background: rgba(0, 0, 0, 0.5);
+                                        border: 1px solid rgba(255, 255, 255, 0.2);
+                                        color: white;
+                                        padding: 5px;
+                                        border-radius: 5px;
+                                        text-align: center;
+                                        font-family: inherit;
+                                    "
+                                />
+                            </div>
+
+                            <button
+                                id="reposition-sticker-btn"
+                                class="btn-cancel"
+                                style="
+                                    width: 100%;
+                                    padding: 10px;
+                                    font-size: 0.85rem;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                "
+                            >
+                                <svg
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    style="margin-right: 8px"
+                                >
+                                    <path d="M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20" />
+                                </svg>
+                                Déplacer (cliquer sur modèle)
+                            </button>
+                        </div>
+
+                        <div class="creation-actions">
+                            <button class="btn-cancel">Annuler</button>
+                            <button class="btn-primary">Valider la création</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
+
+        <!-- ELEMENT VIEW COMPOSITION -->
         <div class="community-bottom-toggle glass-card">
             <button class="toggle-mode-btn active" id="btn-compositions">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -284,6 +582,93 @@
                         </svg>
                     </button>
                 </form>
+            </div>
+        </div>
+
+        <div id="validation-modal" class="modal-overlay">
+            <div class="modal-content glass-card validation-card">
+                <button class="close-modal-btn" id="close-validation-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+
+                <h2>Finaliser votre Design</h2>
+                <p>Donnez un nom unique à votre création pour la partager.</p>
+
+                <div class="validation-body">
+                    <div class="input-group">
+                        <input
+                            type="text"
+                            id="creation-name-input"
+                            required
+                            placeholder="Nom de la création (ex: Golden Night)"
+                        />
+                    </div>
+
+                    <div class="creation-recap">
+                        <div class="recap-item">
+                            <span>Pièce :</span>
+                            <strong id="recap-part">Corps</strong>
+                        </div>
+                        <div class="recap-item">
+                            <span>Couleur :</span>
+                            <div class="recap-color-group">
+                                <div id="recap-color-swatch" class="mini-swatch"></div>
+                                <strong id="recap-hex">#D2A039</strong>
+                            </div>
+                        </div>
+                        <div class="recap-item">
+                            <span>Motifs posés :</span>
+                            <strong id="recap-stickers-count">0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn-cancel" id="confirm-cancel-btn">Modifier encore</button>
+                    <button class="btn-primary" id="final-confirm-btn">Confirmer & Sauvegarder</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-warning-modal" class="modal-overlay">
+            <div class="modal-content glass-card" style="text-align: center; max-width: 400px; padding: 30px">
+                <button class="close-modal-btn" id="close-warning-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+
+                <div
+                    style="
+                        background: rgba(74, 222, 128, 0.1);
+                        width: 60px;
+                        height: 60px;
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        margin: 0 auto 20px auto;
+                    "
+                >
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </div>
+
+                <h2 style="margin-bottom: 15px; font-size: 1.5rem">Éditeur PC requis</h2>
+                <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.6; margin-bottom: 25px; font-size: 0.95rem">
+                    Notre outil de personnalisation 3D nécessite un grand écran pour placer vos logos de la meilleure
+                    manière possible.<br /><br />
+                    <strong>Rejoignez-nous depuis un ordinateur pour créer votre gourde !</strong>
+                </p>
+
+                <button class="btn-primary" id="understand-warning-btn" style="width: 100%">J'ai compris</button>
             </div>
         </div>
         <footer>

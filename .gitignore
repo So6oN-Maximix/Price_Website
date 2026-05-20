@@ -1,7 +1,7 @@
 node_modules/
 public/assets/*.jpg
 public/assets/*.png
-public/assets/Video_test.mp4
+public/assets/*.mp4
 public/assets/products
 public/3DModels/Background_pictures.blend
 public/3DModels/Raw_files

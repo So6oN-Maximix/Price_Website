@@ -1,0 +1,335 @@
+/* --- CONTENEUR PRINCIPAL --- */
+.creation-module {
+    display: flex;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* --- ZONE GAUCHE : INTERPRÉTEUR --- */
+.creation-visualizer {
+    flex: 1; /* Prend la moitié de l'espace */
+    min-height: 450px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 15px;
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.visualizer-placeholder {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.visualizer-placeholder p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #d4d4d8;
+}
+
+.visualizer-placeholder span {
+    font-size: 0.85rem;
+}
+
+/* --- ZONE DROITE : CONTRÔLES --- */
+.creation-controls {
+    flex: 1; /* Prend l'autre moitié */
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.controls-title {
+    font-size: 1.5rem;
+    color: #ffffff;
+    margin-top: 0;
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px;
+}
+
+.control-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: #a1a1aa;
+    margin-bottom: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- SÉLECTEUR DE PIÈCES --- */
+.part-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.part-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #d4d4d8;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.part-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.part-btn.active {
+    background: #d2a039; /* Ton doré */
+    color: #0a0a0b;
+    border-color: #d2a039;
+    font-weight: 600;
+}
+
+/* --- SÉLECTEUR DE COULEUR ROND & HEX --- */
+.color-panel-container {
+    display: flex;
+    flex-direction: row; /* 🚀 Aligne les éléments de gauche à droite */
+    align-items: center; /* Centre le rond et le texte verticalement */
+    gap: 15px; /* Espace entre le rond et l'étiquette HEX */
+}
+
+/* Le bouton qui contient la couleur */
+.color-picker-round {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 50px; /* Largeur du rond */
+    height: 50px; /* Hauteur du rond */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0; /* Empêche le rond d'être écrasé par le texte */
+}
+
+/* Stylisation du bloc de couleur interne (Chrome / Safari) */
+.color-picker-round::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.color-picker-round::-webkit-color-swatch {
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%; /* 🚀 C'est ça qui fait le cercle parfait ! */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition:
+        border-color 0.3s ease,
+        transform 0.2s ease;
+}
+
+/* Stylisation du bloc de couleur interne (Firefox) */
+.color-picker-round::-moz-color-swatch {
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%; /* 🚀 Pareil pour Firefox */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition:
+        border-color 0.3s ease,
+        transform 0.2s ease;
+}
+
+/* Effet au survol (hover) */
+.color-picker-round:hover::-webkit-color-swatch,
+.color-picker-round:hover::-moz-color-swatch {
+    border-color: #ffffff;
+    transform: scale(1.08); /* Fait très légèrement grossir le rond au survol */
+}
+
+/* Affichage du texte HEX à droite */
+.color-value-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 12px 20px;
+    border-radius: 12px;
+    color: #a1a1aa;
+    font-family: monospace; /* Police façon "code" */
+    font-size: 1rem;
+    flex-grow: 1; /* Permet à la zone de texte de prendre toute la largeur restante */
+}
+
+.color-value-display #hex-value {
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px; /* Espace un peu les lettres du code HEX */
+}
+
+/* --- ZONE D'UPLOAD --- */
+.upload-zone {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: background 0.3s ease;
+}
+
+.upload-zone:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    color: #0a0a0b;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.3s ease;
+}
+
+.upload-btn:hover {
+    opacity: 0.9;
+}
+
+.upload-info {
+    font-size: 0.8rem;
+    color: #71717a;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+/* --- BOUTONS D'ACTION --- */
+.creation-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: auto; /* Pousse les boutons vers le bas */
+    padding-top: 15px;
+}
+
+.btn-cancel {
+    flex: 1;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #d4d4d8;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-primary {
+    flex: 2;
+    background: #d2a039;
+    border: none;
+    color: #0a0a0b;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: filter 0.3s;
+}
+
+.btn-primary:hover {
+    filter: brightness(1.1);
+}
+
+/* --- L'INTERPRÉTEUR 3D --- */
+.viewer-3d {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    outline: none;
+}
+
+.viewer-3d::part(default-progress-bar) {
+    display: none;
+}
+
+/* --- MODAL DE VALIDATION --- */
+.validation-card {
+    max-width: 450px !important;
+    text-align: center;
+}
+
+.validation-body {
+    margin: 25px 0;
+}
+
+/* Style du récapitulatif */
+.creation-recap {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.recap-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+}
+
+.recap-item span {
+    color: #a1a1aa;
+}
+
+.recap-item strong {
+    color: #ffffff;
+    text-transform: capitalize;
+}
+
+.recap-color-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mini-swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 15px;
+}
+
+/* --- RESPONSIVE MOBILE --- */
+@media screen and (max-width: 768px) {
+    .creation-module {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .creation-visualizer {
+        min-height: 300px;
+    }
+}

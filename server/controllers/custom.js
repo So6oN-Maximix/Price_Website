@@ -155,3 +155,57 @@ export const getSelected = async (req, res, sessions) => {
         res.end();
     }
 };
+
+export const getCreationType = async (req, res, sessions) => {
+    const cookieHeader = req.headers.cookie;
+    if (!cookieHeader) return res.end(JSON.stringify([]));
+    const cookies = Object.fromEntries(cookieHeader.split("; ").map((c) => c.split("=")));
+    const sessionData = sessions[cookies.session_id];
+    if (!sessionData) return res.end(JSON.stringify([]));
+    const userId = sessionData.user_id;
+
+    const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+    const creationType = parsedUrl.searchParams.get("productType");
+    if (!creationType) {
+        res.writeHead(400);
+        res.end(JSON.stringify({ message: "Type manquant" }));
+        return;
+    }
+
+    try {
+        const creationListQuery = await database.query(
+            "SELECT * FROM created_parts WHERE type = $1 AND user_id = $2 ORDER BY creation_id;",
+            [creationType, userId]
+        );
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(creationListQuery.rows));
+    } catch (error) {
+        console.error("Erreur API - Get Creation Type: ", error);
+        res.writeHead(500);
+        res.end();
+    }
+};
+
+export const getCreationInfo = async (req, res) => {
+    const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+    const creationId = parsedUrl.searchParams.get("id");
+    if (!creationId) {
+        res.writeHead(400);
+        res.end(JSON.stringify({ message: "ID manquant" }));
+        return;
+    }
+
+    try {
+        const query = await database.query("SELECT * FROM created_parts WHERE creation_id = $1;", [creationId]);
+        if (query.rows.length === 0) {
+            res.writeHead(404, { "Content-Type": "application/json" });
+            return res.end(JSON.stringify({ message: "Création introuvable" }));
+        }
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(query.rows[0]));
+    } catch (error) {
+        console.error("Erreur API - Get Creation Info: ", error);
+        res.writeHead(500);
+        res.end();
+    }
+};

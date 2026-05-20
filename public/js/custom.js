@@ -3,11 +3,21 @@ const optionContainers = document.querySelectorAll(".options-grid");
 
 let selectedProducts = { bouchon: "", corps: "", habillage: "", socle: "" };
 
-function addToOptionMenu(productObj) {
+function addToOptionMenu(productObj, isUserDesign = false) {
     const optionItemDiv = document.createElement("div");
     optionItemDiv.classList.add("option-item", "glass-card");
-    const keyCard = productObj.name === "∅" ? null : productObj.product_id;
-    optionItemDiv.id = `${productObj.type}-${keyCard}-card`;
+    if (isUserDesign) optionItemDiv.classList.add("is-user-design");
+
+    const keyCard = productObj.name === "∅" ? null : isUserDesign ? productObj.creation_id : productObj.product_id;
+    const idPrefix = isUserDesign ? "creation_" : "";
+    optionItemDiv.id = `${productObj.type}-${idPrefix}${keyCard}-card`;
+
+    if (isUserDesign) {
+        const creatorBadge = document.createElement("div");
+        creatorBadge.classList.add("creator-badge-mini");
+        creatorBadge.textContent = "Design";
+        optionItemDiv.appendChild(creatorBadge);
+    }
 
     if (productObj.name === "∅") {
         const emptyIcon = document.createElement("div");
@@ -16,9 +26,19 @@ function addToOptionMenu(productObj) {
         optionItemDiv.appendChild(emptyIcon);
     } else {
         const imgElement = document.createElement("img");
-        imgElement.src = productObj.image;
+        const image = isUserDesign ? productObj.image_creation : productObj.image;
+        imgElement.src = image;
         imgElement.alt = productObj.name;
         imgElement.classList.add("product-thumbnail");
+
+        if (isUserDesign) {
+            imgElement.style.objectFit = "contain";
+            imgElement.style.backgroundImage = "url('/assets/Icones/background.png')";
+            imgElement.style.backgroundSize = "cover";
+            imgElement.style.backgroundPosition = "center";
+            imgElement.style.borderRadius = "8px";
+        }
+
         optionItemDiv.appendChild(imgElement);
     }
 
@@ -52,21 +72,26 @@ function addToOptionMenu(productObj) {
     } else {
         const priceSpan = document.createElement("span");
         priceSpan.classList.add("option-price");
-        priceSpan.textContent = `${productObj.price}€`;
+        priceSpan.textContent = isUserDesign ? "Création" : `${productObj.price}€`;
         optionItemDiv.appendChild(priceSpan);
     }
 
     const productType = productObj.type;
     optionItemDiv.addEventListener("click", async () => {
         if (optionItemDiv.classList.contains("selected")) return;
-        selectedProducts[productType] = productObj.name === "∅" ? null : productObj.product_id;
+        selectedProducts[productType] =
+            productObj.name === "∅"
+                ? null
+                : isUserDesign
+                  ? `creation_${productObj.creation_id}`
+                  : productObj.product_id;
 
         const parentGrid = optionItemDiv.parentElement;
         const currentlySelected = parentGrid.querySelectorAll(".selected");
         currentlySelected.forEach((element) => element.classList.remove("selected"));
         optionItemDiv.classList.add("selected");
 
-        addToSummary(productObj);
+        addToSummary(productObj, isUserDesign);
         await fetch("/api/update-custom", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -83,16 +108,19 @@ function addToOptionMenu(productObj) {
     if (optionZone) optionZone.appendChild(optionItemDiv);
 }
 
-function addToSummary(productObj) {
+function addToSummary(productObj, isUserDesign = false) {
     const productType = productObj.type;
     const productTypeLine = document.getElementById(`${productType}-summary`);
     const productNameLine = document.getElementById(`summary-${productType}-name`);
 
     const displayName = productObj.name === "∅" ? `Aucun ${productType}` : productObj.name;
 
-    let finalPrice = Number(productObj.price);
-    if (productObj.promo) finalPrice *= 1 - Number(productObj.promo) / 100;
-    const priceText = `${finalPrice.toFixed(2)}€`;
+    const finalPrice = isUserDesign
+        ? "Création"
+        : productObj.promo
+          ? (Number(productObj.price) * (1 - Number(productObj.promo) / 100)).toFixed(2)
+          : Number(productObj.price).toFixed(2);
+    const priceText = isUserDesign ? finalPrice : `${finalPrice}€`;
 
     if (!productNameLine) {
         const productNameSpan = document.createElement("span");
@@ -104,7 +132,7 @@ function addToSummary(productObj) {
         productPriceSpan.classList.add("item-price");
         productPriceSpan.id = `summary-${productType.toLowerCase()}-price`;
         productPriceSpan.textContent = priceText;
-        productPriceSpan.dataset.price = finalPrice.toFixed(2);
+        productPriceSpan.dataset.price = finalPrice;
 
         productTypeLine.appendChild(productNameSpan);
         productTypeLine.appendChild(productPriceSpan);
@@ -112,30 +140,38 @@ function addToSummary(productObj) {
         productNameLine.textContent = displayName;
         const productPriceSpan = document.getElementById(`summary-${productType}-price`);
         productPriceSpan.textContent = priceText;
-        productPriceSpan.dataset.price = finalPrice.toFixed(2);
+        productPriceSpan.dataset.price = finalPrice;
     }
 }
 
 function updateTotal() {
     let total = 0;
+    let isUserDesign = false;
     const allPriceSpans = document.querySelectorAll(".item-price");
-    allPriceSpans.forEach((span) => (total += Number(span.dataset.price)));
-    document.getElementById("custom-total-price").textContent = `${total.toFixed(2)}€`;
+    for (let i = 0; i < allPriceSpans.length; i++) {
+        if (allPriceSpans[i].dataset.price === "Création") {
+            total = "Création";
+            isUserDesign = true;
+            break;
+        } else {
+            total += Number(allPriceSpans[i].dataset.price);
+        }
+    }
+    if (!isUserDesign) total = total.toFixed(2);
+    document.getElementById("custom-total-price").textContent = isUserDesign ? total : `${total}€`;
 }
 
 function checkValidity() {
-    const finishBtn = document.querySelector(".finish-btn");
-    const selectedCount = document.querySelectorAll(".summary-details .item-price").length;
-    if (selectedCount === 4) {
-        finishBtn.disabled = false;
-        finishBtn.style.opacity = "1";
-        finishBtn.style.cursor = "pointer";
-        finishBtn.textContent = "Terminer & Ajouter au panier";
+    let isUserDesign = false;
+    const allPriceSpans = document.querySelectorAll(".item-price");
+    allPriceSpans.forEach((span) => {
+        if (span.dataset.price === "Création") isUserDesign = true;
+    });
+
+    if (isUserDesign) {
+        document.querySelector(".finish-btn").textContent = "Enregistrer la Création";
     } else {
-        finishBtn.disabled = true;
-        finishBtn.style.opacity = "0.5";
-        finishBtn.style.cursor = "not-allowed";
-        finishBtn.textContent = `Sélectionne encore ${4 - selectedCount} étape(s)`;
+        document.querySelector(".finish-btn").textContent = "Terminer & Ajouter au panier";
     }
 }
 
@@ -215,6 +251,13 @@ tabButtons.forEach((btn) => {
                         addToOptionMenu(productType);
                     }
                 }
+                const creationResponse = await fetch(`/api/get-creation-type?productType=${cible}`);
+                if (creationResponse.ok) {
+                    const creationList = await creationResponse.json();
+                    for (const creation of creationList) {
+                        addToOptionMenu(creation, true);
+                    }
+                }
             }
             const selectedProductId = selectedProducts[cible];
             const currentlySelected = zoneToLoad.querySelectorAll(".selected");
@@ -246,10 +289,14 @@ window.addEventListener("DOMContentLoaded", async () => {
                     promo: null
                 });
             } else {
-                const productInfoRequest = await fetch(`/api/get-product-info?id=${value}`);
+                const isCreation = String(value).startsWith("creation_");
+                const productInfoRequestQuery = isCreation
+                    ? `/api/get-creation-info?id=${String(value).replace("creation_", "")}`
+                    : `/api/get-product-info?id=${value}`;
+                const productInfoRequest = await fetch(productInfoRequestQuery);
                 if (productInfoRequest.ok) {
                     const productObj = await productInfoRequest.json();
-                    addToSummary(productObj);
+                    addToSummary(productObj, isCreation);
                 }
             }
         }
@@ -337,17 +384,18 @@ finishButton.addEventListener("click", () => {
                 }
             };
 
-            saveBtn.disabled = true;
-            saveBtn.textContent = "Ajout en cours...";
-
             for (const type in selectedProducts) {
                 dataPack.custom_data[type].id = selectedProducts[type];
                 if (selectedProducts[type] !== null) {
-                    const productInfoRequest = await fetch(`/api/get-product-info?id=${selectedProducts[type]}`);
+                    const isCreation = String(selectedProducts[type]).startsWith("creation_");
+                    const fetchUrl = isCreation
+                        ? `/api/get-creation-info?id=${String(selectedProducts[type]).replace("creation_", "")}`
+                        : `/api/get-product-info?id=${selectedProducts[type]}`;
+
+                    const productInfoRequest = await fetch(fetchUrl);
                     if (productInfoRequest.ok) {
                         const productObj = await productInfoRequest.json();
-                        const productName = productObj.name;
-                        dataPack.custom_data[type].name = productName;
+                        dataPack.custom_data[type].name = productObj.name;
                     }
                 }
             }
@@ -364,6 +412,7 @@ finishButton.addEventListener("click", () => {
             finishButton.textContent = "Ajouté ! ✓";
             finishButton.classList.remove("loading");
             finishButton.classList.add("success");
+            document.getElementById("custom-design-name").value = "";
             showToast();
             await resetCustom();
         } catch (error) {

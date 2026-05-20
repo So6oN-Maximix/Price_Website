@@ -163,6 +163,46 @@ export const deleteComment = async (req, res, sessions) => {
     });
 };
 
+export const addCreation = async (req, res, sessions) => {
+    const cookieHeader = req.headers.cookie;
+    if (!cookieHeader) return res.end(JSON.stringify([]));
+    const cookies = Object.fromEntries(cookieHeader.split("; ").map((c) => c.split("=")));
+    const sessionData = sessions[cookies.session_id];
+    if (!sessionData) return res.end(JSON.stringify([]));
+    const userId = sessionData.user_id;
+
+    let body = "";
+    req.on("data", (chunk) => (body += chunk.toString()));
+    req.on("end", async () => {
+        const data = JSON.parse(body);
+        const creationType = data.type;
+        const creationName = data.name;
+        const creationColor = data.hex_color;
+        const creationStickers = data.images;
+        const creationImage = data.image_creation;
+        try {
+            await database.query(
+                "INSERT INTO created_parts(type, name, hex_color, images, image_creation, user_id) VALUES ($1, $2, $3, $4, $5, $6);",
+                [
+                    creationType.toLowerCase(),
+                    creationName,
+                    creationColor,
+                    JSON.stringify(creationStickers),
+                    creationImage,
+                    userId
+                ]
+            );
+            console.log(`La création ${creationName} a été ajoutée à la BDD !`);
+            res.writeHead(200);
+            res.end();
+        } catch (error) {
+            console.error("Erreur API - Saving Creation: ", error);
+            res.writeHead(500);
+            res.end();
+        }
+    });
+};
+
 // GET
 
 export const loadInspiComments = async (res) => {

@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
 :root {
     --white: rgba(255, 255, 255, 0.9);
     --glass-bg: rgba(255, 255, 255, 0.1);
@@ -8,13 +10,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family:
-        "Inter",
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        sans-serif;
+    font-family: "Monserrat" sans-serif;
 }
 
 body {
@@ -1535,8 +1531,15 @@ input:-webkit-autofill:active {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
+    max-height: 55vh;
+    overflow-y: auto;
     overflow-y: auto;
     padding-right: 5px;
+    padding: 10px;
+}
+
+.options-grid::-webkit-scrollbar {
+    width: 6px;
 }
 
 .option-item {
@@ -1691,6 +1694,53 @@ input:-webkit-autofill:active {
     width: 100%;
     padding: 15px;
     font-size: 1rem;
+}
+
+/* --- LA TUILE UTILISATEUR (Basée sur ta structure) --- */
+.option-item.is-user-design {
+    position: relative;
+    border-color: rgba(210, 160, 57, 0.4); /* Bordure dorée au lieu de blanche */
+    background: linear-gradient(145deg, rgba(210, 160, 57, 0.05) 0%, transparent 100%);
+    overflow: visible; /* Important pour que le badge puisse dépasser sans être coupé */
+}
+
+/* Au survol */
+.option-item.is-user-design:hover {
+    border-color: #d2a039;
+    background: rgba(210, 160, 57, 0.1);
+}
+
+/* 🚀 SURCHARGE : Quand l'utilisateur clique dessus (Remplace ton vert #4ade80 par du doré) */
+.option-item.is-user-design.selected {
+    border-color: #d2a039;
+    background: rgba(210, 160, 57, 0.15);
+    box-shadow: 0 0 15px rgba(210, 160, 57, 0.2);
+}
+
+/* --- LE MINI BADGE --- */
+.creator-badge-mini {
+    position: absolute;
+    top: -8px; /* Dépasse légèrement de la boîte */
+    right: -8px;
+    background: #d2a039;
+    color: #0a0a0b;
+    padding: 3px 6px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    border-radius: 4px;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    white-space: nowrap; /* Empêche le texte de passer sur deux lignes */
+}
+
+/* --- L'APERÇU 3D / SILHOUETTE --- */
+.custom-model-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0; /* Écrase le padding de 5px de ta classe native pour laisser la place */
+    background: radial-gradient(circle, #2a2a2c 0%, #151515 100%);
 }
 
 /* ========================================= */
@@ -1970,7 +2020,7 @@ input:-webkit-autofill:active {
 
 .community-header {
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 50px;
 }
 
 .community-header h1 {

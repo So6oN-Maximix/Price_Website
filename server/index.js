@@ -37,6 +37,7 @@ import {
     createComment,
     updateCommentsNumber,
     deleteComment,
+    addCreation,
     loadInspiComments,
     addLike,
     removeLike,
@@ -47,7 +48,14 @@ import {
     removeCommentLike,
     checkCommentLike
 } from "./controllers/community.js";
-import { updateCustom, clearCustom, addToCustom, getSelected } from "./controllers/custom.js";
+import {
+    updateCustom,
+    clearCustom,
+    addToCustom,
+    getSelected,
+    getCreationType,
+    getCreationInfo
+} from "./controllers/custom.js";
 import { loadDatas, getProductInfo, getProductType } from "./controllers/product.js";
 
 dns.setDefaultResultOrder("ipv4first");
@@ -83,6 +91,7 @@ const postRoutes = {
     "/api/create-comment": (req, res) => createComment(req, res, sessions),
     "/api/update-comments-number": (req, res) => updateCommentsNumber(req, res),
     "/api/delete-comment": (req, res) => deleteComment(req, res, sessions),
+    "/api/add-creation": (req, res) => addCreation(req, res, sessions),
 
     // Custom
     "/api/update-custom": (req, res) => updateCustom(req, res, sessions),
@@ -123,7 +132,9 @@ const getRoutes = {
     "/api/check-comment-like": (req, res) => checkCommentLike(req, res, sessions),
 
     // Custom
-    "/api/get-selected": (req, res) => getSelected(req, res, sessions)
+    "/api/get-selected": (req, res) => getSelected(req, res, sessions),
+    "/api/get-creation-type": (req, res) => getCreationType(req, res, sessions),
+    "/api/get-creation-info": (req, res) => getCreationInfo(req, res)
 };
 
 const serverLunching = http.createServer(async (req, res) => {
